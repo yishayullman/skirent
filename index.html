@@ -13,8 +13,8 @@
             --success: #27ae60;
             --danger: #e74c3c;
             --whatsapp: #25d366;
-            --bit: #ff007a; /* צבע ביט המקורי */
-            --paybox: #00b0f0; /* צבע פייבוקס המקורי */
+            --bit: #ff007a;
+            --paybox: #00b0f0;
         }
 
         body {
@@ -102,9 +102,6 @@
         }
         .pay-bit { background: var(--bit); }
         .pay-paybox { background: var(--paybox); }
-        .pay-link:hover { transform: translateY(-2px); opacity: 0.9; }
-
-        .manual-pay-info { font-size: 0.8rem; color: #888; margin-bottom: 15px; }
 
         .cart-summary { background: #f0f2f5; padding: 10px; border-radius: 12px; text-align: center; margin-bottom: 10px; }
         .total-count { font-size: 1.1rem; font-weight: bold; color: var(--primary); }
@@ -132,7 +129,7 @@
 
 <nav>
     <a onclick="showModal('cartModal')" style="color: #e67e22;">🛒 עגלת הזמנה (<span id="cart-count">0</span>)</a>
-    <a onclick="showModal('contactModal')">📍 צור קשר ואיסוף</a>
+    <a onclick="showModal('contactModal')">📍 צור קשר</a>
 </nav>
 
 <div class="container">
@@ -149,7 +146,6 @@
 
 <div class="overlay" id="overlay" onclick="closeAllPopups()"></div>
 
-<!-- עגלת קניות -->
 <div class="modal" id="cartModal">
     <div class="modal-header">
         <span class="close-x" onclick="closeAllPopups()">×</span>
@@ -157,54 +153,39 @@
     </div>
     <div class="modal-body">
         <div class="cart-list" id="cart-content-list"></div>
-        
         <div id="cart-ui-extras" style="display:none;">
-            <div class="cart-summary">
-                סה"כ פריטים: <span class="total-count" id="total-items-num">0</span>
-            </div>
-
+            <div class="cart-summary">סה"כ פריטים: <span class="total-count" id="total-items-num">0</span></div>
             <div class="payment-section">
                 <div class="payment-title">תשלום מהיר בנייד:</div>
                 <div class="payment-grid">
                     <button onclick="openBit()" class="pay-link pay-bit">bit</button>
                     <button onclick="openPaybox()" class="pay-link pay-paybox">PayBox</button>
                 </div>
-                <div class="manual-pay-info">או העברה למספר: 054-7884607</div>
+                <div style="font-size: 0.8rem; color: #888; margin-bottom: 15px;">או למספר: 054-7884607</div>
             </div>
-            
-            <button class="btn-select" style="width:100%; background: var(--success);" onclick="sendWhatsApp()">
-                ✅ שלח הזמנה לוואטסאפ
-            </button>
+            <button class="btn-select" style="width:100%; background: var(--success);" onclick="sendWhatsApp()">✅ שלח הזמנה לוואטסאפ</button>
         </div>
-
-        <div id="empty-cart-msg" style="text-align:center; padding: 20px; color:#999;">
-            העגלה שלך עדיין ריקה... 🎿
-        </div>
+        <div id="empty-cart-msg" style="text-align:center; padding: 20px; color:#999;">העגלה ריקה... 🎿</div>
     </div>
 </div>
 
-<!-- צור קשר -->
 <div class="modal" id="contactModal">
     <div class="modal-header">
         <span class="close-x" onclick="closeAllPopups()">×</span>
-        <h3>פרטי התקשרות ואיסוף</h3>
+        <h3>פרטי התקשרות</h3>
     </div>
     <div class="modal-body">
-        <div class="contact-info">
-            <div style="margin-bottom:15px;"><strong>📞 טלפון:</strong> <a href="tel:0549943477" style="text-decoration:none; color:inherit;">054-9943477</a></div>
-            <div style="margin-bottom:15px;"><strong>🏠 כתובת:</strong> יהודה הלוי 58, גבעת שמואל</div>
-            <a href="https://wa.me/972549943477" target="_blank" class="action-btn btn-wa">💬 שלח לנו הודעה בוואטסאפ</a>
-            <a href="https://www.google.com/maps/search/?api=1&query=יהודה+הלוי+58+גבעת+שמואל" target="_blank" class="action-btn btn-maps">📍 ניווט ב-Google Maps</a>
-        </div>
+        <div style="margin-bottom:15px;"><strong>📞 טלפון:</strong> <a href="tel:0549943477" style="text-decoration:none; color:inherit;">054-9943477</a></div>
+        <div style="margin-bottom:15px;"><strong>🏠 כתובת:</strong> יהודה הלוי 58, גבעת שמואל</div>
+        <a href="https://wa.me/972549943477" target="_blank" class="action-btn btn-wa">💬 וואטסאפ</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=יהודה+הלוי+58+גבעת+שמואל" target="_blank" class="action-btn btn-maps">📍 ניווט</a>
         <button class="btn-select" style="width:100%; margin-top:15px;" onclick="closeAllPopups()">סגור</button>
     </div>
 </div>
 
-<!-- הגדלת תמונה -->
 <div class="lightbox" id="lightbox">
     <span onclick="closeAllPopups()" style="position:absolute; top:10px; left:20px; font-size:2rem; cursor:pointer; color:#333;">×</span>
-    <img id="lightbox-img" src="">
-    <h3 id="lightbox-title" style="margin-top: 15px; color:#1a2a6c;"></h3>
+    <img id="lightbox-img" src=""><h3 id="lightbox-title" style="margin-top:15px;"></h3>
 </div>
 
 <script>
@@ -213,7 +194,6 @@
     let cart = [];
     let currentCategory = 'all';
 
-    // תמונות
     const myImages = {
         'מעיל-1': "https://i.postimg.cc/SN3vJ3s3/7b788b3f-6662-402b-a041-8b6c85e1b681.jpg",
         'מעיל-2': "https://i.postimg.cc/Xqz4ZLGp/1a256f0f-8a9a-4c42-b6f8-242afd02df85.jpg",
@@ -221,12 +201,8 @@
         'מעיל-4': "https://i.postimg.cc/sxkH0HMg/659f2dd7-c29c-41b9-8e5b-549f51a432c3.jpg"
     };
 
-    // מידות
-    const mySizes = {
-        'מעיל-1': "M", 'מעיל-2': "L", 'מעיל-3': "XL", 'מעיל-4': "M"
-    };
+    const mySizes = { 'מעיל-1': "M", 'מעיל-2': "L", 'מעיל-3': "XL", 'מעיל-4': "M" };
 
-    // בניית הקטלוג
     cats.forEach(c => {
         for(let i=1; i<=9; i++) {
             const key = `${c}-${i}`;
@@ -254,7 +230,7 @@
                     <h3>${p.name}</h3>
                     <div class="size-badge">מידה: ${p.size}</div><br>
                     <button class="btn-select ${isSelected ? 'selected' : ''}" onclick="toggleCart('${p.id}')">
-                        ${isSelected ? '✅ בתוך העגלה' : 'הוסף לעגלה'}
+                        ${isSelected ? '✅ בעגלה' : 'הוסף לעגלה'}
                     </button>
                 </div>`;
         });
@@ -269,46 +245,21 @@
     }
 
     function updateCartUI() {
-        const listContainer = document.getElementById('cart-content-list');
-        const emptyMsg = document.getElementById('empty-cart-msg');
-        const extras = document.getElementById('cart-ui-extras');
-        const totalNum = document.getElementById('total-items-num');
-
-        if(cart.length === 0) {
-            listContainer.innerHTML = "";
-            emptyMsg.style.display = 'block';
-            extras.style.display = 'none';
-        } else {
-            emptyMsg.style.display = 'none';
-            extras.style.display = 'block';
-            totalNum.innerText = cart.length;
+        const listContainer = document.getElementById('cart-content-list'), emptyMsg = document.getElementById('empty-cart-msg');
+        const extras = document.getElementById('cart-ui-extras'), totalNum = document.getElementById('total-items-num');
+        if(cart.length === 0) { listContainer.innerHTML = ""; emptyMsg.style.display = 'block'; extras.style.display = 'none'; }
+        else {
+            emptyMsg.style.display = 'none'; extras.style.display = 'block'; totalNum.innerText = cart.length;
             listContainer.innerHTML = cart.map(id => {
                 const p = products.find(prod => prod.id === id);
-                return `
-                    <div class="cart-item">
-                        <div class="cart-item-info">
-                            <span style="font-size: 1.4rem;">${getEmoji(p.cat)}</span>
-                            <div>
-                                <div class="cart-item-name">${p.name}</div>
-                                <span class="cart-item-size">מידה: ${p.size}</span>
-                            </div>
-                        </div>
-                        <button class="remove-btn" onclick="toggleCart('${p.id}')">×</button>
-                    </div>`;
+                return `<div class="cart-item"><div class="cart-item-info"><span>${getEmoji(p.cat)}</span><div><b>${p.name}</b><br><small>מידה: ${p.size}</small></div></div><button class="remove-btn" onclick="toggleCart('${p.id}')">×</button></div>`;
             }).join('');
         }
     }
 
-    // קישורי עומק לאפליקציות
-    function openBit() {
-        const phone = "0547884607";
-        window.location.href = `https://www.bitpay.co.il/app/me/${phone}`;
-    }
-
-    function openPaybox() {
-        const phone = "0547884607";
-        window.location.href = `https://www.payboxapp.com/pay/${phone}`;
-    }
+    // פתיחה בטאב חדש כדי שהאתר לא ייסגר
+    function openBit() { window.open(`https://www.bitpay.co.il/app/me/0547884607`, '_blank'); }
+    function openPaybox() { window.open(`https://www.payboxapp.com/pay/0547884607`, '_blank'); }
 
     function openLightbox(imgSrc, title) {
         document.getElementById('overlay').style.display = 'block';
@@ -319,29 +270,17 @@
 
     function filterItems(cat, btn) {
         document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        render(cat);
+        btn.classList.add('active'); render(cat);
     }
 
-    function showModal(id) {
-        document.getElementById('overlay').style.display = 'block';
-        document.getElementById(id).style.display = 'block';
-    }
-
-    function closeAllPopups() {
-        document.querySelectorAll('.modal, .lightbox, .overlay').forEach(e => e.style.display = 'none');
-    }
+    function showModal(id) { document.getElementById('overlay').style.display = 'block'; document.getElementById(id).style.display = 'block'; }
+    function closeAllPopups() { document.querySelectorAll('.modal, .lightbox, .overlay').forEach(e => e.style.display = 'none'); }
 
     function sendWhatsApp() {
-        const list = cart.map(id => {
-            const p = products.find(prod => prod.id === id);
-            return `• ${getEmoji(p.cat)} ${p.name} (מידה ${p.size})`;
-        }).join('\n');
-        window.open(`https://wa.me/972549943477?text=${encodeURIComponent("שלום אבנר, אני מעוניין לשכור את הציוד הבא:\n" + list)}`);
+        const list = cart.map(id => { const p = products.find(prod => prod.id === id); return `• ${getEmoji(p.cat)} ${p.name} (מידה ${p.size})`; }).join('\n');
+        window.open(`https://wa.me/972549943477?text=${encodeURIComponent("היי אבנר, אני מעוניין לשכור:\n" + list)}`);
     }
-
     render();
 </script>
-
 </body>
 </html>
