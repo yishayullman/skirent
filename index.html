@@ -13,8 +13,8 @@
             --success: #27ae60;
             --danger: #e74c3c;
             --whatsapp: #25d366;
-            --bit: #00d2be;
-            --paybox: #0056fb;
+            --bit: #ff007a; /* צבע ביט המקורי */
+            --paybox: #00b0f0; /* צבע פייבוקס המקורי */
         }
 
         body {
@@ -117,9 +117,9 @@
         .btn-maps { background: #4285F4; }
         .btn-wa { background: var(--whatsapp); }
 
-        .lightbox { width: 95%; max-width: 1000px; height: 90vh; text-align: center; background: rgba(255,255,255,0.98); padding: 20px; }
-        .lightbox img { width: 100%; height: 80vh; object-fit: contain; }
-        .close-x { position: absolute; top: 15px; left: 15px; cursor: pointer; font-size: 1.5rem; color: white; }
+        .lightbox { width: 95%; max-width: 1000px; height: auto; text-align: center; background: rgba(255,255,255,0.98); padding: 20px; }
+        .lightbox img { width: 100%; max-height: 80vh; object-fit: contain; }
+        .close-x { position: absolute; top: 15px; left: 15px; cursor: pointer; font-size: 1.5rem; color: white; z-index: 2100; }
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1500; }
     </style>
 </head>
@@ -191,26 +191,20 @@
     </div>
     <div class="modal-body">
         <div class="contact-info">
-            <div class="contact-item">
-                <div class="contact-icon">📞</div>
-                <div><strong>טלפון:</strong><br><a href="tel:0549943477" style="text-decoration:none; color:inherit;">054-9943477</a></div>
-            </div>
-            <div class="contact-item">
-                <div class="contact-icon">🏠</div>
-                <div><strong>כתובת:</strong><br>יהודה הלוי 58, גבעת שמואל</div>
-            </div>
+            <div style="margin-bottom:15px;"><strong>📞 טלפון:</strong> <a href="tel:0549943477" style="text-decoration:none; color:inherit;">054-9943477</a></div>
+            <div style="margin-bottom:15px;"><strong>🏠 כתובת:</strong> יהודה הלוי 58, גבעת שמואל</div>
             <a href="https://wa.me/972549943477" target="_blank" class="action-btn btn-wa">💬 שלח לנו הודעה בוואטסאפ</a>
             <a href="https://www.google.com/maps/search/?api=1&query=יהודה+הלוי+58+גבעת+שמואל" target="_blank" class="action-btn btn-maps">📍 ניווט ב-Google Maps</a>
         </div>
-        <button class="btn-select" style="width:100%" onclick="closeAllPopups()">סגור</button>
+        <button class="btn-select" style="width:100%; margin-top:15px;" onclick="closeAllPopups()">סגור</button>
     </div>
 </div>
 
 <!-- הגדלת תמונה -->
 <div class="lightbox" id="lightbox">
-    <span class="lightbox-close" style="position:absolute; top:10px; left:20px; font-size:2rem; cursor:pointer; color:#333;" onclick="closeAllPopups()">×</span>
+    <span onclick="closeAllPopups()" style="position:absolute; top:10px; left:20px; font-size:2rem; cursor:pointer; color:#333;">×</span>
     <img id="lightbox-img" src="">
-    <h3 id="lightbox-title" style="margin-top: 15px;"></h3>
+    <h3 id="lightbox-title" style="margin-top: 15px; color:#1a2a6c;"></h3>
 </div>
 
 <script>
@@ -219,7 +213,7 @@
     let cart = [];
     let currentCategory = 'all';
 
-    // --- עדכון תמונות ---
+    // תמונות
     const myImages = {
         'מעיל-1': "https://i.postimg.cc/SN3vJ3s3/7b788b3f-6662-402b-a041-8b6c85e1b681.jpg",
         'מעיל-2': "https://i.postimg.cc/Xqz4ZLGp/1a256f0f-8a9a-4c42-b6f8-242afd02df85.jpg",
@@ -227,7 +221,7 @@
         'מעיל-4': "https://i.postimg.cc/sxkH0HMg/659f2dd7-c29c-41b9-8e5b-549f51a432c3.jpg"
     };
 
-    // --- עדכון מידות ---
+    // מידות
     const mySizes = {
         'מעיל-1': "M", 'מעיל-2': "L", 'מעיל-3': "XL", 'מעיל-4': "M"
     };
@@ -242,13 +236,11 @@
         }
     });
 
-    // אימוג'ים לעגלה
     function getEmoji(cat) {
         const icons = {'מעיל':'🧥', 'מכנס':'👖', 'קסדה':'🪖', 'כפפות':'🧤', 'גוגלס':'🥽'};
         return icons[cat] || '🎿';
     }
 
-    // הצגת המוצרים
     function render(filter = 'all') {
         currentCategory = filter;
         const grid = document.getElementById('product-grid');
@@ -268,7 +260,6 @@
         });
     }
 
-    // הוספה/הסרה מהעגלה
     function toggleCart(id) {
         if(cart.includes(id)) cart = cart.filter(i => i !== id);
         else cart.push(id);
@@ -277,7 +268,6 @@
         render(currentCategory);
     }
 
-    // עדכון תצוגת העגלה
     function updateCartUI() {
         const listContainer = document.getElementById('cart-content-list');
         const emptyMsg = document.getElementById('empty-cart-msg');
@@ -309,24 +299,15 @@
         }
     }
 
-    // פתיחת אפליקציות תשלום
+    // קישורי עומק לאפליקציות
     function openBit() {
         const phone = "0547884607";
-        if(/Android|iPhone|iPad/i.test(navigator.userAgent)) {
-            window.location.href = `bitpay://send?phone=${phone}`;
-            setTimeout(() => { window.location.href = "https://www.bitpay.co.il/get-bit"; }, 1500);
-        } else {
-            alert("bit זמין רק דרך הטלפון הנייד.");
-        }
+        window.location.href = `https://www.bitpay.co.il/app/me/${phone}`;
     }
 
     function openPaybox() {
         const phone = "0547884607";
-        if(/Android|iPhone|iPad/i.test(navigator.userAgent)) {
-            window.location.href = `https://payboxapp.page.link/send?phone=${phone}`;
-        } else {
-            alert("PayBox זמין רק דרך הטלפון הנייד.");
-        }
+        window.location.href = `https://www.payboxapp.com/pay/${phone}`;
     }
 
     function openLightbox(imgSrc, title) {
@@ -356,7 +337,7 @@
             const p = products.find(prod => prod.id === id);
             return `• ${getEmoji(p.cat)} ${p.name} (מידה ${p.size})`;
         }).join('\n');
-        window.open(`https://wa.me/972549943477?text=${encodeURIComponent("שלום, אני מעוניין לשכור את הציוד הבא:\n" + list)}`);
+        window.open(`https://wa.me/972549943477?text=${encodeURIComponent("שלום אבנר, אני מעוניין לשכור את הציוד הבא:\n" + list)}`);
     }
 
     render();
