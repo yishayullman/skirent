@@ -86,6 +86,8 @@
 
         .cart-bundle-item { background: #f0f4ff; border: 1px dashed var(--bundle); padding: 15px; border-radius: 10px; margin-bottom: 12px; text-align: right; }
         .cart-price-detail { font-size: 0.85rem; color: #666; margin-top: 5px; }
+
+        .wa-btn { background: var(--whatsapp); color: white; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; width: 100%; text-decoration: none; display: inline-block; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -129,6 +131,7 @@
 
 <div class="overlay" id="overlay" onclick="closePopups()"></div>
 
+<!-- מודאל בחירת פריטים לחבילה -->
 <div class="modal" id="bundleWizard">
     <div class="modal-header"><h3>בחירת פריטים לחבילה</h3></div>
     <div class="modal-body" id="bundle-wizard-body"></div>
@@ -137,6 +140,7 @@
     </div>
 </div>
 
+<!-- מודאל עגלה -->
 <div class="modal" id="cartModal">
     <div class="modal-header"><span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span><h3>סיכום הזמנה</h3></div>
     <div class="modal-body">
@@ -154,13 +158,15 @@
     </div>
 </div>
 
+<!-- מודאל איסוף וקשר -->
 <div class="modal" id="contactModal">
-    <div class="modal-header"><h3>פרטי איסוף</h3></div>
+    <div class="modal-header"><h3>פרטי איסוף וקשר</h3></div>
     <div class="modal-body" style="text-align:center;">
         <p><strong>🏠 כתובת:</strong> יהודה הלוי 58, גבעת שמואל</p>
         <p><strong>📞 טלפון:</strong> 054-9943477</p>
-        <button class="btn-select" style="background:#4285F4; margin-bottom:10px;" onclick="window.open('https://www.google.com/maps/search/?api=1&query=יהודה+הלוי+58+גבעת+שמואל')">📍 ניווט</button>
-        <button class="btn-select" onclick="closePopups()">סגור</button>
+        <button class="btn-select" style="background:#4285F4; margin-bottom:10px;" onclick="window.open('https://www.google.com/maps/search/?api=1&query=יהודה+הלוי+58+גבעת+שמואל')">📍 ניווט ליעד</button>
+        <a href="https://wa.me/972549943477" target="_blank" class="wa-btn">💬 שלח לנו הודעה בוואטסאפ</a>
+        <button class="btn-select" style="margin-top:15px; background:#666;" onclick="closePopups()">סגור</button>
     </div>
 </div>
 
@@ -284,6 +290,22 @@
     }
 
     function removeBundle(idx) { cartBundles.splice(idx, 1); updateUI(); }
+
+    // פונקציות תשלום חכמות
+    function openBit() {
+        const amount = document.getElementById('final-price').innerText;
+        const phone = "0547884607";
+        // פתיחה בטאב חדש עם סכום
+        window.open(`https://www.bitpay.co.il/app/me/${phone}?amount=${amount}`, '_blank');
+    }
+
+    function openPaybox() {
+        const amount = document.getElementById('final-price').innerText;
+        const phone = "0547884607";
+        // פתיחה בטאב חדש עם סכום
+        window.open(`https://www.payboxapp.com/pay/${phone}?amount=${amount}`, '_blank');
+    }
+
     function sendWhatsApp() {
         const s = document.getElementById('start-date').value, e = document.getElementById('end-date').value;
         const total = document.getElementById('final-price').innerText;
@@ -297,8 +319,6 @@
     function showModal(id) { document.getElementById('overlay').style.display='block'; document.getElementById(id).style.display='block'; }
     function closePopups() { document.querySelectorAll('.modal, .overlay').forEach(m => m.style.display='none'); }
     function filterItems(c, btn) { document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); currentCat = c; render(); }
-    function openBit() { window.open(`https://www.bitpay.co.il/app/me/0547884607`, '_blank'); }
-    function openPaybox() { window.open(`https://www.payboxapp.com/pay/0547884607`, '_blank'); }
 
     render();
 </script>
