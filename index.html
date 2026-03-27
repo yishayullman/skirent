@@ -144,8 +144,8 @@
                 סה"כ לתשלום: <b>₪<span id="final-price">0</span></b>
             </div>
             <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <button onclick="openBit()" style="flex:1; background:var(--bit); color:white; padding:12px; border-radius:10px; border:none; font-weight:bold;">bit</button>
-                <button onclick="openPaybox()" style="flex:1; background:var(--paybox); color:white; padding:12px; border-radius:10px; border:none; font-weight:bold;">PayBox</button>
+                <button onclick="payViaApp('bit')" style="flex:1; background:var(--bit); color:white; padding:12px; border-radius:10px; border:none; font-weight:bold;">bit</button>
+                <button onclick="payViaApp('paybox')" style="flex:1; background:var(--paybox); color:white; padding:12px; border-radius:10px; border:none; font-weight:bold;">PayBox</button>
             </div>
             <button onclick="sendWhatsApp()" style="width:100%; background:var(--whatsapp); color:white; padding:15px; border-radius:10px; border:none; font-weight:bold;">✅ שלח הזמנה לוואטסאפ</button>
         </div>
@@ -255,7 +255,7 @@
                     <div class="cart-bundle-item">
                         <div style="display:flex; justify-content:space-between;">
                             <b>${icons.bundle} חבילת קומפלט #${idx+1}</b>
-                            <span style="color:red; cursor:pointer;" onclick="removeBundle(${idx})">×</span>
+                            <span style="color:red; cursor:pointer;" onclick="removeBundle(${idx})">הסר ×</span>
                         </div>
                         <div style="font-size:0.8rem; color:#555;">${b.items.join(', ')}</div>
                         <div class="cart-price-detail">₪${bPrice} לשבוע | סה"כ: <b>₪${bTotal}</b></div>
@@ -281,26 +281,20 @@
 
     function removeBundle(idx) { cartBundles.splice(idx, 1); updateUI(); }
 
-    function openBit() {
+    // פונקציית תשלום משופרת
+    function payViaApp(app) {
         const amount = document.getElementById('final-price').innerText;
         const phone = "0547884607";
-        if(/Android|iPhone|iPad/i.test(navigator.userAgent)) {
-            // הקישור הישיר לפתיחת אפליקציה
-            window.location.href = `bitpay://send?phone=${phone}&amount=${amount}`;
-        } else {
-            alert("bit זמין רק מהטלפון הנייד.");
-        }
-    }
-
-    function openPaybox() {
-        const amount = document.getElementById('final-price').innerText;
-        const phone = "0547884607";
-        if(/Android|iPhone|iPad/i.test(navigator.userAgent)) {
-            // הקישור הישיר לפתיחת אפליקציה
-            window.location.href = `https://payboxapp.page.link/send?phone=${phone}&amount=${amount}`;
-        } else {
-            alert("PayBox זמין רק מהטלפון הנייד.");
-        }
+        
+        // העתקת הסכום לזיכרון (נוחות ללקוח)
+        navigator.clipboard.writeText(amount).then(() => {
+            if(app === 'bit') {
+                window.location.href = `https://www.bitpay.co.il/app/me/${phone}`;
+            } else {
+                window.location.href = `https://payboxapp.page.link/send?phone=${phone}`;
+            }
+            alert(`הסכום (₪${amount}) הועתק! האפליקציה תיפתח כעת. פשוט הדביקו את הסכום ושלחו.`);
+        });
     }
 
     function sendWhatsApp() {
