@@ -81,13 +81,9 @@
         
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1500; }
         
-        .bundle-selection-row { margin-bottom: 15px; text-align: right; }
-        .bundle-selection-row select { width: 100%; padding: 8px; border-radius: 5px; margin-top: 5px; }
-
         .cart-bundle-item { background: #f0f4ff; border: 1px dashed var(--bundle); padding: 15px; border-radius: 10px; margin-bottom: 12px; text-align: right; }
         .cart-price-detail { font-size: 0.85rem; color: #666; margin-top: 5px; }
-
-        .wa-btn { background: var(--whatsapp); color: white; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; width: 100%; text-decoration: none; display: inline-block; margin-top: 10px; }
+        .wa-btn { background: var(--whatsapp); color: white; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; width: 100%; text-decoration: none; display: inline-block; margin-top: 10px; text-align: center; }
     </style>
 </head>
 <body>
@@ -131,7 +127,6 @@
 
 <div class="overlay" id="overlay" onclick="closePopups()"></div>
 
-<!-- מודאל בחירת פריטים לחבילה -->
 <div class="modal" id="bundleWizard">
     <div class="modal-header"><h3>בחירת פריטים לחבילה</h3></div>
     <div class="modal-body" id="bundle-wizard-body"></div>
@@ -140,7 +135,6 @@
     </div>
 </div>
 
-<!-- מודאל עגלה -->
 <div class="modal" id="cartModal">
     <div class="modal-header"><span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span><h3>סיכום הזמנה</h3></div>
     <div class="modal-body">
@@ -158,7 +152,6 @@
     </div>
 </div>
 
-<!-- מודאל איסוף וקשר -->
 <div class="modal" id="contactModal">
     <div class="modal-header"><h3>פרטי איסוף וקשר</h3></div>
     <div class="modal-body" style="text-align:center;">
@@ -215,9 +208,9 @@
     function openBundleWizard() {
         const body = document.getElementById('bundle-wizard-body');
         body.innerHTML = cats.map(cat => `
-            <div class="bundle-selection-row">
+            <div style="margin-bottom:15px; text-align:right;">
                 <label>בחר ${cat}:</label>
-                <select id="wizard-${cat}">
+                <select id="wizard-${cat}" style="width:100%; padding:8px; border-radius:5px;">
                     ${products.filter(p => p.cat === cat).map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
                 </select>
             </div>
@@ -256,20 +249,18 @@
         } else {
             checkout.style.display = 'block';
             let html = '';
-
             cartBundles.forEach((b, idx) => {
                 const bPrice = 350; const bTotal = bPrice * weeks; total += bTotal;
                 html += `
                     <div class="cart-bundle-item">
                         <div style="display:flex; justify-content:space-between;">
                             <b>${icons.bundle} חבילת קומפלט #${idx+1}</b>
-                            <span style="color:red; cursor:pointer;" onclick="removeBundle(${idx})">הסר ×</span>
+                            <span style="color:red; cursor:pointer;" onclick="removeBundle(${idx})">×</span>
                         </div>
                         <div style="font-size:0.8rem; color:#555;">${b.items.join(', ')}</div>
-                        <div class="cart-price-detail">₪${bPrice} לשבוע | סה"כ ל-${weeks} שבועות: <b>₪${bTotal}</b></div>
+                        <div class="cart-price-detail">₪${bPrice} לשבוע | סה"כ: <b>₪${bTotal}</b></div>
                     </div>`;
             });
-
             cartItems.forEach(id => {
                 const p = products.find(x => x.id === id);
                 const pTotal = p.price * weeks; total += pTotal;
@@ -279,10 +270,9 @@
                             <span>${icons[p.cat]} <b>${p.name}</b></span>
                             <span style="color:red; cursor:pointer;" onclick="toggleCartItem('${id}')">×</span>
                         </div>
-                        <div class="cart-price-detail">₪${p.price} לשבוע | סה"כ ל-${weeks} שבועות: <b>₪${pTotal}</b></div>
+                        <div class="cart-price-detail">₪${p.price} לשבוע | סה"כ: <b>₪${pTotal}</b></div>
                     </div>`;
             });
-
             list.innerHTML = html;
             document.getElementById('final-price').innerText = total;
         }
@@ -291,19 +281,26 @@
 
     function removeBundle(idx) { cartBundles.splice(idx, 1); updateUI(); }
 
-    // פונקציות תשלום חכמות
     function openBit() {
         const amount = document.getElementById('final-price').innerText;
         const phone = "0547884607";
-        // פתיחה בטאב חדש עם סכום
-        window.open(`https://www.bitpay.co.il/app/me/${phone}?amount=${amount}`, '_blank');
+        if(/Android|iPhone|iPad/i.test(navigator.userAgent)) {
+            // הקישור הישיר לפתיחת אפליקציה
+            window.location.href = `bitpay://send?phone=${phone}&amount=${amount}`;
+        } else {
+            alert("bit זמין רק מהטלפון הנייד.");
+        }
     }
 
     function openPaybox() {
         const amount = document.getElementById('final-price').innerText;
         const phone = "0547884607";
-        // פתיחה בטאב חדש עם סכום
-        window.open(`https://www.payboxapp.com/pay/${phone}?amount=${amount}`, '_blank');
+        if(/Android|iPhone|iPad/i.test(navigator.userAgent)) {
+            // הקישור הישיר לפתיחת אפליקציה
+            window.location.href = `https://payboxapp.page.link/send?phone=${phone}&amount=${amount}`;
+        } else {
+            alert("PayBox זמין רק מהטלפון הנייד.");
+        }
     }
 
     function sendWhatsApp() {
@@ -312,7 +309,7 @@
         let msg = `הזמנה לתאריכים ${s} עד ${e}:\n\n`;
         cartBundles.forEach((b, i) => msg += `חבילה ${i+1}: ${b.items.join(', ')}\n`);
         cartItems.forEach(id => msg += `• ${products.find(p=>p.id===id).name}\n`);
-        msg += `\nסה"כ לתשלום: ₪${total}`;
+        msg += `\nסה"כ: ₪${total}`;
         window.open(`https://wa.me/972549943477?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
