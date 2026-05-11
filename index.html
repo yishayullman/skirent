@@ -144,8 +144,8 @@
                 סה"כ לתשלום: <b>₪<span id="final-price">0</span></b>
             </div>
             <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <button onclick="copyAndNotify('bit')" style="flex:1; background:var(--bit); color:white; padding:12px; border-radius:10px; border:none; font-weight:bold;">bit</button>
-                <button onclick="copyAndNotify('paybox')" style="flex:1; background:var(--paybox); color:white; padding:12px; border-radius:10px; border:none; font-weight:bold;">PayBox</button>
+                <button onclick="justCopyNumber('bit')" style="flex:1; background:var(--bit); color:white; padding:12px; border-radius:10px; border:none; font-weight:bold;">bit</button>
+                <button onclick="justCopyNumber('paybox')" style="flex:1; background:var(--paybox); color:white; padding:12px; border-radius:10px; border:none; font-weight:bold;">PayBox</button>
             </div>
             <button onclick="sendWhatsApp()" style="width:100%; background:var(--whatsapp); color:white; padding:15px; border-radius:10px; border:none; font-weight:bold;">✅ שלח הזמנה לוואטסאפ</button>
         </div>
@@ -180,6 +180,11 @@
         'מעיל-4': "https://i.postimg.cc/sxkH0HMg/659f2dd7-c29c-41b9-8e5b-549f51a432c3.jpg"
     };
 
+    // רשימת הזמנות קיימות לעדכון ידני
+    const bookedDates = [
+        { id: 'מעיל-1', start: '2026-03-25', end: '2026-03-31' }
+    ];
+
     cats.forEach(c => {
         for(let i=1; i<=9; i++) {
             const id = `${c}-${i}`;
@@ -187,19 +192,26 @@
         }
     });
 
+    function isTaken(pid) {
+        const s = document.getElementById('start-date').value, e = document.getElementById('end-date').value;
+        if(!s || !e) return false;
+        const uS = new Date(s), uE = new Date(e);
+        return bookedDates.some(b => b.id === pid && (uS <= new Date(b.end) && uE >= new Date(b.start)));
+    }
+
     function render() {
         const grid = document.getElementById('product-grid');
         grid.innerHTML = '';
         const filtered = currentCat === 'all' ? products : products.filter(p => p.cat === currentCat);
         filtered.forEach(p => {
-            const selected = cartItems.includes(p.id);
+            const taken = isTaken(p.id), selected = cartItems.includes(p.id);
             grid.innerHTML += `
-                <div class="card">
+                <div class="card" style="${taken ? 'opacity:0.6' : ''}">
                     <img src="${p.image}">
                     <h3>${p.name}</h3>
                     <div style="color:var(--success); font-weight:bold;">₪${p.price} לשבוע</div>
-                    <button class="btn-select" onclick="toggleCartItem('${p.id}')">
-                        ${selected ? '✅ בסל' : 'הוסף לסל'}
+                    <button class="btn-select" ${taken ? 'disabled' : ''} onclick="toggleCartItem('${p.id}')">
+                        ${taken ? 'לא זמין' : (selected ? '✅ בסל' : 'הוסף לסל')}
                     </button>
                 </div>`;
         });
@@ -255,7 +267,7 @@
                     <div class="cart-bundle-item">
                         <div style="display:flex; justify-content:space-between;">
                             <b>${icons.bundle} חבילת קומפלט #${idx+1}</b>
-                            <span style="color:red; cursor:pointer;" onclick="removeBundle(${idx})">הסר ×</span>
+                            <span style="color:red; cursor:pointer;" onclick="removeBundle(${idx})">×</span>
                         </div>
                         <div style="font-size:0.8rem; color:#555;">${b.items.join(', ')}</div>
                         <div class="cart-price-detail">₪${bPrice} לשבוע | סה"כ: <b>₪${bTotal}</b></div>
@@ -281,12 +293,11 @@
 
     function removeBundle(idx) { cartBundles.splice(idx, 1); updateUI(); }
 
-    // פונקציית העתקה והתראה בלבד (ללא ניסיון פתיחת אפליקציה)
-    function copyAndNotify(app) {
+    // פונקציית העתקה והסבר ברור ללקוח
+    function justCopyNumber(app) {
         const phone = "0547884607";
         const amount = document.getElementById('final-price').innerText;
         
-        // יצירת אלמנט זמני להעתקה
         const el = document.createElement('textarea');
         el.value = phone;
         document.body.appendChild(el);
@@ -294,8 +305,7 @@
         document.execCommand('copy');
         document.body.removeChild(el);
 
-        // הודעה למשתמש
-        alert(`המספר של אבנר (${phone}) הועתק!\nנא להיכנס ל-${app} בטלפון ולשלם ₪${amount}.\n(תוכלו להדביק את המספר בשדה החיפוש באפליקציה).`);
+        alert(`שימו לב: עקב מגבלות אבטחה ב-${app}, לא ניתן לבצע תשלום אוטומטי ישירות מהאתר.\n\nלנוחיותכם, העתקנו את המספר של אבנר (${phone}) לזיכרון שלכם.\n\nמה עושים עכשיו?\n1. היכנסו ל-${app} בטלפון.\n2. הדביקו את המספר בשדה החיפוש.\n3. שלחו את הסכום: ₪${amount}.`);
     }
 
     function sendWhatsApp() {
