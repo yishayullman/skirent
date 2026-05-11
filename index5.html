@@ -144,8 +144,8 @@
                 סה"כ לתשלום: <b>₪<span id="final-price">0</span></b>
             </div>
             <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <button onclick="justCopyNumber('bit')" style="flex:1; background:var(--bit); color:white; padding:12px; border-radius:10px; border:none; font-weight:bold;">bit</button>
-                <button onclick="justCopyNumber('paybox')" style="flex:1; background:var(--paybox); color:white; padding:12px; border-radius:10px; border:none; font-weight:bold;">PayBox</button>
+                <button onclick="copyAndNotify('bit')" style="flex:1; background:var(--bit); color:white; padding:12px; border-radius:10px; border:none; font-weight:bold;">bit</button>
+                <button onclick="copyAndNotify('paybox')" style="flex:1; background:var(--paybox); color:white; padding:12px; border-radius:10px; border:none; font-weight:bold;">PayBox</button>
             </div>
             <button onclick="sendWhatsApp()" style="width:100%; background:var(--whatsapp); color:white; padding:15px; border-radius:10px; border:none; font-weight:bold;">✅ שלח הזמנה לוואטסאפ</button>
         </div>
@@ -255,7 +255,7 @@
                     <div class="cart-bundle-item">
                         <div style="display:flex; justify-content:space-between;">
                             <b>${icons.bundle} חבילת קומפלט #${idx+1}</b>
-                            <span style="color:red; cursor:pointer;" onclick="removeBundle(${idx})">×</span>
+                            <span style="color:red; cursor:pointer;" onclick="removeBundle(${idx})">הסר ×</span>
                         </div>
                         <div style="font-size:0.8rem; color:#555;">${b.items.join(', ')}</div>
                         <div class="cart-price-detail">₪${bPrice} לשבוע | סה"כ: <b>₪${bTotal}</b></div>
@@ -281,11 +281,12 @@
 
     function removeBundle(idx) { cartBundles.splice(idx, 1); updateUI(); }
 
-    // פונקציה נקייה מהפניות אוטומטיות לאפליקציות
-    function justCopyNumber(app) {
+    // פונקציית העתקה והתראה בלבד (ללא ניסיון פתיחת אפליקציה)
+    function copyAndNotify(app) {
         const phone = "0547884607";
         const amount = document.getElementById('final-price').innerText;
         
+        // יצירת אלמנט זמני להעתקה
         const el = document.createElement('textarea');
         el.value = phone;
         document.body.appendChild(el);
@@ -293,7 +294,8 @@
         document.execCommand('copy');
         document.body.removeChild(el);
 
-        alert(`המספר של אבנר (${phone}) הועתק לטלפון!\nנא להיכנס ל-${app} ולשלם ₪${amount}.\n(פשוט תעשו "הדבק" למספר בשדה החיפוש באפליקציה).`);
+        // הודעה למשתמש
+        alert(`המספר של אבנר (${phone}) הועתק!\nנא להיכנס ל-${app} בטלפון ולשלם ₪${amount}.\n(תוכלו להדביק את המספר בשדה החיפוש באפליקציה).`);
     }
 
     function sendWhatsApp() {
