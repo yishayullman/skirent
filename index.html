@@ -64,7 +64,7 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.2); text-align: center;
             padding-bottom: 20px; position: relative;
         }
-        .card img { width: 100%; height: 250px; object-fit: contain; background: #f9f9f9; padding: 10px; }
+        .card img { width: 100%; height: 250px; object-fit: contain; background: #f9f9f9; padding: 10px; cursor: zoom-in; }
 
         .btn-select {
             background: var(--primary); color: white; border: none;
@@ -81,6 +81,9 @@
         
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1500; }
         
+        /* סגנון למודאל תמונה מוגדלת */
+        #imageModal img { width: 100%; height: auto; border-radius: 10px; }
+
         .cart-bundle-item { background: #f0f4ff; border: 1px dashed var(--bundle); padding: 15px; border-radius: 10px; margin-bottom: 12px; text-align: right; }
         .cart-price-detail { font-size: 0.85rem; color: #666; margin-top: 5px; }
         .wa-btn { background: var(--whatsapp); color: white; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; width: 100%; text-decoration: none; display: inline-block; margin-top: 10px; text-align: center; }
@@ -126,6 +129,14 @@
 </div>
 
 <div class="overlay" id="overlay" onclick="closePopups()"></div>
+
+<!-- מודאל תמונה מוגדלת -->
+<div class="modal" id="imageModal">
+    <div class="modal-body" style="padding:10px;">
+        <img id="enlarged-img" src="">
+        <button class="btn-select" style="margin-top:10px; width:100%; background:#666;" onclick="closePopups()">סגור</button>
+    </div>
+</div>
 
 <div class="modal" id="bundleWizard">
     <div class="modal-header"><h3>בחירת פריטים לחבילה</h3></div>
@@ -207,7 +218,7 @@
             const taken = isTaken(p.id), selected = cartItems.includes(p.id);
             grid.innerHTML += `
                 <div class="card" style="${taken ? 'opacity:0.6' : ''}">
-                    <img src="${p.image}">
+                    <img src="${p.image}" onclick="zoomImage('${p.image}')">
                     <h3>${p.name}</h3>
                     <div style="color:var(--success); font-weight:bold;">₪${p.price} לשבוע</div>
                     <button class="btn-select" ${taken ? 'disabled' : ''} onclick="toggleCartItem('${p.id}')">
@@ -215,6 +226,11 @@
                     </button>
                 </div>`;
         });
+    }
+
+    function zoomImage(src) {
+        document.getElementById('enlarged-img').src = src;
+        showModal('imageModal');
     }
 
     function openBundleWizard() {
@@ -267,7 +283,7 @@
                     <div class="cart-bundle-item">
                         <div style="display:flex; justify-content:space-between;">
                             <b>${icons.bundle} חבילת קומפלט #${idx+1}</b>
-                            <span style="color:red; cursor:pointer;" onclick="removeBundle(${idx})">×</span>
+                            <span style="color:red; cursor:pointer;" onclick="removeBundle(${idx})">הסר ×</span>
                         </div>
                         <div style="font-size:0.8rem; color:#555;">${b.items.join(', ')}</div>
                         <div class="cart-price-detail">₪${bPrice} לשבוע | סה"כ: <b>₪${bTotal}</b></div>
@@ -293,7 +309,6 @@
 
     function removeBundle(idx) { cartBundles.splice(idx, 1); updateUI(); }
 
-    // פונקציית העתקה והסבר ברור ללקוח
     function justCopyNumber(app) {
         const phone = "0547884607";
         const amount = document.getElementById('final-price').innerText;
