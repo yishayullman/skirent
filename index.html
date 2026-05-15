@@ -83,22 +83,13 @@
         input, select { padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin: 5px; font-family: inherit; }
 
         .cart-item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 12px; 
-            border-bottom: 1px solid #eee; 
-            background: #fff;
-            margin-bottom: 5px;
-            border-radius: 8px;
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 12px; border-bottom: 1px solid #eee; background: #fff;
+            margin-bottom: 5px; border-radius: 8px;
         }
         .cart-bundle-item { 
-            background: #f0f4ff; 
-            border: 1px dashed var(--bundle); 
-            padding: 15px; 
-            border-radius: 10px; 
-            margin-bottom: 12px; 
-            text-align: right;
+            background: #f0f4ff; border: 1px dashed var(--bundle); 
+            padding: 15px; border-radius: 10px; margin-bottom: 12px; text-align: right;
         }
         .remove-btn { color: var(--danger); cursor: pointer; font-weight: bold; font-size: 1.2rem; }
         
@@ -188,7 +179,7 @@
     <div class="modal-body" style="text-align:center;">
         <p><strong>🏠 כתובת:</strong> יהודה הלוי 58, גבעת שמואל</p>
         <p><strong>📞 טלפון:</strong> 054-9943477</p>
-        <button class="btn-select" style="background:#4285F4; margin-bottom:10px;" onclick="window.open('https://www.google.com/maps/search/?api=1&query=יהודה+הלוי+58+גבעת+שמואל')">📍 ניווט ליעד</button>
+        <button class="btn-select" style="background:#4285F4; margin-bottom:10px;" onclick="window.open('https://maps.google.com/?q=יהודה+הלוי+58+גבעת+שמואל')">📍 ניווט ליעד</button>
         <a href="https://wa.me/972549943477" target="_blank" class="wa-btn">💬 שלח לנו הודעה בוואטסאפ</a>
         <button class="btn-select" style="margin-top:15px; background:#666;" onclick="closePopups()">סגור</button>
     </div>
@@ -214,11 +205,31 @@
         });
     });
 
+    // פונקציית תאריכים מתוקנת - בודקת רק אם שני התאריכים מלאים
     function validateDates() {
-        const sInput = document.getElementById('start-date'), eInput = document.getElementById('end-date');
+        const sInput = document.getElementById('start-date');
+        const eInput = document.getElementById('end-date');
         const today = new Date(); today.setHours(0,0,0,0);
-        if (sInput.value && new Date(sInput.value) < today) { alert("לא ניתן לבחור תאריך מהעבר"); sInput.value = ""; return; }
-        if (sInput.value && eInput.value && new Date(eInput.value) < new Date(sInput.value)) { alert("תאריך סיום חייב להיות אחרי תאריך התחלה"); eInput.value = ""; return; }
+
+        if (sInput.value) {
+            if (new Date(sInput.value) < today) {
+                alert("לא ניתן לבחור תאריך מהעבר");
+                sInput.value = "";
+                return;
+            }
+        }
+
+        // הבדיקה הקריטית: בצע השוואה רק אם המשתמש בחר תאריך סיום מלא
+        if (sInput.value && eInput.value) {
+            const startDate = new Date(sInput.value);
+            const endDate = new Date(eInput.value);
+            
+            if (endDate < startDate) {
+                alert("תאריך סיום חייב להיות אחרי תאריך התחלה");
+                eInput.value = "";
+                return;
+            }
+        }
         updateUI();
     }
 
@@ -296,8 +307,8 @@
         document.getElementById('cart-count').innerText = cartItems.length + cartBundles.length;
         
         const s = document.getElementById('start-date').value, e = document.getElementById('end-date').value;
-        const weeks = (s && e) ? Math.ceil(Math.ceil(Math.abs(new Date(e)-new Date(s))/(1000*60*60*24))/7) : 1;
-        document.getElementById('duration-info').innerText = (s && e) ? `תקופה: ${weeks} שבועות` : "נא לבחור תאריכים";
+        const weeks = (s && e) ? Math.max(1, Math.ceil(Math.abs(new Date(e)-new Date(s))/(1000*60*60*24))/7) : 1;
+        document.getElementById('duration-info').innerText = (s && e) ? `תקופה: ${Math.ceil(weeks)} שבועות` : "נא לבחור תאריכים";
 
         const listContainer = document.getElementById('cart-list');
         const checkoutArea = document.getElementById('checkout-area');
@@ -310,7 +321,7 @@
         } else {
             checkoutArea.style.display = 'block';
             cartBundles.forEach((b, idx) => {
-                total += 350 * weeks;
+                total += 350 * Math.ceil(weeks);
                 htmlContent += `
                     <div class="cart-bundle-item">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -326,7 +337,7 @@
             cartItems.forEach((item) => {
                 const productData = products.find(p => p.id === item.id);
                 if(productData) {
-                    total += productData.price * weeks;
+                    total += productData.price * Math.ceil(weeks);
                     htmlContent += `
                         <div class="cart-item">
                             <div>
@@ -375,8 +386,7 @@
         
         msg += `\nסה"כ לתשלום: ₪${document.getElementById('final-price').innerText}`;
         
-        const waUrl = `https://wa.me/972549943477?text=${encodeURIComponent(msg)}`;
-        window.open(waUrl, '_blank');
+        window.open(`https://wa.me/972549943477?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
     function showModal(id) { document.getElementById('overlay').style.display='block'; document.getElementById(id).style.display='block'; }
