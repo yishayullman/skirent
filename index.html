@@ -85,7 +85,7 @@
         input, select { padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin: 5px; font-family: inherit; }
 
         .cart-bundle-item { background: #f0f4ff; border: 1px dashed var(--bundle); padding: 15px; border-radius: 10px; margin-bottom: 12px; text-align: right; }
-        .cart-price-detail { font-size: 0.85rem; color: #666; margin-top: 5px; }
+        .wa-btn { background: var(--whatsapp); color: white; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; width: 100%; text-decoration: none; display: inline-block; margin-top: 10px; text-align: center; }
     </style>
 </head>
 <body>
@@ -176,7 +176,8 @@
     <div class="modal-body" style="text-align:center;">
         <p><strong>🏠 כתובת:</strong> יהודה הלוי 58, גבעת שמואל</p>
         <p><strong>📞 טלפון:</strong> 054-9943477</p>
-        <button class="btn-select" style="background:#4285F4; margin-bottom:10px;" onclick="window.open('https://maps.app.goo.gl/3XpUpX7qYw4pT5yA8')">📍 ניווט ליעד</button>
+        <button class="btn-select" style="background:#4285F4; margin-bottom:10px;" onclick="window.open('https://maps.google.com/?q=יהודה+הלוי+58+גבעת+שמואל')">📍 ניווט ליעד</button>
+        <a href="https://wa.me/972549943477" target="_blank" class="wa-btn">💬 שלח לנו הודעה בוואטסאפ</a>
         <button class="btn-select" style="margin-top:15px; background:#666;" onclick="closePopups()">סגור</button>
     </div>
 </div>
@@ -193,15 +194,22 @@
     let currentCat = 'all';
     let currentGender = 'all';
 
+    // יצירת בסיס נתונים למוצרים
     cats.forEach(c => {
         genders.forEach(g => {
             for(let i=1; i<=3; i++) {
-                products.push({ id: `${c}-${g}-${i}`, name: `${c} ${g} דגם ${i}`, cat: c, gender: g, price: prices[c], image: `https://placehold.jp/24/1a2a6c/ffffff/300x250.png?text=${c}+${g}+${i}` });
+                products.push({ 
+                    id: `${c}-${g}-${i}`, 
+                    name: `${c} ${g} דגם ${i}`, 
+                    cat: c, 
+                    gender: g, 
+                    price: prices[c], 
+                    image: `https://placehold.jp/24/1a2a6c/ffffff/300x250.png?text=${c}+${g}+${i}` 
+                });
             }
         });
     });
 
-    // התיקון לבעיית התאריכים
     function validateDates() {
         const startInput = document.getElementById('start-date');
         const endInput = document.getElementById('end-date');
@@ -263,14 +271,19 @@
 
     function toggleCartItem(id) {
         const idx = cartItems.findIndex(i => i.id === id);
-        if(idx > -1) cartItems.splice(idx, 1);
-        else cartItems.push({ id, size: document.getElementById(`size-${id}`).value });
+        if(idx > -1) {
+            cartItems.splice(idx, 1);
+        } else {
+            const sizeSelect = document.getElementById(`size-${id}`);
+            const size = sizeSelect ? sizeSelect.value : 'OS';
+            cartItems.push({ id, size });
+        }
         updateUI();
     }
 
     function openBundleWizard() {
         const body = document.getElementById('bundle-wizard-body');
-        body.innerHTML = `<label>עבור מי?</label><select id="bundle-gen" style="width:100%" onchange="updateWizardOptions()">
+        body.innerHTML = `<label>עבור מי החבילה?</label><select id="bundle-gen" style="width:100%" onchange="updateWizardOptions()">
             ${genders.map(g => `<option value="${g}">${g}</option>`).join('')}
         </select><hr><div id="wizard-items"></div>`;
         updateWizardOptions();
@@ -288,9 +301,15 @@
 
     function saveBundleToCart() {
         const bundle = { gender: document.getElementById('bundle-gen').value, items: [] };
-        cats.forEach(c => bundle.items.push({ name: products.find(p => p.id === document.getElementById(`wb-${c}`).value).name, size: document.getElementById(`wbs-${c}`).value }));
+        cats.forEach(c => {
+            const pId = document.getElementById(`wb-${c}`).value;
+            const pName = products.find(p => p.id === pId).name;
+            const pSize = document.getElementById(`wbs-${c}`).value;
+            bundle.items.push({ name: pName, size: pSize });
+        });
         cartBundles.push(bundle);
-        updateUI(); closePopups();
+        updateUI(); 
+        closePopups();
     }
 
     function updateUI() {
@@ -312,25 +331,36 @@
             let html = '';
             cartBundles.forEach((b, idx) => {
                 total += 350 * weeks;
-                html += `<div class="cart-bundle-item"><b>🎁 חבילת ${b.gender} #${idx+1}</b> <span style="color:red; cursor:pointer;" onclick="cartBundles.splice(${idx},1); updateUI();">×</span><br>
+                html += `<div class="cart-bundle-item"><b>🎁 חבילת ${b.gender} #${idx+1}</b> 
+                <span style="color:red; cursor:pointer; float:left;" onclick="removeBundle(${idx})">הסר ×</span><br>
                 <small>${b.items.map(i => `${i.name} (${i.size})`).join(', ')}</small></div>`;
             });
-            cartItems.forEach(i => {
-                const p = products.find(x => x.id === i.id); total += p.price * weeks;
-                html += `<div style="display:flex; justify-content:space-between;"><span>${p.name} (מידה: ${i.size})</span><span style="color:red; cursor:pointer;" onclick="toggleCartItem('${i.id}')">×</span></div>`;
+            cartItems.forEach((i, idx) => {
+                const p = products.find(x => x.id === i.id); 
+                total += p.price * weeks;
+                html += `<div style="display:flex; justify-content:space-between; margin-bottom:5px; border-bottom:1px solid #eee; padding:5px;">
+                    <span>${p.name} (מידה: ${i.size})</span>
+                    <span style="color:red; cursor:pointer;" onclick="toggleCartItem('${i.id}')">×</span>
+                </div>`;
             });
-            list.innerHTML = html; document.getElementById('final-price').innerText = total;
+            list.innerHTML = html; 
+            document.getElementById('final-price').innerText = total;
         }
         render();
+    }
+
+    function removeBundle(idx) {
+        cartBundles.splice(idx, 1);
+        updateUI();
     }
 
     function sendWhatsApp() {
         const name = document.getElementById('cust-name').value;
         if(!name) return alert("הכנס שם!");
-        let msg = `הזמנה מ: ${name}\nתאריכים: ${document.getElementById('start-date').value} עד ${document.getElementById('end-date').value}\n\n`;
+        let msg = `הזמנה חדשה מ: ${name}\nתאריכים: ${document.getElementById('start-date').value} עד ${document.getElementById('end-date').value}\n\n`;
         cartBundles.forEach(b => msg += `🎁 חבילת ${b.gender}: ${b.items.map(i => `${i.name} (${i.size})`).join(', ')}\n`);
         cartItems.forEach(i => { const p = products.find(x => x.id === i.id); msg += `• ${p.name} | מידה: ${i.size}\n`; });
-        msg += `\nסה"כ: ₪${document.getElementById('final-price').innerText}`;
+        msg += `\nסה"כ לתשלום: ₪${document.getElementById('final-price').innerText}`;
         window.open(`https://wa.me/972549943477?text=${encodeURIComponent(msg)}`);
     }
 
@@ -338,7 +368,8 @@
     function closePopups() { document.querySelectorAll('.modal, .overlay').forEach(m => m.style.display='none'); }
     function zoomImage(src) { document.getElementById('enlarged-img').src = src; showModal('imageModal'); }
 
-    render(); updateUI();
+    render(); 
+    updateUI();
 </script>
 </body>
 </html>
