@@ -119,7 +119,7 @@
     <div class="tools-section">
         <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; margin-bottom:15px;">
             <div><label><b>מתאריך:</b></label> <input type="date" id="start-date" onchange="validateDates()"></div>
-            <div><label><b>עד תאריך:</b></label> <input type="date" id="end-date" onchange="validateDates()"></div>
+            <div><label><b>עד תאריך:</b></label> <input type="date" id="end-date" oninput="validateDates()"></div>
         </div>
 
         <div class="filter-group">
@@ -194,9 +194,8 @@
 
     let cartItems = JSON.parse(localStorage.getItem('skiCartItems')) || [];
     let cartBundles = JSON.parse(localStorage.getItem('skiCartBundles')) || [];
-    let currentCat = 'all';
-    let currentGender = 'all';
 
+    // יצירת מוצרים
     cats.forEach(c => {
         genders.forEach(g => {
             for(let i=1; i<=2; i++) {
@@ -205,7 +204,7 @@
         });
     });
 
-    // פונקציית תאריכים מתוקנת - בודקת רק אם שני התאריכים מלאים
+    // תיקון תאריכים: בודק רק אם התאריך השני מלא בתווים
     function validateDates() {
         const sInput = document.getElementById('start-date');
         const eInput = document.getElementById('end-date');
@@ -219,8 +218,8 @@
             }
         }
 
-        // הבדיקה הקריטית: בצע השוואה רק אם המשתמש בחר תאריך סיום מלא
-        if (sInput.value && eInput.value) {
+        // הבדיקה תרוץ רק אם התאריך באורך תקין (YYYY-MM-DD)
+        if (sInput.value && eInput.value && eInput.value.length === 10) {
             const startDate = new Date(sInput.value);
             const endDate = new Date(eInput.value);
             
@@ -247,6 +246,9 @@
         render();
     }
 
+    let currentCat = 'all';
+    let currentGender = 'all';
+
     function render() {
         const grid = document.getElementById('product-grid');
         grid.innerHTML = '';
@@ -269,7 +271,8 @@
         if(idx > -1) {
             cartItems.splice(idx, 1);
         } else {
-            const size = document.getElementById(`size-${id}`).value;
+            const sizeEl = document.getElementById(`size-${id}`);
+            const size = sizeEl ? sizeEl.value : 'OS';
             cartItems.push({ id, size });
         }
         updateUI();
@@ -301,9 +304,14 @@
         updateUI(); closePopups();
     }
 
+    // התיקון הקריטי לסל - מנקה פריטי רפאים
     function updateUI() {
+        // ניקוי אוטומטי של פריטים פגומים בסל
+        cartItems = cartItems.filter(item => products.some(p => p.id === item.id));
+        
         localStorage.setItem('skiCartItems', JSON.stringify(cartItems));
         localStorage.setItem('skiCartBundles', JSON.stringify(cartBundles));
+        
         document.getElementById('cart-count').innerText = cartItems.length + cartBundles.length;
         
         const s = document.getElementById('start-date').value, e = document.getElementById('end-date').value;
@@ -342,7 +350,7 @@
                         <div class="cart-item">
                             <div>
                                 <div style="font-weight:bold;">${productData.name}</div>
-                                <div style="font-size:0.8rem; color:#666;">מידה: ${item.size}</div>
+                                <div style="font-size:0.8rem; color:#666;">מידה: ${item.size || 'OS'}</div>
                             </div>
                             <span class="remove-btn" onclick="toggleCartItem('${productData.id}')">×</span>
                         </div>`;
@@ -385,7 +393,6 @@
         }
         
         msg += `\nסה"כ לתשלום: ₪${document.getElementById('final-price').innerText}`;
-        
         window.open(`https://wa.me/972549943477?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
