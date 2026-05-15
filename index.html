@@ -205,21 +205,39 @@
     });
 
     function validateDates() {
-        const startInput = document.getElementById('start-date');
-        const endInput = document.getElementById('end-date');
-        const today = new Date().toISOString().split('T')[0];
-        
-        if (startInput.value && startInput.value < today) {
+    const startInput = document.getElementById('start-date');
+    const endInput = document.getElementById('end-date');
+    
+    // תאריך של היום בשעה 00:00 כדי לאפשר בחירה של היום
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (startInput.value) {
+        const startDate = new Date(startInput.value);
+        startDate.setHours(0, 0, 0, 0);
+
+        if (startDate < today) {
             alert("לא ניתן לבחור תאריך מהעבר");
-            startInput.value = today;
+            startInput.value = "";
+            return;
         }
+    }
+
+    if (startInput.value && endInput.value) {
+        const startDate = new Date(startInput.value);
+        const endDate = new Date(endInput.value);
         
-        if (startInput.value && endInput.value && endInput.value < startInput.value) {
+        // אם תאריך הסיום קטן מתאריך ההתחלה
+        if (endDate < startDate) {
             alert("תאריך הסיום חייב להיות אחרי תאריך ההתחלה");
             endInput.value = "";
+            return;
         }
-        updateUI();
     }
+    
+    updateUI(); // מעדכן את המחיר והתצוגה אחרי שהכל תקין
+}
+
 
     function render() {
         const grid = document.getElementById('product-grid');
