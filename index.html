@@ -119,7 +119,7 @@
     <div class="tools-section">
         <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; margin-bottom:15px;">
             <div><label><b>מתאריך:</b></label> <input type="date" id="start-date" onchange="validateDates()"></div>
-            <div><label><b>עד תאריך:</b></label> <input type="date" id="end-date" oninput="validateDates()"></div>
+            <div><label><b>עד תאריך:</b></label> <input type="date" id="end-date" onchange="validateDates()"></div>
         </div>
 
         <div class="filter-group">
@@ -186,16 +186,12 @@
 </div>
 
 <script>
-    const products = [];
     const cats = ['מעיל', 'מכנס', 'קסדה', 'כפפות', 'גוגלס'];
     const genders = ['גברים', 'נשים', 'ילדים'];
     const prices = { 'מעיל': 150, 'מכנס': 120, 'קסדה': 50, 'כפפות': 30, 'גוגלס': 40 };
     const sizes = { 'מעיל': ['S', 'M', 'L', 'XL'], 'מכנס': ['S', 'M', 'L', 'XL'], 'קסדה': ['S', 'M', 'L'], 'כפפות': ['S', 'M', 'L'], 'גוגלס': ['OS'] };
 
-    let cartItems = JSON.parse(localStorage.getItem('skiCartItems')) || [];
-    let cartBundles = JSON.parse(localStorage.getItem('skiCartBundles')) || [];
-
-    // יצירת מוצרים
+    const products = [];
     cats.forEach(c => {
         genders.forEach(g => {
             for(let i=1; i<=2; i++) {
@@ -204,26 +200,29 @@
         });
     });
 
-    // תיקון תאריכים: בודק רק אם התאריך השני מלא בתווים
+    let cartItems = JSON.parse(localStorage.getItem('skiCartItems')) || [];
+    let cartBundles = JSON.parse(localStorage.getItem('skiCartBundles')) || [];
+
+    // --- תיקון פריט רפאים: ניקוי סופי של הזיכרון מפריטים שלא קיימים במערך ה-products ---
+    cartItems = cartItems.filter(item => products.some(p => p.id === item.id));
+    localStorage.setItem('skiCartItems', JSON.stringify(cartItems));
+
     function validateDates() {
         const sInput = document.getElementById('start-date');
         const eInput = document.getElementById('end-date');
-        const today = new Date(); today.setHours(0,0,0,0);
+        const todayStr = new Date().toISOString().split('T')[0];
 
-        if (sInput.value) {
-            if (new Date(sInput.value) < today) {
-                alert("לא ניתן לבחור תאריך מהעבר");
-                sInput.value = "";
-                return;
-            }
+        if (sInput.value && sInput.value < todayStr) {
+            alert("לא ניתן לבחור תאריך מהעבר");
+            sInput.value = "";
+            return;
         }
 
-        // הבדיקה תרוץ רק אם התאריך באורך תקין (YYYY-MM-DD)
-        if (sInput.value && eInput.value && eInput.value.length === 10) {
-            const startDate = new Date(sInput.value);
-            const endDate = new Date(eInput.value);
-            
-            if (endDate < startDate) {
+        // --- תיקון תאריכים: בדיקה רק אם המשתמש בחר תאריך שונה מהיום או אם בחר תאריך מלא ---
+        if (sInput.value && eInput.value) {
+            // אם המשתמש רק פתח את השדה והדפדפן שם את היום כברירת מחדל, והיום קטן מתאריך ההתחלה - אל תצעק עדיין.
+            // אנחנו נבדוק רק אם הוא ממש בחר תאריך סיום שקטן מההתחלה.
+            if (eInput.value < sInput.value && eInput.value !== todayStr) {
                 alert("תאריך סיום חייב להיות אחרי תאריך התחלה");
                 eInput.value = "";
                 return;
@@ -304,9 +303,8 @@
         updateUI(); closePopups();
     }
 
-    // התיקון הקריטי לסל - מנקה פריטי רפאים
     function updateUI() {
-        // ניקוי אוטומטי של פריטים פגומים בסל
+        // סינון נוסף ליתר ביטחון בכל עדכון
         cartItems = cartItems.filter(item => products.some(p => p.id === item.id));
         
         localStorage.setItem('skiCartItems', JSON.stringify(cartItems));
@@ -315,8 +313,8 @@
         document.getElementById('cart-count').innerText = cartItems.length + cartBundles.length;
         
         const s = document.getElementById('start-date').value, e = document.getElementById('end-date').value;
-        const weeks = (s && e) ? Math.max(1, Math.ceil(Math.abs(new Date(e)-new Date(s))/(1000*60*60*24))/7) : 1;
-        document.getElementById('duration-info').innerText = (s && e) ? `תקופה: ${Math.ceil(weeks)} שבועות` : "נא לבחור תאריכים";
+        const weeks = (s && e && e >= s) ? Math.max(1, Math.ceil(Math.abs(new Date(e)-new Date(s))/(1000*60*60*24))/7) : 1;
+        document.getElementById('duration-info').innerText = (s && e && e >= s) ? `תקופה: ${Math.ceil(weeks)} שבועות` : "נא לבחור תאריכים";
 
         const listContainer = document.getElementById('cart-list');
         const checkoutArea = document.getElementById('checkout-area');
@@ -350,7 +348,7 @@
                         <div class="cart-item">
                             <div>
                                 <div style="font-weight:bold;">${productData.name}</div>
-                                <div style="font-size:0.8rem; color:#666;">מידה: ${item.size || 'OS'}</div>
+                                <div style="font-size:0.8rem; color:#666;">מידה: ${item.size}</div>
                             </div>
                             <span class="remove-btn" onclick="toggleCartItem('${productData.id}')">×</span>
                         </div>`;
