@@ -80,7 +80,7 @@
         
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1500; }
         
-        input, select { padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin: 5px; font-family: inherit; }
+        input, select { padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin: 5px; font-family: inherit; font-size: 1rem; }
 
         .cart-item { 
             display: flex; justify-content: space-between; align-items: center; 
@@ -203,33 +203,36 @@
     let cartItems = JSON.parse(localStorage.getItem('skiCartItems')) || [];
     let cartBundles = JSON.parse(localStorage.getItem('skiCartBundles')) || [];
 
-    // --- תיקון פריט רפאים: ניקוי סופי של הזיכרון מפריטים שלא קיימים במערך ה-products ---
+    // ניקוי פריטי רפאים
     cartItems = cartItems.filter(item => products.some(p => p.id === item.id));
     localStorage.setItem('skiCartItems', JSON.stringify(cartItems));
+
+    // הגדרת תאריך מינימלי להיום לכל השדות
+    const todayStr = new Date().toISOString().split('T')[0];
+    document.getElementById('start-date').min = todayStr;
+    document.getElementById('end-date').min = todayStr;
 
     function validateDates() {
         const sInput = document.getElementById('start-date');
         const eInput = document.getElementById('end-date');
-        const todayStr = new Date().toISOString().split('T')[0];
 
-        if (sInput.value && sInput.value < todayStr) {
-            alert("לא ניתן לבחור תאריך מהעבר");
-            sInput.value = "";
-            return;
+        if (sInput.value) {
+            // ברגע שנבחר תאריך התחלה, תאריך הסיום לא יכול להיות לפניו
+            document.getElementById('end-date').min = sInput.value;
         }
 
-        // --- תיקון תאריכים: בדיקה רק אם המשתמש בחר תאריך שונה מהיום או אם בחר תאריך מלא ---
+        // הבדיקה תרוץ רק אם המשתמש ממש שינה את הערך למשהו לא תקין
         if (sInput.value && eInput.value) {
-            // אם המשתמש רק פתח את השדה והדפדפן שם את היום כברירת מחדל, והיום קטן מתאריך ההתחלה - אל תצעק עדיין.
-            // אנחנו נבדוק רק אם הוא ממש בחר תאריך סיום שקטן מההתחלה.
-            if (eInput.value < sInput.value && eInput.value !== todayStr) {
-                alert("תאריך סיום חייב להיות אחרי תאריך התחלה");
+            if (eInput.value < sInput.value) {
+                alert("תאריך סיום לא יכול להיות לפני תאריך התחלה");
                 eInput.value = "";
-                return;
             }
         }
         updateUI();
     }
+
+    let currentCat = 'all';
+    let currentGender = 'all';
 
     function filterGender(g, btn) {
         btn.parentElement.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
@@ -244,9 +247,6 @@
         currentCat = c;
         render();
     }
-
-    let currentCat = 'all';
-    let currentGender = 'all';
 
     function render() {
         const grid = document.getElementById('product-grid');
@@ -304,17 +304,20 @@
     }
 
     function updateUI() {
-        // סינון נוסף ליתר ביטחון בכל עדכון
-        cartItems = cartItems.filter(item => products.some(p => p.id === item.id));
-        
         localStorage.setItem('skiCartItems', JSON.stringify(cartItems));
         localStorage.setItem('skiCartBundles', JSON.stringify(cartBundles));
         
         document.getElementById('cart-count').innerText = cartItems.length + cartBundles.length;
         
         const s = document.getElementById('start-date').value, e = document.getElementById('end-date').value;
-        const weeks = (s && e && e >= s) ? Math.max(1, Math.ceil(Math.abs(new Date(e)-new Date(s))/(1000*60*60*24))/7) : 1;
-        document.getElementById('duration-info').innerText = (s && e && e >= s) ? `תקופה: ${Math.ceil(weeks)} שבועות` : "נא לבחור תאריכים";
+        let weeks = 1;
+        if (s && e && e >= s) {
+            const diffDays = Math.ceil(Math.abs(new Date(e) - new Date(s)) / (1000 * 60 * 60 * 24));
+            weeks = Math.max(1, Math.ceil(diffDays / 7));
+            document.getElementById('duration-info').innerText = `תקופה: ${weeks} שבועות`;
+        } else {
+            document.getElementById('duration-info').innerText = "נא לבחור תאריכים";
+        }
 
         const listContainer = document.getElementById('cart-list');
         const checkoutArea = document.getElementById('checkout-area');
@@ -327,7 +330,7 @@
         } else {
             checkoutArea.style.display = 'block';
             cartBundles.forEach((b, idx) => {
-                total += 350 * Math.ceil(weeks);
+                total += 350 * weeks;
                 htmlContent += `
                     <div class="cart-bundle-item">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -343,7 +346,7 @@
             cartItems.forEach((item) => {
                 const productData = products.find(p => p.id === item.id);
                 if(productData) {
-                    total += productData.price * Math.ceil(weeks);
+                    total += productData.price * weeks;
                     htmlContent += `
                         <div class="cart-item">
                             <div>
@@ -369,6 +372,7 @@
 
         if(!nameInput.value.trim()) { alert("נא להזין שם מלא להזמנה"); return; }
         if(!sInput.value || !eInput.value) { alert("נא לבחור תאריכי השכרה בראש העמוד"); return; }
+        if(eInput.value < sInput.value) { alert("תאריכי ההזמנה לא תקינים"); return; }
 
         let msg = `שלום, אני מעוניין להזמין ציוד סקי:\n`;
         msg += `שם: ${nameInput.value}\n`;
