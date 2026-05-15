@@ -63,7 +63,7 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.2); text-align: center;
             padding-bottom: 20px; position: relative;
         }
-        .card img { width: 100%; height: 250px; object-fit: contain; background: #f9f9f9; padding: 10px; cursor: zoom-in; }
+        .card img { width: 100%; height: 250px; object-fit: contain; background: #f9f9f9; padding: 10px; }
 
         .btn-select {
             background: var(--primary); color: white; border: none;
@@ -82,7 +82,6 @@
         
         input, select { padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin: 5px; font-family: inherit; }
 
-        /* עיצוב פריטים בסל */
         .cart-item { 
             display: flex; 
             justify-content: space-between; 
@@ -161,8 +160,7 @@
         <h3>הסל שלי</h3>
     </div>
     <div class="modal-body">
-        <div id="cart-list">
-            </div>
+        <div id="cart-list"></div>
         <div id="checkout-area" style="display:none; margin-top:20px;">
             <hr>
             <div style="margin:15px 0;">
@@ -190,7 +188,7 @@
     <div class="modal-body" style="text-align:center;">
         <p><strong>🏠 כתובת:</strong> יהודה הלוי 58, גבעת שמואל</p>
         <p><strong>📞 טלפון:</strong> 054-9943477</p>
-        <button class="btn-select" style="background:#4285F4; margin-bottom:10px;" onclick="window.open('https://maps.google.com/?q=יהודה+הלוי+58+גבעת+שמואל')">📍 ניווט ליעד</button>
+        <button class="btn-select" style="background:#4285F4; margin-bottom:10px;" onclick="window.open('https://www.google.com/maps/search/?api=1&query=יהודה+הלוי+58+גבעת+שמואל')">📍 ניווט ליעד</button>
         <a href="https://wa.me/972549943477" target="_blank" class="wa-btn">💬 שלח לנו הודעה בוואטסאפ</a>
         <button class="btn-select" style="margin-top:15px; background:#666;" onclick="closePopups()">סגור</button>
     </div>
@@ -208,7 +206,6 @@
     let currentCat = 'all';
     let currentGender = 'all';
 
-    // יצירת מוצרים
     cats.forEach(c => {
         genders.forEach(g => {
             for(let i=1; i<=2; i++) {
@@ -293,11 +290,9 @@
         updateUI(); closePopups();
     }
 
-    // התיקון הקריטי להצגת הסל
     function updateUI() {
         localStorage.setItem('skiCartItems', JSON.stringify(cartItems));
         localStorage.setItem('skiCartBundles', JSON.stringify(cartBundles));
-        
         document.getElementById('cart-count').innerText = cartItems.length + cartBundles.length;
         
         const s = document.getElementById('start-date').value, e = document.getElementById('end-date').value;
@@ -314,8 +309,6 @@
             checkoutArea.style.display = 'none';
         } else {
             checkoutArea.style.display = 'block';
-            
-            // רינדור חבילות
             cartBundles.forEach((b, idx) => {
                 total += 350 * weeks;
                 htmlContent += `
@@ -330,7 +323,6 @@
                     </div>`;
             });
 
-            // רינדור מוצרים בודדים
             cartItems.forEach((item) => {
                 const productData = products.find(p => p.id === item.id);
                 if(productData) {
@@ -346,35 +338,45 @@
                 }
             });
         }
-
         listContainer.innerHTML = htmlContent;
         document.getElementById('final-price').innerText = total;
-        render(); // מעדכן את הכפתורים בלוח המוצרים
+        render();
     }
 
     function removeBundle(idx) { cartBundles.splice(idx, 1); updateUI(); }
 
     function sendWhatsApp() {
-        const name = document.getElementById('cust-name').value;
-        if(!name) return alert("נא להזין שם מלא להזמנה");
-        const s = document.getElementById('start-date').value, e = document.getElementById('end-date').value;
-        if(!s || !e) return alert("נא לבחור תאריכים לפני ההזמנה");
+        const nameInput = document.getElementById('cust-name');
+        const sInput = document.getElementById('start-date');
+        const eInput = document.getElementById('end-date');
+
+        if(!nameInput.value.trim()) { alert("נא להזין שם מלא להזמנה"); return; }
+        if(!sInput.value || !eInput.value) { alert("נא לבחור תאריכי השכרה בראש העמוד"); return; }
 
         let msg = `שלום, אני מעוניין להזמין ציוד סקי:\n`;
-        msg += `שם: ${name}\n`;
-        msg += `תאריכים: ${s} עד ${e}\n\n`;
+        msg += `שם: ${nameInput.value}\n`;
+        msg += `תאריכים: ${sInput.value} עד ${eInput.value}\n\n`;
         
-        cartBundles.forEach((b, i) => {
-            msg += `🎁 חבילה ${i+1} (${b.gender}):\n${b.items.map(it => `  - ${it.name} (${it.size})`).join('\n')}\n\n`;
-        });
+        if(cartBundles.length > 0) {
+            msg += `--- חבילות קומפלט ---\n`;
+            cartBundles.forEach((b, i) => {
+                msg += `🎁 חבילה ${i+1} (${b.gender}):\n${b.items.map(it => `  - ${it.name} (${it.size})`).join('\n')}\n`;
+            });
+            msg += `\n`;
+        }
         
-        cartItems.forEach(i => {
-            const p = products.find(x => x.id === i.id);
-            msg += `• ${p.name} (מידה: ${i.size})\n`;
-        });
+        if(cartItems.length > 0) {
+            msg += `--- פריטים בודדים ---\n`;
+            cartItems.forEach(i => {
+                const p = products.find(x => x.id === i.id);
+                if(p) msg += `• ${p.name} (מידה: ${i.size})\n`;
+            });
+        }
         
         msg += `\nסה"כ לתשלום: ₪${document.getElementById('final-price').innerText}`;
-        window.open(`https://wa.me/972549943477?text=${encodeURIComponent(msg)}`);
+        
+        const waUrl = `https://wa.me/972549943477?text=${encodeURIComponent(msg)}`;
+        window.open(waUrl, '_blank');
     }
 
     function showModal(id) { document.getElementById('overlay').style.display='block'; document.getElementById(id).style.display='block'; }
