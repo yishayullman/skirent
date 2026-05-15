@@ -85,6 +85,7 @@
         input, select { padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin: 5px; font-family: inherit; }
 
         .cart-bundle-item { background: #f0f4ff; border: 1px dashed var(--bundle); padding: 15px; border-radius: 10px; margin-bottom: 12px; text-align: right; }
+        .cart-price-detail { font-size: 0.85rem; color: #666; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -114,14 +115,14 @@
         </div>
 
         <div class="filter-group">
-            <button class="cat-btn active" id="gen-all" onclick="filterGender('all', this)">הכל</button>
+            <button class="cat-btn active" onclick="filterGender('all', this)">הכל</button>
             <button class="cat-btn" onclick="filterGender('גברים', this)">גברים 🧔</button>
             <button class="cat-btn" onclick="filterGender('נשים', this)">נשים 👩</button>
             <button class="cat-btn" onclick="filterGender('ילדים', this)">ילדים 🧒</button>
         </div>
 
         <div class="filter-group">
-            <button class="cat-btn active" id="cat-all" onclick="filterCategory('all', this)">כל המוצרים</button>
+            <button class="cat-btn active" onclick="filterCategory('all', this)">כל המוצרים</button>
             <button class="cat-btn" onclick="filterCategory('מעיל', this)">מעילים</button>
             <button class="cat-btn" onclick="filterCategory('מכנס', this)">מכנסיים</button>
             <button class="cat-btn" onclick="filterCategory('קסדה', this)">קסדות</button>
@@ -137,6 +138,21 @@
 
 <div class="overlay" id="overlay" onclick="closePopups()"></div>
 
+<div class="modal" id="imageModal">
+    <div class="modal-body" style="padding:10px; text-align:center;">
+        <img id="enlarged-img" style="width:100%; border-radius:10px;">
+        <button class="btn-select" style="margin-top:10px; width:100%; background:#666;" onclick="closePopups()">סגור</button>
+    </div>
+</div>
+
+<div class="modal" id="bundleWizard">
+    <div class="modal-header"><h3>בחירת חבילת קומפלט</h3></div>
+    <div class="modal-body" id="bundle-wizard-body"></div>
+    <div style="padding: 15px; text-align: center;">
+        <button class="btn-select" style="background:var(--success); width:100%;" onclick="saveBundleToCart()">אישור והוספה לסל</button>
+    </div>
+</div>
+
 <div class="modal" id="cartModal">
     <div class="modal-header"><span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span><h3>סיכום הזמנה</h3></div>
     <div class="modal-body">
@@ -147,7 +163,7 @@
                 <label>שם מלא:</label><br>
                 <input type="text" id="cust-name" placeholder="הכנס שם מלא" style="width:90%">
             </div>
-            <div id="final-price-div" style="padding:15px; background:#f0fdf4; border-radius:10px; margin:15px 0; text-align:center;">
+            <div style="padding:15px; background:#f0fdf4; border-radius:10px; margin:15px 0; text-align:center;">
                 סה"כ לתשלום: <b>₪<span id="final-price">0</span></b>
             </div>
             <button onclick="sendWhatsApp()" style="width:100%; background:var(--whatsapp); color:white; padding:15px; border-radius:10px; border:none; font-weight:bold; cursor:pointer;">✅ שלח הזמנה לוואטסאפ</button>
@@ -155,11 +171,13 @@
     </div>
 </div>
 
-<div class="modal" id="bundleWizard">
-    <div class="modal-header"><h3>בחירת חבילת קומפלט</h3></div>
-    <div class="modal-body" id="bundle-wizard-body"></div>
-    <div style="padding: 15px; text-align: center;">
-        <button class="btn-select" style="background:var(--success); width:100%;" onclick="saveBundleToCart()">אישור והוספה לסל</button>
+<div class="modal" id="contactModal">
+    <div class="modal-header"><h3>פרטי איסוף וקשר</h3></div>
+    <div class="modal-body" style="text-align:center;">
+        <p><strong>🏠 כתובת:</strong> יהודה הלוי 58, גבעת שמואל</p>
+        <p><strong>📞 טלפון:</strong> 054-9943477</p>
+        <button class="btn-select" style="background:#4285F4; margin-bottom:10px;" onclick="window.open('https://maps.app.goo.gl/3XpUpX7qYw4pT5yA8')">📍 ניווט ליעד</button>
+        <button class="btn-select" style="margin-top:15px; background:#666;" onclick="closePopups()">סגור</button>
     </div>
 </div>
 
@@ -172,38 +190,54 @@
 
     let cartItems = JSON.parse(localStorage.getItem('skiCartItems')) || [];
     let cartBundles = JSON.parse(localStorage.getItem('skiCartBundles')) || [];
-    
     let currentCat = 'all';
     let currentGender = 'all';
 
-    // יצירת מוצרים לדוגמה עם מגדר
     cats.forEach(c => {
         genders.forEach(g => {
             for(let i=1; i<=3; i++) {
-                const id = `${c}-${g}-${i}`;
-                products.push({ 
-                    id, 
-                    name: `${c} ${g} דגם ${i}`, 
-                    cat: c, 
-                    gender: g, 
-                    price: prices[c], 
-                    image: `https://placehold.jp/24/1a2a6c/ffffff/300x250.png?text=${c}+${g}+${i}` 
-                });
+                products.push({ id: `${c}-${g}-${i}`, name: `${c} ${g} דגם ${i}`, cat: c, gender: g, price: prices[c], image: `https://placehold.jp/24/1a2a6c/ffffff/300x250.png?text=${c}+${g}+${i}` });
             }
         });
     });
 
+    // התיקון לבעיית התאריכים
+    function validateDates() {
+        const startInput = document.getElementById('start-date');
+        const endInput = document.getElementById('end-date');
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (startInput.value) {
+            const startDate = new Date(startInput.value);
+            if (startDate < today) {
+                alert("לא ניתן לבחור תאריך מהעבר");
+                startInput.value = "";
+                return;
+            }
+        }
+
+        if (startInput.value && endInput.value) {
+            const startDate = new Date(startInput.value);
+            const endDate = new Date(endInput.value);
+            if (endDate < startDate) {
+                alert("תאריך הסיום חייב להיות אחרי תאריך ההתחלה");
+                endInput.value = "";
+                return;
+            }
+        }
+        updateUI();
+    }
+
     function filterGender(g, btn) {
-        const btns = btn.parentElement.querySelectorAll('.cat-btn');
-        btns.forEach(b => b.classList.remove('active'));
+        btn.parentElement.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentGender = g;
         render();
     }
 
     function filterCategory(c, btn) {
-        const btns = btn.parentElement.querySelectorAll('.cat-btn');
-        btns.forEach(b => b.classList.remove('active'));
+        btn.parentElement.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentCat = c;
         render();
@@ -212,43 +246,19 @@
     function render() {
         const grid = document.getElementById('product-grid');
         grid.innerHTML = '';
+        const filtered = products.filter(p => (currentCat === 'all' || p.cat === currentCat) && (currentGender === 'all' || p.gender === currentGender));
         
-        const filtered = products.filter(p => {
-            const matchCat = (currentCat === 'all' || p.cat === currentCat);
-            const matchGen = (currentGender === 'all' || p.gender === currentGender);
-            return matchCat && matchGen;
-        });
-
-        if(filtered.length === 0) {
-            grid.innerHTML = '<p style="grid-column: 1/-1; color: white;">לא נמצאו מוצרים תואמים לסינון.</p>';
-            return;
-        }
-
         filtered.forEach(p => {
-            const isInCart = cartItems.some(item => item.id === p.id);
+            const isInCart = cartItems.some(i => i.id === p.id);
             grid.innerHTML += `
                 <div class="card">
-                    <img src="${p.image}">
-                    <div style="font-size:0.8rem; color:#666; margin-top:5px;">${p.gender} | ${p.cat}</div>
+                    <img src="${p.image}" onclick="zoomImage('${p.image}')">
                     <h3>${p.name}</h3>
-                    <select id="size-${p.id}" style="width:80%">
-                        ${sizes[p.cat].map(s => `<option value="${s}">${s}</option>`).join('')}
-                    </select>
+                    <select id="size-${p.id}" style="width:80%">${sizes[p.cat].map(s => `<option value="${s}">${s}</option>`).join('')}</select>
                     <div style="color:var(--success); font-weight:bold; margin:10px 0;">₪${p.price} לשבוע</div>
-                    <button class="btn-select" onclick="toggleCartItem('${p.id}')">
-                        ${isInCart ? '✅ בסל' : 'הוסף לסל'}
-                    </button>
+                    <button class="btn-select" onclick="toggleCartItem('${p.id}')">${isInCart ? '✅ בסל' : 'הוסף לסל'}</button>
                 </div>`;
         });
-    }
-
-    // פונקציות תאריכים, סל, וואטסאפ וכו' - נשארות כפי שהיו
-    function validateDates() {
-        const s = document.getElementById('start-date'), e = document.getElementById('end-date');
-        const today = new Date(); today.setHours(0,0,0,0);
-        if(s.value && new Date(s.value) < today) { alert("תאריך עבר!"); s.value = ""; }
-        if(s.value && e.value && new Date(e.value) < new Date(s.value)) { alert("סיום לפני התחלה!"); e.value = ""; }
-        updateUI();
     }
 
     function toggleCartItem(id) {
@@ -256,6 +266,31 @@
         if(idx > -1) cartItems.splice(idx, 1);
         else cartItems.push({ id, size: document.getElementById(`size-${id}`).value });
         updateUI();
+    }
+
+    function openBundleWizard() {
+        const body = document.getElementById('bundle-wizard-body');
+        body.innerHTML = `<label>עבור מי?</label><select id="bundle-gen" style="width:100%" onchange="updateWizardOptions()">
+            ${genders.map(g => `<option value="${g}">${g}</option>`).join('')}
+        </select><hr><div id="wizard-items"></div>`;
+        updateWizardOptions();
+        showModal('bundleWizard');
+    }
+
+    function updateWizardOptions() {
+        const g = document.getElementById('bundle-gen').value;
+        document.getElementById('wizard-items').innerHTML = cats.map(c => `
+            <div style="margin-top:10px;"><label>${c}:</label>
+            <select id="wb-${c}" style="width:100%">${products.filter(p => p.cat === c && p.gender === g).map(p => `<option value="${p.id}">${p.name}</option>`).join('')}</select>
+            <select id="wbs-${c}" style="width:100%">${sizes[c].map(s => `<option value="${s}">${s}</option>`).join('')}</select></div>
+        `).join('');
+    }
+
+    function saveBundleToCart() {
+        const bundle = { gender: document.getElementById('bundle-gen').value, items: [] };
+        cats.forEach(c => bundle.items.push({ name: products.find(p => p.id === document.getElementById(`wb-${c}`).value).name, size: document.getElementById(`wbs-${c}`).value }));
+        cartBundles.push(bundle);
+        updateUI(); closePopups();
     }
 
     function updateUI() {
@@ -267,61 +302,43 @@
         const weeks = (s && e) ? Math.ceil(Math.ceil(Math.abs(new Date(e)-new Date(s))/(1000*60*60*24))/7) : 1;
         document.getElementById('duration-info').innerText = (s && e) ? `תקופה: ${weeks} שבועות` : "נא לבחור תאריכים";
 
+        const list = document.getElementById('cart-list'), checkout = document.getElementById('checkout-area');
+        let total = 0;
+
+        if(cartItems.length === 0 && cartBundles.length === 0) {
+            list.innerHTML = 'הסל ריק'; checkout.style.display = 'none';
+        } else {
+            checkout.style.display = 'block';
+            let html = '';
+            cartBundles.forEach((b, idx) => {
+                total += 350 * weeks;
+                html += `<div class="cart-bundle-item"><b>🎁 חבילת ${b.gender} #${idx+1}</b> <span style="color:red; cursor:pointer;" onclick="cartBundles.splice(${idx},1); updateUI();">×</span><br>
+                <small>${b.items.map(i => `${i.name} (${i.size})`).join(', ')}</small></div>`;
+            });
+            cartItems.forEach(i => {
+                const p = products.find(x => x.id === i.id); total += p.price * weeks;
+                html += `<div style="display:flex; justify-content:space-between;"><span>${p.name} (מידה: ${i.size})</span><span style="color:red; cursor:pointer;" onclick="toggleCartItem('${i.id}')">×</span></div>`;
+            });
+            list.innerHTML = html; document.getElementById('final-price').innerText = total;
+        }
         render();
     }
 
-    function openBundleWizard() {
-        const body = document.getElementById('bundle-wizard-body');
-        // כאן המשתמש יבחר מגדר לחבילה קודם כל
-        body.innerHTML = `
-            <div style="text-align:right;">
-                <label><b>עבור מי החבילה?</b></label><br>
-                <select id="bundle-gen" style="width:100%" onchange="updateBundleWizardOptions()">
-                    <option value="גברים">גברים</option>
-                    <option value="נשים">נשים</option>
-                    <option value="ילדים">ילדים</option>
-                </select>
-                <hr>
-                <div id="bundle-items-selects"></div>
-            </div>`;
-        updateBundleWizardOptions();
-        showModal('bundleWizard');
-    }
-
-    function updateBundleWizardOptions() {
-        const gen = document.getElementById('bundle-gen').value;
-        const container = document.getElementById('bundle-items-selects');
-        container.innerHTML = cats.map(cat => `
-            <div style="margin-top:10px;">
-                <label>${cat}:</label>
-                <select id="wb-${cat}" style="width:100%">
-                    ${products.filter(p => p.cat === cat && p.gender === gen).map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
-                </select>
-                <select id="wb-size-${cat}" style="width:100%">
-                    ${sizes[cat].map(s => `<option value="${s}">${s}</option>`).join('')}
-                </select>
-            </div>
-        `).join('');
-    }
-
-    function saveBundleToCart() {
-        const bundle = { gender: document.getElementById('bundle-gen').value, items: [] };
-        cats.forEach(cat => {
-            bundle.items.push({ 
-                name: products.find(p => p.id === document.getElementById(`wb-${cat}`).value).name,
-                size: document.getElementById(`wb-size-${cat}`).value
-            });
-        });
-        cartBundles.push(bundle);
-        updateUI();
-        closePopups();
+    function sendWhatsApp() {
+        const name = document.getElementById('cust-name').value;
+        if(!name) return alert("הכנס שם!");
+        let msg = `הזמנה מ: ${name}\nתאריכים: ${document.getElementById('start-date').value} עד ${document.getElementById('end-date').value}\n\n`;
+        cartBundles.forEach(b => msg += `🎁 חבילת ${b.gender}: ${b.items.map(i => `${i.name} (${i.size})`).join(', ')}\n`);
+        cartItems.forEach(i => { const p = products.find(x => x.id === i.id); msg += `• ${p.name} | מידה: ${i.size}\n`; });
+        msg += `\nסה"כ: ₪${document.getElementById('final-price').innerText}`;
+        window.open(`https://wa.me/972549943477?text=${encodeURIComponent(msg)}`);
     }
 
     function showModal(id) { document.getElementById('overlay').style.display='block'; document.getElementById(id).style.display='block'; }
     function closePopups() { document.querySelectorAll('.modal, .overlay').forEach(m => m.style.display='none'); }
+    function zoomImage(src) { document.getElementById('enlarged-img').src = src; showModal('imageModal'); }
 
-    render();
-    updateUI();
+    render(); updateUI();
 </script>
 </body>
 </html>
