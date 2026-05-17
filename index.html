@@ -94,8 +94,6 @@
         .remove-btn { color: var(--danger); cursor: pointer; font-weight: bold; font-size: 1.2rem; }
         
         .wa-btn { background: var(--whatsapp); color: white; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; width: 100%; text-decoration: none; display: inline-block; margin-top: 10px; text-align: center; }
-        
-        .btn-date-apply { background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-right: 5px; }
     </style>
 </head>
 <body>
@@ -120,9 +118,8 @@
 
     <div class="tools-section">
         <div style="display:flex; justify-content:center; align-items: center; gap:15px; flex-wrap:wrap; margin-bottom:15px;">
-            <div><label><b>מתאריך:</b></label> <input type="date" id="start-date" onblur="validateDates()"></div>
-            <div><label><b>עד תאריך:</b></label> <input type="date" id="end-date" onblur="validateDates()"></div>
-            <button class="btn-date-apply" onclick="validateDates(true)">עדכן תאמינו 🔄</button>
+            <div><label><b>מתאריך:</b></label> <input type="date" id="start-date" onchange="validateDates()" onblur="validateDates()"></div>
+            <div><label><b>עד תאריך:</b></label> <input type="date" id="end-date" onchange="validateDates()" onblur="validateDates()"></div>
         </div>
 
         <div class="filter-group">
@@ -210,31 +207,31 @@
     cartItems = cartItems.filter(item => products.some(p => p.id === item.id));
     localStorage.setItem('skiCartItems', JSON.stringify(cartItems));
 
-    // הגדרת תאריך מינימלי להיום
+    // הגדרת חסימה לתאריכים מהעבר בדפדפן
     const todayStr = new Date().toISOString().split('T')[0];
     document.getElementById('start-date').min = todayStr;
     document.getElementById('end-date').min = todayStr;
 
-    // פונקציית תאריכים משופרת עם הגנה מדפדפנים סוררים
-    function validateDates(forceCheck = false) {
+    function validateDates() {
         const sInput = document.getElementById('start-date');
         const eInput = document.getElementById('end-date');
 
-        if (sInput.value) {
-            // נועל פיזית את האפשרות לבחור תאריך לפני תאריך ההתחלה בשדה השני
-            eInput.min = sInput.value;
-            
-            if (sInput.value < todayStr) {
-                alert("לא ניתן לבחור תאריך מהעבר");
-                sInput.value = "";
-                return;
-            }
+        // חסימת תאריך מהעבר בשדה ההתחלה
+        if (sInput.value && sInput.value < todayStr) {
+            alert("לא ניתן לבחור תאריך מהעבר");
+            sInput.value = "";
+            return;
         }
 
+        if (sInput.value) {
+            // תאריך הסיום חייב להיות לפחות כמו תאריך ההתחלה
+            eInput.min = sInput.value;
+        }
+
+        // בדיקה רק כשהמשתמש לא נמצא כרגע בתוך עריכת שדה הסיום
         if (sInput.value && eInput.value) {
-            // הבדיקה תתבצע רק אם המשתמש יצא מהשדה (blur) או לחץ על עדכן באופן יזום
             if (eInput.value < sInput.value) {
-                if(forceCheck || document.activeElement !== eInput) {
+                if (document.activeElement !== eInput) {
                     alert("תאריך סיום לא יכול להיות לפני תאריך התחלה");
                     eInput.value = "";
                 }
@@ -377,7 +374,6 @@
 
     function removeBundle(idx) { cartBundles.splice(idx, 1); updateUI(); }
 
-    // וידוא אחרון לפני שליחת ההזמנה
     function sendWhatsApp() {
         const nameInput = document.getElementById('cust-name');
         const sInput = document.getElementById('start-date');
