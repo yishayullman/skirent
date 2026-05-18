@@ -63,7 +63,8 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.2); text-align: center;
             padding-bottom: 20px; position: relative;
         }
-        .card img { width: 100%; height: 250px; object-fit: contain; background: #f9f9f9; padding: 10px; }
+        .card img { width: 100%; height: 250px; object-fit: contain; background: #f9f9f9; padding: 10px; cursor: pointer; transition: transform 0.2s; }
+        .card img:hover { transform: scale(1.02); }
 
         .btn-select {
             background: var(--primary); color: white; border: none;
@@ -97,6 +98,16 @@
         .remove-btn { color: var(--danger); cursor: pointer; font-weight: bold; font-size: 1.2rem; }
         
         .wa-btn { background: var(--whatsapp); color: white; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; width: 100%; text-decoration: none; display: inline-block; margin-top: 10px; text-align: center; }
+
+        .lightbox {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9); z-index: 3000; justify-content: center; align-items: center;
+        }
+        .lightbox img { max-width: 90%; max-height: 85vh; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .lightbox-close {
+            position: absolute; top: 20px; left: 20px; color: white; font-size: 2.5rem;
+            cursor: pointer; font-weight: bold; user-select: none;
+        }
     </style>
 </head>
 <body>
@@ -148,6 +159,11 @@
 
 <div class="overlay" id="overlay" onclick="closePopups()"></div>
 
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="lightbox-close" onclick="closeLightbox()">×</span>
+    <img id="lightbox-img" src="" alt="תצוגה מוגדלת">
+</div>
+
 <div class="modal" id="cartModal">
     <div class="modal-header">
         <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
@@ -194,11 +210,25 @@
     const prices = { 'מעיל': 150, 'מכנס': 120, 'קסדה': 50, 'כפפות': 30, 'גוגלס': 40 };
     const sizes = { 'מעיל': ['S', 'M', 'L', 'XL'], 'מכנס': ['S', 'M', 'L', 'XL'], 'קסדה': ['S', 'M', 'L'], 'כפפות': ['S', 'M', 'L'], 'גוגלס': ['OS'] };
 
-    const products = [];
+    const products = [
+        { id: 'coat-men-1', name: 'מעיל גברים דגם 1', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.postimg.cc/0yfCcb9Q/7b788b3f-6662-402b-a041-8b6c85e1b681.jpg' },
+        { id: 'coat-men-2', name: 'מעיל גברים דגם 2', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.postimg.cc/v84gKDtZ/659f2dd7-c29c-41b9-8e5b-549f51a432c3.jpg' },
+        { id: 'coat-women-1', name: 'מעיל נשים דגם 1', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.postimg.cc/5NtPTBkL/1a256f0f-8a9a-4c42-b6f8-242afd02df85.jpg' },
+        { id: 'coat-women-2', name: 'מעיל נשים דגם 2', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.ibb.co/wZpX0g7C/4.jpg' }
+    ];
+
     cats.forEach(c => {
+        if (c === 'מעיל') return; 
         genders.forEach(g => {
             for(let i=1; i<=2; i++) {
-                products.push({ id: `${c}-${g}-${i}`, name: `${c} ${g} דגם ${i}`, cat: c, gender: g, price: prices[c], image: `https://placehold.jp/24/1a2a6c/ffffff/300x250.png?text=${c}+${g}` });
+                products.push({ 
+                    id: `${c}-${g}-${i}`, 
+                    name: `${c} ${g} דגם ${i}`, 
+                    cat: c, 
+                    gender: g, 
+                    price: prices[c], 
+                    image: `https://placehold.jp/24/1a2a6c/ffffff/300x250.png?text=${c}+${g}` 
+                });
             }
         });
     });
@@ -206,11 +236,9 @@
     let cartItems = JSON.parse(localStorage.getItem('skiCartItems')) || [];
     let cartBundles = JSON.parse(localStorage.getItem('skiCartBundles')) || [];
 
-    // ניקוי פריטי רפאים
     cartItems = cartItems.filter(item => products.some(p => p.id === item.id));
     localStorage.setItem('skiCartItems', JSON.stringify(cartItems));
 
-    // הגדרת חסימה לתאריכים מהעבר בדפדפן
     const todayStr = new Date().toISOString().split('T')[0];
     document.getElementById('start-date').min = todayStr;
     document.getElementById('end-date').min = todayStr;
@@ -257,7 +285,6 @@
         render();
     }
 
-    // פונקציה שמתעדכנת בלייב כשמשנים מידה בכרטיס מוצר
     function onSizeChange(id) {
         const sizeEl = document.getElementById(`size-${id}`);
         const btnEl = document.getElementById(`btn-${id}`);
@@ -275,18 +302,25 @@
         }
     }
 
+    function openLightbox(src) {
+        document.getElementById('lightbox-img').src = src;
+        document.getElementById('lightbox').style.display = 'flex';
+    }
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+    }
+
     function render() {
         const grid = document.getElementById('product-grid');
         grid.innerHTML = '';
         const filtered = products.filter(p => (currentCat === 'all' || p.cat === currentCat) && (currentGender === 'all' || p.gender === currentGender));
         filtered.forEach(p => {
-            // כברירת מחדל נבדוק את המידה הראשונה ברשימה של המוצר
             const defaultSize = sizes[p.cat][0];
             const isInCart = cartItems.some(i => i.id === p.id && i.size === defaultSize);
             
             grid.innerHTML += `
                 <div class="card">
-                    <img src="${p.image}">
+                    <img src="${p.image}" onclick="openLightbox('${p.image}')" title="לחץ להגדלה">
                     <h3>${p.name}</h3>
                     <select id="size-${p.id}" style="width:80%" onchange="onSizeChange('${p.id}')">
                         ${sizes[p.cat].map(s => `<option value="${s}">${s}</option>`).join('')}
@@ -299,7 +333,6 @@
         });
     }
 
-    // הוספה או הסרה של שילוב ספציפי של מוצר + מידה
     function toggleCartItem(id) {
         const sizeEl = document.getElementById(`size-${id}`);
         const size = sizeEl ? sizeEl.value : 'OS';
@@ -314,7 +347,6 @@
         onSizeChange(id);
     }
 
-    // הסרה ישירה מתוך תצוגת עגלת הקניות
     function removeSpecificItem(id, size) {
         const idx = cartItems.findIndex(i => i.id === id && i.size === size);
         if (idx > -1) {
@@ -344,7 +376,8 @@
         const bundle = { gender: document.getElementById('bundle-gen').value, items: [] };
         cats.forEach(c => {
             const pId = document.getElementById(`wb-${c}`).value;
-            bundle.items.push({ name: products.find(p => p.id === pId).name, size: document.getElementById(`wbs-${c}`).value });
+            const foundProd = products.find(p => p.id === pId);
+            bundle.items.push({ name: foundProd ? foundProd.name : c, size: document.getElementById(`wbs-${c}`).value });
         });
         cartBundles.push(bundle);
         updateUI(); closePopups();
