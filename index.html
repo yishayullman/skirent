@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SkiRent Premium | השכרת ציוד סקי</title>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-
     <style>
         :root {
             --primary: #1a2a6c;
@@ -112,30 +109,6 @@
             cursor: pointer; font-weight: bold; user-select: none;
         }
     </style>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, set, onValue, push, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCY90fyiewhmK2lClR1wSQxKt9eYVhvFd4",
-            authDomain: "yishayullmanskirent.firebaseapp.com",
-            databaseURL: "https://yishayullmanskirent-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "yishayullmanskirent",
-            storageBucket: "yishayullmanskirent.firebasestorage.app",
-            messagingSenderId: "290415824092",
-            appId: "1:290415824092:web:b8336e96349a8ff0e77819"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        window.db = db;
-        window.dbRef = ref;
-        window.dbSet = set;
-        window.dbPush = push;
-        window.dbRemove = remove;
-    </script>
 </head>
 <body>
 
@@ -258,6 +231,10 @@
 </div>
 
 <script>
+    // הגדרות חיבור לשרת האחסון הפשוט
+    const BIN_ID = "65f005a7266cfc3fde96df8f"; // מזהה קובץ החסימות שלך
+    const API_KEY = "$2a$10$A3aPXMRSPKEJKtNLgjR4o.YJWA06TL6jnPttQD5EtSTR9ak6RnSSK"; // המפתח המעודכן מהסרטון
+
     const cats = ['מעיל', 'מכנס', 'קסדה', 'כפפות', 'גוגלס'];
     const genders = ['גברים', 'נשים', 'ילדים'];
     const prices = { 'מעיל': 150, 'מכנס': 120, 'קסדה': 50, 'כפפות': 30, 'גוגלס': 40 };
@@ -288,41 +265,45 @@
 
     let cartItems = JSON.parse(localStorage.getItem('skiCartItems')) || [];
     let cartBundles = JSON.parse(localStorage.getItem('skiCartBundles')) || [];
-    
-    // רשימת החסימות המפוענחות שהקוד עובד איתן באופן שוטף
-    let blockedDatesFromServer = {}; 
-    const SECRET_KEY = "yishayullmanskirent"; // מפתח ההצפנה הקבוע שלנו
+    let blockedDatesFromServer = []; 
 
-    function initFirebaseSync() {
-        if (window.db) {
-            const blockedRef = window.dbRef(window.db, 'blocked_dates');
-            onValue(blockedRef, (snapshot) => {
-                const encryptedData = snapshot.val() || {};
-                blockedDatesFromServer = {}; // איפוס לפני טעינה חדשה
-
-                // פענוח הנתונים המוצפנים שמגיעים מ-Firebase
-                for (let key in encryptedData) {
-                    try {
-                        const bytes = CryptoJS.AES.decrypt(encryptedData[key], SECRET_KEY);
-                        const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
-                        if (decryptedText) {
-                            blockedDatesFromServer[key] = JSON.parse(decryptedText);
-                        }
-                    } catch (e) {
-                        // אם מישהו שלח זבל לא מוצפן לענן - המערכת תתעלם מזה בבטחה
-                        console.log("נמצא מידע לא מורשה בענן - המערכת מתעלמת.");
-                    }
-                }
-                
-                render();
-                updateUI();
-                renderAdminList();
+    // שליפת רשימת החסימות מהאינטרנט
+    async function loadBlockedDates() {
+        try {
+            const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                headers: { "X-Master-Key": API_KEY }
             });
-        } else {
-            setTimeout(initFirebaseSync, 500);
+            const data = await res.json();
+            blockedDatesFromServer = data.record.blocks || [];
+            render();
+            updateUI();
+            renderAdminList();
+        } catch (e) {
+            console.log("בעיה בטעינת החסימות, יוצר קובץ חדש...");
+            saveBlockedDatesToCloud([]);
         }
     }
-    setTimeout(initFirebaseSync, 500);
+
+    async function saveBlockedDatesToCloud(newBlocksArray) {
+        try {
+            await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                method: 'PUT',
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Master-Key": API_KEY
+                },
+                body: JSON.stringify({ blocks: newBlocksArray })
+            });
+            blockedDatesFromServer = newBlocksArray;
+            render();
+            updateUI();
+            renderAdminList();
+        } catch (e) {
+            alert("תקלה בעדכון השרת.");
+        }
+    }
+
+    loadBlockedDates();
 
     const todayStr = new Date().toISOString().split('T')[0];
     document.getElementById('start-date').min = todayStr;
@@ -345,15 +326,12 @@
         const eDate = document.getElementById('end-date').value;
         if (!sDate || !eDate) return false;
 
-        for (let key in blockedDatesFromServer) {
-            const block = blockedDatesFromServer[key];
-            if (block.productId === id && block.size === size) {
-                if (sDate <= block.endDate && eDate >= block.startDate) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return blockedDatesFromServer.some(block => {
+            return block.productId === id && 
+                   block.size === size && 
+                   sDate <= block.endDate && 
+                   eDate >= block.startDate;
+        });
     }
 
     function checkCartValidity() {
@@ -590,13 +568,13 @@
     function showModal(id) { document.getElementById('overlay').style.display='block'; document.getElementById(id).style.display='block'; }
     function closePopups() { document.querySelectorAll('.modal, .overlay').forEach(m => m.style.display='none'); }
 
-    // פונקציות ניהול חסימות - מבוססות הצפנת לקוח מלאה (CryptoJS)
+    // פאנל הניהול האישי
     let isAdminAuthenticated = false;
 
     function openAdminModal() {
         if (!isAdminAuthenticated) {
             const pass = prompt("נא להזין סיסמת מנהל לניהול המלאי:");
-            if (pass === SECRET_KEY) {
+            if (pass === "yishayullmanskirent") {
                 isAdminAuthenticated = true;
             } else {
                 alert("סיסמה שגויה!");
@@ -623,56 +601,21 @@
         const end = document.getElementById('admin-end').value;
         const prodName = products.find(p => p.id === pId).name;
 
-        if (!start || !end) { 
-            alert("יש לבחור תאריכים לחסימה"); 
-            return; 
-        }
+        if (!start || !end) { alert("יש לבחור תאריכים לחסימה"); return; }
 
-        if (window.db) {
-            const uniqueKey = 'block_' + Date.now();
-            const directItemRef = window.dbRef(window.db, `blocked_dates/${uniqueKey}`);
-            
-            // יצירת אובייקט חסימה רגיל
-            const blockObj = {
-                productId: pId,
-                productName: prodName,
-                size: size,
-                startDate: start,
-                endDate: end
-            };
-
-            // הצפנת האובייקט למחרוזת "ג'יבריש" מאובטחת
-            const encryptedString = CryptoJS.AES.encrypt(JSON.stringify(blockObj), SECRET_KEY).toString();
-            
-            // כתיבת המחרוזת המוצפנת ישירות ל-Firebase ללא חסימות שרת
-            window.dbSet(directItemRef, encryptedString)
-            .then(() => {
-                alert("המוצר נחסם בהצלחה בענן בצורה מאובטחת!");
-                document.getElementById('admin-start').value = "";
-                document.getElementById('admin-end').value = "";
-            })
-            .catch((err) => {
-                alert("תקלה בתקשורת מול השרת.");
-                console.error(err);
-            });
-        } else {
-            alert("החיבור לשרת טרם הושלם, נסה שוב בעוד כמה שניות");
-        }
+        const id = Date.now();
+        const updatedBlocks = [...blockedDatesFromServer, { id, productId: pId, productName: prodName, size, startDate: start, endDate: end }];
+        
+        saveBlockedDatesToCloud(updatedBlocks);
+        alert("המוצר נחסם בהצלחה לכולם!");
+        document.getElementById('admin-start').value = "";
+        document.getElementById('admin-end').value = "";
     }
 
-    function removeBlock(key) {
-        if (confirm("האם לשחרר חסימה זו ולהחזיר את המוצר למלאי?")) {
-            if (window.db) {
-                const itemRef = window.dbRef(window.db, `blocked_dates/${key}`);
-                window.dbRemove(itemRef)
-                .then(() => {
-                    alert("החסימה הוסרה בהצלחה.");
-                })
-                .catch((err) => {
-                    alert("תקלה בהסרת החסימה.");
-                    console.error(err);
-                });
-            }
+    function removeBlock(id) {
+        if (confirm("האם לשחרר חסימה זו ולהחזיר את המוצר למלאי לכולם?")) {
+            const updatedBlocks = blockedDatesFromServer.filter(b => b.id !== id);
+            saveBlockedDatesToCloud(updatedBlocks);
         }
     }
 
@@ -681,22 +624,21 @@
         if (!list) return;
         list.innerHTML = "";
         
-        let hasBlocks = false;
-        for (let key in blockedDatesFromServer) {
-            hasBlocks = true;
-            const b = blockedDatesFromServer[key];
+        if(blockedDatesFromServer.length === 0) {
+            list.innerHTML = "<p style='color:#666;'>אין מוצרים חסומים כרגע.</p>";
+            return;
+        }
+
+        blockedDatesFromServer.forEach(b => {
             list.innerHTML += `
                 <div style="background:#f8d7da; padding: 8px; margin-bottom:5px; border-radius:5px; display:flex; justify-content:space-between; align-items:center;">
                     <div>
                         <b>${b.productName} (${b.size})</b><br>
                         תאריכים: ${b.startDate} עד ${b.endDate}
                     </div>
-                    <button onclick="removeBlock('${key}')" style="background:var(--danger); color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">שחרר</button>
+                    <button onclick="removeBlock(${b.id})" style="background:var(--danger); color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">שחרר</button>
                 </div>`;
-        }
-        if (!hasBlocks) {
-            list.innerHTML = "<p style='color:#666;'>אין מוצרים חסומים כרגע.</p>";
-        }
+        });
     }
 
     render(); updateUI();
