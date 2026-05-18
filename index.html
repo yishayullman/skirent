@@ -62,7 +62,10 @@
             background: white; border-radius: 15px; overflow: hidden;
             box-shadow: 0 10px 20px rgba(0,0,0,0.2); text-align: center;
             padding-bottom: 20px; position: relative;
+            transition: opacity 0.3s, filter 0.3s;
         }
+        /* האפקט האפור יופעל רק כשיש מחלקה ספציפית שמוזרקת בזמן אמת */
+        .card.size-blocked { opacity: 0.65; filter: grayscale(0.6); }
         .card img { width: 100%; height: 250px; object-fit: contain; background: #f9f9f9; padding: 10px; cursor: pointer; transition: transform 0.2s; }
         .card img:hover { transform: scale(1.02); }
 
@@ -70,9 +73,8 @@
             background: var(--primary); color: white; border: none;
             padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 80%;
         }
-        .btn-select.in-cart {
-            background: var(--success);
-        }
+        .btn-select.in-cart { background: var(--success); }
+        .btn-select.disabled-btn { background: #7f8c8d; cursor: not-allowed; }
 
         .modal {
             display: none; position: fixed; top: 50%; left: 50%;
@@ -132,8 +134,8 @@
 
     <div class="tools-section">
         <div style="display:flex; justify-content:center; align-items: center; gap:15px; flex-wrap:wrap; margin-bottom:15px;">
-            <div><label><b>מתאריך:</b></label> <input type="date" id="start-date" onchange="validateDates()" onblur="validateDates()"></div>
-            <div><label><b>עד תאריך:</b></label> <input type="date" id="end-date" onchange="validateDates()" onblur="validateDates()"></div>
+            <div><label><b>מתאריך:</b></label> <input type="date" id="start-date" onchange="validateDates()"></div>
+            <div><label><b>עד תאריך:</b></label> <input type="date" id="end-date" onchange="validateDates()"></div>
         </div>
 
         <div class="filter-group">
@@ -155,6 +157,10 @@
     </div>
 
     <div class="grid" id="product-grid"></div>
+</div>
+
+<div style="text-align: center; margin: 40px 0 20px 0;">
+    <button onclick="openAdminModal()" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid white; padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 0.85rem;">🔧 ניהול מלאי חסום</button>
 </div>
 
 <div class="overlay" id="overlay" onclick="closePopups()"></div>
@@ -198,13 +204,39 @@
     <div class="modal-body" style="text-align:center;">
         <p><strong>🏠 כתובת:</strong> יהודה הלוי 58, גבעת שמואל</p>
         <p><strong>📞 טלפון:</strong> 054-9943477</p>
-        <button class="btn-select" style="background:#4285F4; margin-bottom:10px;" onclick="window.open('https://maps.google.com/?q=יהודה+הלוי+58+גבעת+שמואל')">📍 ניווט ליעד</button>
+        <button class="btn-select" style="background:#4285F4; margin-bottom:10px;" onclick="window.open('http://maps.google.com/?q=יהודה+הלוי+58+גבעת+שמואל')">📍 ניווט ליעד</button>
         <a href="https://wa.me/972549943477" target="_blank" class="wa-btn">💬 שלח לנו הודעה בוואטסאפ</a>
         <button class="btn-select" style="margin-top:15px; background:#666;" onclick="closePopups()">סגור</button>
     </div>
 </div>
 
+<div class="modal" id="adminModal">
+    <div class="modal-header"><h3>🛠️ פאנל ניהול חסימות מלאי</h3></div>
+    <div class="modal-body">
+        <div style="margin-bottom: 15px;">
+            <label><b>בחר מוצר לחסימה:</b></label><br>
+            <select id="admin-prod-select" style="width: 100%;"></select>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label><b>בחר מידה:</b></label><br>
+            <select id="admin-size-select" style="width: 100%;"></select>
+        </div>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <div><label>מאיזה תאריך:</label><input type="date" id="admin-start"></div>
+            <div><label>עד תאריך:</label><input type="date" id="admin-end"></div>
+        </div>
+        <button onclick="submitBlock()" style="width:100%; background:var(--danger); color:white; padding:10px; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">🔒 חסום מוצר זה</button>
+        <hr>
+        <h4>רשימת חסימות פעילות בענן:</h4>
+        <div id="admin-blocks-list" style="max-height: 200px; overflow-y:auto; font-size:0.9rem;"></div>
+    </div>
+</div>
+
 <script>
+    // הגדרות חיבור לשרת האחסון
+    const BIN_ID = "6a0b5afa6610dd3ae8672c27"; 
+    const API_KEY = "$2a$10$A3aPXMRSPKEJKtNLgjR4o.YJWA06TL6jnPttQD5EtSTR9ak6RnSSK"; 
+
     const cats = ['מעיל', 'מכנס', 'קסדה', 'כפפות', 'גוגלס'];
     const genders = ['גברים', 'נשים', 'ילדים'];
     const prices = { 'מעיל': 150, 'מכנס': 120, 'קסדה': 50, 'כפפות': 30, 'גוגלס': 40 };
@@ -214,7 +246,7 @@
         { id: 'coat-men-1', name: 'מעיל גברים דגם 1', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.postimg.cc/0yfCcb9Q/7b788b3f-6662-402b-a041-8b6c85e1b681.jpg' },
         { id: 'coat-men-2', name: 'מעיל גברים דגם 2', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.postimg.cc/v84gKDtZ/659f2dd7-c29c-41b9-8e5b-549f51a432c3.jpg' },
         { id: 'coat-women-1', name: 'מעיל נשים דגם 1', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.postimg.cc/5NtPTBkL/1a256f0f-8a9a-4c42-b6f8-242afd02df85.jpg' },
-        { id: 'coat-women-2', name: 'מעיל נשים דגם 2', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.ibb.co/wZpX0g7C/4.jpg' }
+        { id: 'coat-women-2', name: 'מעיל נשים דגם 2', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.postimg.cc/wZpX0g7C/4.jpg' }
     ];
 
     cats.forEach(c => {
@@ -235,9 +267,48 @@
 
     let cartItems = JSON.parse(localStorage.getItem('skiCartItems')) || [];
     let cartBundles = JSON.parse(localStorage.getItem('skiCartBundles')) || [];
+    let blockedDatesFromServer = []; 
 
-    cartItems = cartItems.filter(item => products.some(p => p.id === item.id));
-    localStorage.setItem('skiCartItems', JSON.stringify(cartItems));
+    async function loadBlockedDates() {
+        if(BIN_ID === "") return;
+        try {
+            const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                headers: { "X-Master-Key": API_KEY }
+            });
+            const data = await res.json();
+            blockedDatesFromServer = data.record.blocks || [];
+            render();
+            updateUI();
+            renderAdminList();
+        } catch (e) {
+            console.log("שגיאה בטעינת נתונים מהענן");
+        }
+    }
+
+    async function saveBlockedDatesToCloud(newBlocksArray) {
+        try {
+            const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                method: 'PUT',
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Master-Key": API_KEY
+                },
+                body: JSON.stringify({ blocks: newBlocksArray })
+            });
+            if(res.ok) {
+                blockedDatesFromServer = newBlocksArray;
+                render();
+                updateUI();
+                renderAdminList();
+            } else {
+                alert("תקלה בעדכון השרת. וודא שהמפתח וה-Bin ID נכונים.");
+            }
+        } catch (e) {
+            alert("תקלה ברשת בשמירה לענן.");
+        }
+    }
+
+    loadBlockedDates();
 
     const todayStr = new Date().toISOString().split('T')[0];
     document.getElementById('start-date').min = todayStr;
@@ -246,26 +317,30 @@
     function validateDates() {
         const sInput = document.getElementById('start-date');
         const eInput = document.getElementById('end-date');
-
-        if (sInput.value && sInput.value < todayStr) {
-            alert("לא ניתן לבחור תאריך מהעבר");
-            sInput.value = "";
-            return;
-        }
-
-        if (sInput.value) {
-            eInput.min = sInput.value;
-        }
-
-        if (sInput.value && eInput.value) {
-            if (eInput.value < sInput.value) {
-                if (document.activeElement !== eInput) {
-                    alert("תאריך סיום לא יכול להיות לפני תאריך התחלה");
-                    eInput.value = "";
-                }
-            }
-        }
+        if (sInput.value && sInput.value < todayStr) { sInput.value = ""; return; }
+        if (sInput.value) { eInput.min = sInput.value; }
+        if (sInput.value && eInput.value && eInput.value < sInput.value) { eInput.value = ""; }
+        
+        checkCartValidity();
         updateUI();
+        render();
+    }
+
+    function isProductBlocked(id, size) {
+        const sDate = document.getElementById('start-date').value;
+        const eDate = document.getElementById('end-date').value;
+        if (!sDate || !eDate) return false;
+
+        return blockedDatesFromServer.some(block => {
+            return block.productId === id && 
+                   block.size === size && 
+                   sDate <= block.endDate && 
+                   eDate >= block.startDate;
+        });
+    }
+
+    function checkCartValidity() {
+        cartItems = cartItems.filter(item => !isProductBlocked(item.id, item.size));
     }
 
     let currentCat = 'all';
@@ -285,20 +360,32 @@
         render();
     }
 
+    // התיקון המרכזי כאן: החלפת המצב האפור לפי המידה שנבחרה
     function onSizeChange(id) {
         const sizeEl = document.getElementById(`size-${id}`);
         const btnEl = document.getElementById(`btn-${id}`);
         if (!sizeEl || !btnEl) return;
         
+        const cardEl = sizeEl.closest('.card');
         const selectedSize = sizeEl.value;
-        const isThisSizeInCart = cartItems.some(i => i.id === id && i.size === selectedSize);
-        
-        if (isThisSizeInCart) {
-            btnEl.innerText = "✅ במידה זו בסל";
-            btnEl.classList.add('in-cart');
+        const blocked = isProductBlocked(id, selectedSize);
+
+        if (blocked) {
+            if (cardEl) cardEl.classList.add('size-blocked'); // הופך לאפור רק כשהמידה הזו ספציפית נבחרה ותפוסה
+            btnEl.innerText = `❌ מידה ${selectedSize} תפוסה בתאריכים אלו`;
+            btnEl.className = "btn-select disabled-btn";
+            btnEl.disabled = true;
         } else {
-            btnEl.innerText = "הוסף לסל";
-            btnEl.classList.remove('in-cart');
+            if (cardEl) cardEl.classList.remove('size-blocked'); // מחזיר לצבעוני אם פנוי
+            btnEl.disabled = false;
+            const isThisSizeInCart = cartItems.some(i => i.id === id && i.size === selectedSize);
+            if (isThisSizeInCart) {
+                btnEl.innerText = "✅ במידה זו בסל";
+                btnEl.className = "btn-select in-cart";
+            } else {
+                btnEl.innerText = "הוסף לסל";
+                btnEl.className = "btn-select";
+            }
         }
     }
 
@@ -306,28 +393,30 @@
         document.getElementById('lightbox-img').src = src;
         document.getElementById('lightbox').style.display = 'flex';
     }
-    function closeLightbox() {
-        document.getElementById('lightbox').style.display = 'none';
-    }
+    function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
 
     function render() {
         const grid = document.getElementById('product-grid');
+        if(!grid) return;
         grid.innerHTML = '';
         const filtered = products.filter(p => (currentCat === 'all' || p.cat === currentCat) && (currentGender === 'all' || p.gender === currentGender));
+        
         filtered.forEach(p => {
             const defaultSize = sizes[p.cat][0];
+            const blocked = isProductBlocked(p.id, defaultSize);
             const isInCart = cartItems.some(i => i.id === p.id && i.size === defaultSize);
             
+            // הורדה של מחלקת blocked הגורפת מהכרטיס בטעינה הראשונית
             grid.innerHTML += `
-                <div class="card">
+                <div class="card ${blocked ? 'size-blocked' : ''}" id="card-${p.id}">
                     <img src="${p.image}" onclick="openLightbox('${p.image}')" title="לחץ להגדלה">
                     <h3>${p.name}</h3>
                     <select id="size-${p.id}" style="width:80%" onchange="onSizeChange('${p.id}')">
                         ${sizes[p.cat].map(s => `<option value="${s}">${s}</option>`).join('')}
                     </select>
                     <div style="color:var(--success); font-weight:bold; margin:10px 0;">₪${p.price} לשבוע</div>
-                    <button id="btn-${p.id}" class="btn-select ${isInCart ? 'in-cart' : ''}" onclick="toggleCartItem('${p.id}')">
-                        ${isInCart ? '✅ במידה זו בסל' : 'הוסף לסל'}
+                    <button id="btn-${p.id}" ${blocked ? 'disabled' : ''} class="btn-select ${blocked ? 'disabled-btn' : (isInCart ? 'in-cart' : '')}" onclick="toggleCartItem('${p.id}')">
+                        ${blocked ? `❌ מידה ${defaultSize} תפוסה בתאריכים אלו` : (isInCart ? '✅ במידה זו בסל' : 'הוסף לסל')}
                     </button>
                 </div>`;
         });
@@ -336,22 +425,18 @@
     function toggleCartItem(id) {
         const sizeEl = document.getElementById(`size-${id}`);
         const size = sizeEl ? sizeEl.value : 'OS';
-        
+        if (isProductBlocked(id, size)) return;
+
         const idx = cartItems.findIndex(i => i.id === id && i.size === size);
-        if(idx > -1) {
-            cartItems.splice(idx, 1);
-        } else {
-            cartItems.push({ id, size });
-        }
+        if(idx > -1) { cartItems.splice(idx, 1); } 
+        else { cartItems.push({ id, size }); }
         updateUI();
         onSizeChange(id);
     }
 
     function removeSpecificItem(id, size) {
         const idx = cartItems.findIndex(i => i.id === id && i.size === size);
-        if (idx > -1) {
-            cartItems.splice(idx, 1);
-        }
+        if (idx > -1) { cartItems.splice(idx, 1); }
         updateUI();
         onSizeChange(id);
     }
@@ -374,11 +459,20 @@
 
     function saveBundleToCart() {
         const bundle = { gender: document.getElementById('bundle-gen').value, items: [] };
+        let anyBlocked = false;
         cats.forEach(c => {
             const pId = document.getElementById(`wb-${c}`).value;
+            const size = document.getElementById(`wbs-${c}`).value;
+            if (isProductBlocked(pId, size)) anyBlocked = true;
             const foundProd = products.find(p => p.id === pId);
-            bundle.items.push({ name: foundProd ? foundProd.name : c, size: document.getElementById(`wbs-${c}`).value });
+            bundle.items.push({ id: pId, name: foundProd ? foundProd.name : c, size: size });
         });
+
+        if (anyBlocked) {
+            alert("לא ניתן להוסיף את החבילה - אחד או יותר מהפריטים שבחרת תפוס בתאריכים אלו.");
+            return;
+        }
+
         cartBundles.push(bundle);
         updateUI(); closePopups();
     }
@@ -387,7 +481,8 @@
         localStorage.setItem('skiCartItems', JSON.stringify(cartItems));
         localStorage.setItem('skiCartBundles', JSON.stringify(cartBundles));
         
-        document.getElementById('cart-count').innerText = cartItems.length + cartBundles.length;
+        const countEl = document.getElementById('cart-count');
+        if (countEl) countEl.innerText = cartItems.length + cartBundles.length;
         
         const s = document.getElementById('start-date').value, e = document.getElementById('end-date').value;
         let weeks = 1;
@@ -406,9 +501,9 @@
 
         if(cartItems.length === 0 && cartBundles.length === 0) {
             htmlContent = '<p style="text-align:center; padding:20px; color:#666;">הסל שלך ריק כרגע...</p>';
-            checkoutArea.style.display = 'none';
+            if (checkoutArea) checkoutArea.style.display = 'none';
         } else {
-            checkoutArea.style.display = 'block';
+            if (checkoutArea) checkoutArea.style.display = 'block';
             cartBundles.forEach((b, idx) => {
                 total += 350 * weeks;
                 htmlContent += `
@@ -438,8 +533,9 @@
                 }
             });
         }
-        listContainer.innerHTML = htmlContent;
-        document.getElementById('final-price').innerText = total;
+        if (listContainer) listContainer.innerHTML = htmlContent;
+        const finalPriceEl = document.getElementById('final-price');
+        if (finalPriceEl) finalPriceEl.innerText = total;
     }
 
     function removeBundle(idx) { cartBundles.splice(idx, 1); updateUI(); }
@@ -451,7 +547,6 @@
 
         if(!nameInput.value.trim()) { alert("נא להזין שם מלא להזמנה"); return; }
         if(!sInput.value || !eInput.value) { alert("נא לבחור תאריכי השכרה בראש העמוד"); return; }
-        if(eInput.value < sInput.value) { alert("תאריכי ההזמנה לא תקינים - תאריך הסיום לפני תאריך ההתחלה"); return; }
 
         let msg = `שלום, אני מעוניין להזמין ציוד סקי:\n`;
         msg += `שם: ${nameInput.value}\n`;
@@ -479,6 +574,78 @@
 
     function showModal(id) { document.getElementById('overlay').style.display='block'; document.getElementById(id).style.display='block'; }
     function closePopups() { document.querySelectorAll('.modal, .overlay').forEach(m => m.style.display='none'); }
+
+    let isAdminAuthenticated = false;
+
+    function openAdminModal() {
+        if (!isAdminAuthenticated) {
+            const pass = prompt("נא להזין סיסמת מנהל לניהול המלאי:");
+            if (pass === "yishayullmanskirent") {
+                isAdminAuthenticated = true;
+            } else {
+                alert("סיסמה שגויה!");
+                return;
+            }
+        }
+        
+        const pSelect = document.getElementById('admin-prod-select');
+        pSelect.innerHTML = products.map(p => `<option value="${p.id}">${p.name} (${p.gender})</option>`).join('');
+        
+        pSelect.onchange = () => {
+            const prod = products.find(p => p.id === pSelect.value);
+            document.getElementById('admin-size-select').innerHTML = sizes[prod.cat].map(s => `<option value="${s}">${s}</option>`).join('');
+        };
+        pSelect.onchange();
+
+        showModal('adminModal');
+    }
+
+    function submitBlock() {
+        const pId = document.getElementById('admin-prod-select').value;
+        const size = document.getElementById('admin-size-select').value;
+        const start = document.getElementById('admin-start').value;
+        const end = document.getElementById('admin-end').value;
+        const prodName = products.find(p => p.id === pId).name;
+
+        if (!start || !end) { alert("יש לבחור תאריכים לחסימה"); return; }
+
+        const id = Date.now();
+        const updatedBlocks = [...blockedDatesFromServer, { id, productId: pId, productName: prodName, size, startDate: start, endDate: end }];
+        
+        saveBlockedDatesToCloud(updatedBlocks);
+        alert("המוצר נחסם בהצלחה לכולם!");
+        document.getElementById('admin-start').value = "";
+        document.getElementById('admin-end').value = "";
+    }
+
+    function removeBlock(id) {
+        if (confirm("האם לשחרר חסימה זו ולהחזיר את המוצר למלאי לכולם?")) {
+            const updatedBlocks = blockedDatesFromServer.filter(b => b.id !== id);
+            saveBlockedDatesToCloud(updatedBlocks);
+        }
+    }
+
+    function renderAdminList() {
+        const list = document.getElementById('admin-blocks-list');
+        if (!list) return;
+        list.innerHTML = "";
+        
+        if(blockedDatesFromServer.length === 0) {
+            list.innerHTML = "<p style='color:#666;'>אין מוצרים חסומים כרגע.</p>";
+            return;
+        }
+
+        blockedDatesFromServer.forEach(b => {
+            list.innerHTML += `
+                <div style="background:#f8d7da; padding: 8px; margin-bottom:5px; border-radius:5px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <b>${b.productName} (${b.size})</b><br>
+                        תאריכים: ${b.startDate} עד ${b.endDate}
+                    </div>
+                    <button onclick="removeBlock(${b.id})" style="background:var(--danger); color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">שחרר</button>
+                </div>`;
+        });
+    }
 
     render(); updateUI();
 </script>
