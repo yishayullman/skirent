@@ -569,7 +569,7 @@
     function showModal(id) { document.getElementById('overlay').style.display='block'; document.getElementById(id).style.display='block'; }
     function closePopups() { document.querySelectorAll('.modal, .overlay').forEach(m => m.style.display='none'); }
 
-    // פונקציות ניהול חסימות
+    // פונקציות ניהול חסימות (עודכן עם אבטחת secret ישירה לשרת)
     function openAdminModal() {
         if (!adminPassword) {
             const pass = prompt("נא להזין סיסמת מנהל לניהול המלאי:");
@@ -606,20 +606,17 @@
         }
 
         if (window.db) {
-            // צעד 1: שליחה ועדכון מפתח המעקף המאובטח
-            window.dbSet(window.dbRef(window.db, 'admin_bypass'), adminPassword)
-            .then(() => {
-                // צעד 2: מיד לאחר מכן דחיפת רשומת החסימה החדשה
-                const blockedRef = window.dbRef(window.db, 'blocked_dates');
-                const newBlockRef = window.dbPush(blockedRef);
-                
-                return window.dbSet(newBlockRef, {
-                    productId: pId,
-                    productName: prodName,
-                    size: size,
-                    startDate: start,
-                    endDate: end
-                });
+            const blockedRef = window.dbRef(window.db, 'blocked_dates');
+            const newBlockRef = window.dbPush(blockedRef);
+            
+            // הסיסמה נשלחת כחלק מהנתונים, Firebase Rules בודק אותה ומאשר את הכתיבה
+            window.dbSet(newBlockRef, {
+                productId: pId,
+                productName: prodName,
+                size: size,
+                startDate: start,
+                endDate: end,
+                secret: adminPassword 
             })
             .then(() => {
                 alert("המוצר נחסם בהצלחה בענן לכל המשתמשים!");
@@ -627,7 +624,7 @@
                 document.getElementById('admin-end').value = "";
             })
             .catch((err) => {
-                alert("תקלה ברישום לשרת. וודא שהגדרת נכון את ה-Rules ב-Firebase.");
+                alert("שגיאה ברישום לשרת. וודא שחוקי האבטחה (Rules) ב-Firebase מעודכנים.");
                 console.error(err);
             });
         } else {
@@ -637,17 +634,17 @@
 
     function removeBlock(key) {
         if (confirm("האם לשחרר חסימה זו ולהחזיר את המוצר למלאי?")) {
-            window.dbSet(window.dbRef(window.db, 'admin_bypass'), adminPassword)
-            .then(() => {
+            if (window.db) {
                 const itemRef = window.dbRef(window.db, `blocked_dates/${key}`);
-                return window.dbRemove(itemRef);
-            })
-            .then(() => {
-                alert("החסימה הוסרה בהצלחה.");
-            })
-            .catch((err) => {
-                console.error(err);
-            });
+                window.dbRemove(itemRef)
+                .then(() => {
+                    alert("החסימה הוסרה בהצלחה.");
+                })
+                .catch((err) => {
+                    alert("תקלה בהסרת החסימה.");
+                    console.error(err);
+                });
+            }
         }
     }
 
