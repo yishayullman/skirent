@@ -69,6 +69,9 @@
             background: var(--primary); color: white; border: none;
             padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 80%;
         }
+        .btn-select.in-cart {
+            background: var(--success);
+        }
 
         .modal {
             display: none; position: fixed; top: 50%; left: 50%;
@@ -216,7 +219,6 @@
         const sInput = document.getElementById('start-date');
         const eInput = document.getElementById('end-date');
 
-        // חסימת תאריך מהעבר בשדה ההתחלה
         if (sInput.value && sInput.value < todayStr) {
             alert("לא ניתן לבחור תאריך מהעבר");
             sInput.value = "";
@@ -224,11 +226,9 @@
         }
 
         if (sInput.value) {
-            // תאריך הסיום חייב להיות לפחות כמו תאריך ההתחלה
             eInput.min = sInput.value;
         }
 
-        // בדיקה רק כשהמשתמש לא נמצא כרגע בתוך עריכת שדה הסיום
         if (sInput.value && eInput.value) {
             if (eInput.value < sInput.value) {
                 if (document.activeElement !== eInput) {
@@ -257,33 +257,71 @@
         render();
     }
 
+    // פונקציה שמתעדכנת בלייב כשמשנים מידה בכרטיס מוצר
+    function onSizeChange(id) {
+        const sizeEl = document.getElementById(`size-${id}`);
+        const btnEl = document.getElementById(`btn-${id}`);
+        if (!sizeEl || !btnEl) return;
+        
+        const selectedSize = sizeEl.value;
+        const isThisSizeInCart = cartItems.some(i => i.id === id && i.size === selectedSize);
+        
+        if (isThisSizeInCart) {
+            btnEl.innerText = "✅ במידה זו בסל";
+            btnEl.classList.add('in-cart');
+        } else {
+            btnEl.innerText = "הוסף לסל";
+            btnEl.classList.remove('in-cart');
+        }
+    }
+
     function render() {
         const grid = document.getElementById('product-grid');
         grid.innerHTML = '';
         const filtered = products.filter(p => (currentCat === 'all' || p.cat === currentCat) && (currentGender === 'all' || p.gender === currentGender));
         filtered.forEach(p => {
-            const isInCart = cartItems.some(i => i.id === p.id);
+            // כברירת מחדל נבדוק את המידה הראשונה ברשימה של המוצר
+            const defaultSize = sizes[p.cat][0];
+            const isInCart = cartItems.some(i => i.id === p.id && i.size === defaultSize);
+            
             grid.innerHTML += `
                 <div class="card">
                     <img src="${p.image}">
                     <h3>${p.name}</h3>
-                    <select id="size-${p.id}" style="width:80%">${sizes[p.cat].map(s => `<option value="${s}">${s}</option>`).join('')}</select>
+                    <select id="size-${p.id}" style="width:80%" onchange="onSizeChange('${p.id}')">
+                        ${sizes[p.cat].map(s => `<option value="${s}">${s}</option>`).join('')}
+                    </select>
                     <div style="color:var(--success); font-weight:bold; margin:10px 0;">₪${p.price} לשבוע</div>
-                    <button class="btn-select" onclick="toggleCartItem('${p.id}')">${isInCart ? '✅ בסל' : 'הוסף לסל'}</button>
+                    <button id="btn-${p.id}" class="btn-select ${isInCart ? 'in-cart' : ''}" onclick="toggleCartItem('${p.id}')">
+                        ${isInCart ? '✅ במידה זו בסל' : 'הוסף לסל'}
+                    </button>
                 </div>`;
         });
     }
 
+    // הוספה או הסרה של שילוב ספציפי של מוצר + מידה
     function toggleCartItem(id) {
-        const idx = cartItems.findIndex(i => i.id === id);
+        const sizeEl = document.getElementById(`size-${id}`);
+        const size = sizeEl ? sizeEl.value : 'OS';
+        
+        const idx = cartItems.findIndex(i => i.id === id && i.size === size);
         if(idx > -1) {
             cartItems.splice(idx, 1);
         } else {
-            const sizeEl = document.getElementById(`size-${id}`);
-            const size = sizeEl ? sizeEl.value : 'OS';
             cartItems.push({ id, size });
         }
         updateUI();
+        onSizeChange(id);
+    }
+
+    // הסרה ישירה מתוך תצוגת עגלת הקניות
+    function removeSpecificItem(id, size) {
+        const idx = cartItems.findIndex(i => i.id === id && i.size === size);
+        if (idx > -1) {
+            cartItems.splice(idx, 1);
+        }
+        updateUI();
+        onSizeChange(id);
     }
 
     function openBundleWizard() {
@@ -362,14 +400,13 @@
                                 <div style="font-weight:bold;">${productData.name}</div>
                                 <div style="font-size:0.8rem; color:#666;">מידה: ${item.size}</div>
                             </div>
-                            <span class="remove-btn" onclick="toggleCartItem('${productData.id}')">×</span>
+                            <span class="remove-btn" onclick="removeSpecificItem('${item.id}', '${item.size}')">×</span>
                         </div>`;
                 }
             });
         }
         listContainer.innerHTML = htmlContent;
         document.getElementById('final-price').innerText = total;
-        render();
     }
 
     function removeBundle(idx) { cartBundles.splice(idx, 1); updateUI(); }
