@@ -62,8 +62,10 @@
             background: white; border-radius: 15px; overflow: hidden;
             box-shadow: 0 10px 20px rgba(0,0,0,0.2); text-align: center;
             padding-bottom: 20px; position: relative;
+            transition: opacity 0.3s, filter 0.3s;
         }
-        .card.blocked { opacity: 0.6; filter: grayscale(0.5); }
+        /* האפקט האפור יופעל רק כשיש מחלקה ספציפית שמוזרקת בזמן אמת */
+        .card.size-blocked { opacity: 0.65; filter: grayscale(0.6); }
         .card img { width: 100%; height: 250px; object-fit: contain; background: #f9f9f9; padding: 10px; cursor: pointer; transition: transform 0.2s; }
         .card img:hover { transform: scale(1.02); }
 
@@ -232,7 +234,7 @@
 
 <script>
     // הגדרות חיבור לשרת האחסון
-    const BIN_ID = "6a0b5afa6610dd3ae8672c27"; // ה-Bin ID שלך מעודכן כאן!
+    const BIN_ID = "6a0b5afa6610dd3ae8672c27"; 
     const API_KEY = "$2a$10$A3aPXMRSPKEJKtNLgjR4o.YJWA06TL6jnPttQD5EtSTR9ak6RnSSK"; 
 
     const cats = ['מעיל', 'מכנס', 'קסדה', 'כפפות', 'גוגלס'];
@@ -358,22 +360,23 @@
         render();
     }
 
+    // התיקון המרכזי כאן: החלפת המצב האפור לפי המידה שנבחרה
     function onSizeChange(id) {
         const sizeEl = document.getElementById(`size-${id}`);
         const btnEl = document.getElementById(`btn-${id}`);
-        const cardEl = sizeEl.closest('.card');
         if (!sizeEl || !btnEl) return;
         
+        const cardEl = sizeEl.closest('.card');
         const selectedSize = sizeEl.value;
         const blocked = isProductBlocked(id, selectedSize);
 
         if (blocked) {
-            cardEl.classList.add('blocked');
-            btnEl.innerText = "❌ תפוס בתאריכים אלו";
+            if (cardEl) cardEl.classList.add('size-blocked'); // הופך לאפור רק כשהמידה הזו ספציפית נבחרה ותפוסה
+            btnEl.innerText = `❌ מידה ${selectedSize} תפוסה בתאריכים אלו`;
             btnEl.className = "btn-select disabled-btn";
             btnEl.disabled = true;
         } else {
-            cardEl.classList.remove('blocked');
+            if (cardEl) cardEl.classList.remove('size-blocked'); // מחזיר לצבעוני אם פנוי
             btnEl.disabled = false;
             const isThisSizeInCart = cartItems.some(i => i.id === id && i.size === selectedSize);
             if (isThisSizeInCart) {
@@ -403,8 +406,9 @@
             const blocked = isProductBlocked(p.id, defaultSize);
             const isInCart = cartItems.some(i => i.id === p.id && i.size === defaultSize);
             
+            // הורדה של מחלקת blocked הגורפת מהכרטיס בטעינה הראשונית
             grid.innerHTML += `
-                <div class="card ${blocked ? 'blocked' : ''}">
+                <div class="card ${blocked ? 'size-blocked' : ''}" id="card-${p.id}">
                     <img src="${p.image}" onclick="openLightbox('${p.image}')" title="לחץ להגדלה">
                     <h3>${p.name}</h3>
                     <select id="size-${p.id}" style="width:80%" onchange="onSizeChange('${p.id}')">
@@ -412,7 +416,7 @@
                     </select>
                     <div style="color:var(--success); font-weight:bold; margin:10px 0;">₪${p.price} לשבוע</div>
                     <button id="btn-${p.id}" ${blocked ? 'disabled' : ''} class="btn-select ${blocked ? 'disabled-btn' : (isInCart ? 'in-cart' : '')}" onclick="toggleCartItem('${p.id}')">
-                        ${blocked ? '❌ תפוס בתאריכים אלו' : (isInCart ? '✅ במידה זו בסל' : 'הוסף לסל')}
+                        ${blocked ? `❌ מידה ${defaultSize} תפוסה בתאריכים אלו` : (isInCart ? '✅ במידה זו בסל' : 'הוסף לסל')}
                     </button>
                 </div>`;
         });
