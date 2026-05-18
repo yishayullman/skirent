@@ -108,8 +108,6 @@
             position: absolute; top: 20px; left: 20px; color: white; font-size: 2.5rem;
             cursor: pointer; font-weight: bold; user-select: none;
         }
-        
-        .admin-tag { background: var(--danger); color: white; font-size: 0.75rem; padding: 3px 8px; border-radius: 10px; position: absolute; top: 10px; right: 10px; font-weight: bold; }
     </style>
 
     <script type="module">
@@ -290,7 +288,8 @@
     let blockedDatesFromServer = {}; 
     let adminPassword = "";
 
-    setTimeout(() => {
+    // חיבור וסנכרון מול השרת
+    function initFirebaseSync() {
         if (window.db) {
             const blockedRef = window.dbRef(window.db, 'blocked_dates');
             onValue(blockedRef, (snapshot) => {
@@ -299,8 +298,11 @@
                 updateUI();
                 renderAdminList();
             });
+        } else {
+            setTimeout(initFirebaseSync, 500);
         }
-    }, 1500);
+    }
+    setTimeout(initFirebaseSync, 500);
 
     const todayStr = new Date().toISOString().split('T')[0];
     document.getElementById('start-date').min = todayStr;
@@ -318,7 +320,6 @@
         render();
     }
 
-    // בדיקה האם פריט מסוים תפוס בתאריכים
     function isProductBlocked(id, size) {
         const sDate = document.getElementById('start-date').value;
         const eDate = document.getElementById('end-date').value;
@@ -475,7 +476,8 @@
         localStorage.setItem('skiCartItems', JSON.stringify(cartItems));
         localStorage.setItem('skiCartBundles', JSON.stringify(cartBundles));
         
-        document.getElementById('cart-count').innerText = cartItems.length + cartBundles.length;
+        const countEl = document.getElementById('cart-count');
+        if (countEl) countEl.innerText = cartItems.length + cartBundles.length;
         
         const s = document.getElementById('start-date').value, e = document.getElementById('end-date').value;
         let weeks = 1;
@@ -494,9 +496,9 @@
 
         if(cartItems.length === 0 && cartBundles.length === 0) {
             htmlContent = '<p style="text-align:center; padding:20px; color:#666;">הסל שלך ריק כרגע...</p>';
-            checkoutArea.style.display = 'none';
+            if (checkoutArea) checkoutArea.style.display = 'none';
         } else {
-            checkoutArea.style.display = 'block';
+            if (checkoutArea) checkoutArea.style.display = 'block';
             cartBundles.forEach((b, idx) => {
                 total += 350 * weeks;
                 htmlContent += `
@@ -527,7 +529,8 @@
             });
         }
         if (listContainer) listContainer.innerHTML = htmlContent;
-        document.getElementById('final-price').innerText = total;
+        const finalPriceEl = document.getElementById('final-price');
+        if (finalPriceEl) finalPriceEl.innerText = total;
     }
 
     function removeBundle(idx) { cartBundles.splice(idx, 1); updateUI(); }
@@ -567,7 +570,7 @@
     function showModal(id) { document.getElementById('overlay').style.display='block'; document.getElementById(id).style.display='block'; }
     function closePopups() { document.querySelectorAll('.modal, .overlay').forEach(m => m.style.display='none'); }
 
-    // פונקציות מנהל - פאנל חסימות עם הקוד הסודי החדש
+    // פונקציות ניהול חסימות
     function openAdminModal() {
         if (!adminPassword) {
             const pass = prompt("נא להזין סיסמת מנהל לניהול המלאי:");
@@ -604,9 +607,6 @@
             const blockedRef = window.dbRef(window.db, 'blocked_dates');
             const newBlockRef = window.dbPush(blockedRef);
             
-            // שליחת עדכון עוקף חוקים לשרת רגע לפני הרישום
-            window.dbSet(window.dbRef(window.db, 'admin_bypass'), adminPassword);
-
             window.dbSet(newBlockRef, {
                 productId: pId,
                 productName: prodName,
@@ -615,16 +615,19 @@
                 endDate: end
             }).then(() => {
                 alert("המוצר נחסם בהצלחה בענן לכל המשתמשים!");
+                document.getElementById('admin-start').value = "";
+                document.getElementById('admin-end').value = "";
             }).catch((err) => {
-                alert("שגיאת אבטחה: לא ניתן לכתוב לשרת. וודא שהגדרת את ה-Rules ב-Firebase.");
+                alert("תקלה ברישום לשרת. וודא שפתחת את ה-Rules ב-Firebase ל-true.");
                 console.error(err);
             });
+        } else {
+            alert("החיבור לשרת טרם הושלם, נסה שוב בעוד כמה שניות");
         }
     }
 
     function removeBlock(key) {
         if (confirm("האם לשחרר חסימה זו ולהחזיר את המוצר למלאי?")) {
-            window.dbSet(window.dbRef(window.db, 'admin_bypass'), adminPassword);
             const itemRef = window.dbRef(window.db, `blocked_dates/${key}`);
             window.dbRemove(itemRef).then(() => {
                 alert("החסימה הוסרה בהצלחה.");
