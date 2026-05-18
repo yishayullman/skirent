@@ -99,7 +99,6 @@
         
         .wa-btn { background: var(--whatsapp); color: white; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; width: 100%; text-decoration: none; display: inline-block; margin-top: 10px; text-align: center; }
 
-        /* סגנון למציג התמונות המוגדל (Lightbox) */
         .lightbox {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.9); z-index: 3000; justify-content: center; align-items: center;
@@ -161,7 +160,7 @@
 <div class="overlay" id="overlay" onclick="closePopups()"></div>
 
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+    <span class="lightbox-close" onclick="closeLightbox()">×</span>
     <img id="lightbox-img" src="" alt="תצוגה מוגדלת">
 </div>
 
@@ -211,15 +210,13 @@
     const prices = { 'מעיל': 150, 'מכנס': 120, 'קסדה': 50, 'כפפות': 30, 'גוגלס': 40 };
     const sizes = { 'מעיל': ['S', 'M', 'L', 'XL'], 'מכנס': ['S', 'M', 'L', 'XL'], 'קסדה': ['S', 'M', 'L'], 'כפפות': ['S', 'M', 'L'], 'גוגלס': ['OS'] };
 
-    // החזרת ארבעת המעילים המקוריים עם השמות המבוקשים (דגם 1, דגם 2) והתמונות שלהם
     const products = [
         { id: 'coat-men-1', name: 'מעיל גברים דגם 1', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.postimg.cc/0yfCcb9Q/7b788b3f-6662-402b-a041-8b6c85e1b681.jpg' },
-        { id: 'coat-men-2', name: 'מעיל גברים דגם 2', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.ibb.co/689YV3gH/2.jpg' },
+        { id: 'coat-men-2', name: 'מעיל גברים דגם 2', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.postimg.cc/v84gKDtZ/659f2dd7-c29c-41b9-8e5b-549f51a432c3.jpg' },
         { id: 'coat-women-1', name: 'מעיל נשים דגם 1', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.ibb.co/v4m86M98/3.jpg' },
         { id: 'coat-women-2', name: 'מעיל נשים דגם 2', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.ibb.co/wZpX0g7C/4.jpg' }
     ];
 
-    // יצירה אוטומטית של שאר פריטי הציוד הנלווה בפורמט השמות הנקי ("X מגדר דגם Y")
     cats.forEach(c => {
         if (c === 'מעיל') return; 
         genders.forEach(g => {
@@ -305,7 +302,6 @@
         }
     }
 
-    // פונקציות לפתיחה וסגירה של תמונה מוגדלת
     function openLightbox(src) {
         document.getElementById('lightbox-img').src = src;
         document.getElementById('lightbox').style.display = 'flex';
