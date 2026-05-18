@@ -569,7 +569,7 @@
     function showModal(id) { document.getElementById('overlay').style.display='block'; document.getElementById(id).style.display='block'; }
     function closePopups() { document.querySelectorAll('.modal, .overlay').forEach(m => m.style.display='none'); }
 
-    // פונקציות ניהול חסימות (עודכן עם אבטחת secret ישירה לשרת)
+    // פונקציות ניהול חסימות (עודכן למבנה ישיר)
     function openAdminModal() {
         if (!adminPassword) {
             const pass = prompt("נא להזין סיסמת מנהל לניהול המלאי:");
@@ -606,11 +606,11 @@
         }
 
         if (window.db) {
-            const blockedRef = window.dbRef(window.db, 'blocked_dates');
-            const newBlockRef = window.dbPush(blockedRef);
+            // יצירת מפתח ייחודי מבוסס זמן ישירות תחת blocked_dates
+            const uniqueKey = 'block_' + Date.now();
+            const directItemRef = window.dbRef(window.db, `blocked_dates/${uniqueKey}`);
             
-            // הסיסמה נשלחת כחלק מהנתונים, Firebase Rules בודק אותה ומאשר את הכתיבה
-            window.dbSet(newBlockRef, {
+            window.dbSet(directItemRef, {
                 productId: pId,
                 productName: prodName,
                 size: size,
@@ -624,7 +624,7 @@
                 document.getElementById('admin-end').value = "";
             })
             .catch((err) => {
-                alert("שגיאה ברישום לשרת. וודא שחוקי האבטחה (Rules) ב-Firebase מעודכנים.");
+                alert("שגיאה ברישום לשרת. וודא שחוקי האבטחה (Rules) ב-Firebase עודכנו בדיוק לפי ההנחיות.");
                 console.error(err);
             });
         } else {
