@@ -63,7 +63,8 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.2); text-align: center;
             padding-bottom: 20px; position: relative;
         }
-        .card img { width: 100%; height: 250px; object-fit: contain; background: #f9f9f9; padding: 10px; }
+        .card img { width: 100%; height: 250px; object-fit: contain; background: #f9f9f9; padding: 10px; cursor: pointer; transition: transform 0.2s; }
+        .card img:hover { transform: scale(1.02); }
 
         .btn-select {
             background: var(--primary); color: white; border: none;
@@ -97,6 +98,17 @@
         .remove-btn { color: var(--danger); cursor: pointer; font-weight: bold; font-size: 1.2rem; }
         
         .wa-btn { background: var(--whatsapp); color: white; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; width: 100%; text-decoration: none; display: inline-block; margin-top: 10px; text-align: center; }
+
+        /* סגנון למציג התמונות המוגדל (Lightbox) */
+        .lightbox {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9); z-index: 3000; justify-content: center; align-items: center;
+        }
+        .lightbox img { max-width: 90%; max-height: 85vh; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .lightbox-close {
+            position: absolute; top: 20px; left: 20px; color: white; font-size: 2.5rem;
+            cursor: pointer; font-weight: bold; user-select: none;
+        }
     </style>
 </head>
 <body>
@@ -148,6 +160,11 @@
 
 <div class="overlay" id="overlay" onclick="closePopups()"></div>
 
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+    <img id="lightbox-img" src="" alt="תצוגה מוגדלת">
+</div>
+
 <div class="modal" id="cartModal">
     <div class="modal-header">
         <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
@@ -194,16 +211,17 @@
     const prices = { 'מעיל': 150, 'מכנס': 120, 'קסדה': 50, 'כפפות': 30, 'גוגלס': 40 };
     const sizes = { 'מעיל': ['S', 'M', 'L', 'XL'], 'מכנס': ['S', 'M', 'L', 'XL'], 'קסדה': ['S', 'M', 'L'], 'כפפות': ['S', 'M', 'L'], 'גוגלס': ['OS'] };
 
-    // עדכון קישור התמונה למעיל הראשון
+    // החזרת ארבעת המעילים המקוריים עם השמות המבוקשים (דגם 1, דגם 2) והתמונות שלהם
     const products = [
-        { id: 'coat-men-1', name: 'מעיל גברים צהוב קולומביה', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.postimg.cc/0yfCcb9Q/7b788b3f-6662-402b-a041-8b6c85e1b681.jpg' },
-        { id: 'coat-men-2', name: 'מעיל גברים ספיידר אדום', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.ibb.co/689YV3gH/2.jpg' },
-        { id: 'coat-women-1', name: 'מעיל נשים סגול סלומון', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.ibb.co/v4m86M98/3.jpg' },
-        { id: 'coat-women-2', name: 'מעיל נשים לבן נורת פייס', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.ibb.co/wZpX0g7C/4.jpg' }
+        { id: 'coat-men-1', name: 'מעיל גברים דגם 1', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.postimg.cc/0yfCcb9Q/7b788b3f-6662-402b-a041-8b6c85e1b681.jpg' },
+        { id: 'coat-men-2', name: 'מעיל גברים דגם 2', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.ibb.co/689YV3gH/2.jpg' },
+        { id: 'coat-women-1', name: 'מעיל נשים דגם 1', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.ibb.co/v4m86M98/3.jpg' },
+        { id: 'coat-women-2', name: 'מעיל נשים דגם 2', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.ibb.co/wZpX0g7C/4.jpg' }
     ];
 
+    // יצירה אוטומטית של שאר פריטי הציוד הנלווה בפורמט השמות הנקי ("X מגדר דגם Y")
     cats.forEach(c => {
-        if (c === 'מעיל') return;
+        if (c === 'מעיל') return; 
         genders.forEach(g => {
             for(let i=1; i<=2; i++) {
                 products.push({ 
@@ -287,6 +305,15 @@
         }
     }
 
+    // פונקציות לפתיחה וסגירה של תמונה מוגדלת
+    function openLightbox(src) {
+        document.getElementById('lightbox-img').src = src;
+        document.getElementById('lightbox').style.display = 'flex';
+    }
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+    }
+
     function render() {
         const grid = document.getElementById('product-grid');
         grid.innerHTML = '';
@@ -297,7 +324,7 @@
             
             grid.innerHTML += `
                 <div class="card">
-                    <img src="${p.image}">
+                    <img src="${p.image}" onclick="openLightbox('${p.image}')" title="לחץ להגדלה">
                     <h3>${p.name}</h3>
                     <select id="size-${p.id}" style="width:80%" onchange="onSizeChange('${p.id}')">
                         ${sizes[p.cat].map(s => `<option value="${s}">${s}</option>`).join('')}
