@@ -194,17 +194,16 @@
     const prices = { 'מעיל': 150, 'מכנס': 120, 'קסדה': 50, 'כפפות': 30, 'גוגלס': 40 };
     const sizes = { 'מעיל': ['S', 'M', 'L', 'XL'], 'מכנס': ['S', 'M', 'L', 'XL'], 'קסדה': ['S', 'M', 'L'], 'כפפות': ['S', 'M', 'L'], 'גוגלס': ['OS'] };
 
-    // החזרת רשימת המוצרים המקורית עם ארבעת המעילים הייחודיים ותמונותיהם
+    // עדכון קישור התמונה למעיל הראשון
     const products = [
-        { id: 'coat-men-1', name: 'מעיל גברים צהוב קולומביה', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.ibb.co/V9m6L3bX/1.jpg' },
+        { id: 'coat-men-1', name: 'מעיל גברים צהוב קולומביה', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.postimg.cc/0yfCcb9Q/7b788b3f-6662-402b-a041-8b6c85e1b681.jpg' },
         { id: 'coat-men-2', name: 'מעיל גברים ספיידר אדום', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.ibb.co/689YV3gH/2.jpg' },
         { id: 'coat-women-1', name: 'מעיל נשים סגול סלומון', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.ibb.co/v4m86M98/3.jpg' },
         { id: 'coat-women-2', name: 'מעיל נשים לבן נורת פייס', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.ibb.co/wZpX0g7C/4.jpg' }
     ];
 
-    // יצירה אוטומטית של שאר פריטי הציוד הנלווה כדי לא לרוקן את החנות
     cats.forEach(c => {
-        if (c === 'מעיל') return; // מדלגים על מעיל כי כבר הזנו אותם ידנית למעלה
+        if (c === 'מעיל') return;
         genders.forEach(g => {
             for(let i=1; i<=2; i++) {
                 products.push({ 
@@ -222,11 +221,9 @@
     let cartItems = JSON.parse(localStorage.getItem('skiCartItems')) || [];
     let cartBundles = JSON.parse(localStorage.getItem('skiCartBundles')) || [];
 
-    // ניקוי פריטי רפאים
     cartItems = cartItems.filter(item => products.some(p => p.id === item.id));
     localStorage.setItem('skiCartItems', JSON.stringify(cartItems));
 
-    // הגדרת חסימה לתאריכים מהעבר בדפדפן
     const todayStr = new Date().toISOString().split('T')[0];
     document.getElementById('start-date').min = todayStr;
     document.getElementById('end-date').min = todayStr;
@@ -424,7 +421,6 @@
 
     function removeBundle(idx) { cartBundles.splice(idx, 1); updateUI(); }
 
-    // וידוא ושליחה לוואטסאפ
     function sendWhatsApp() {
         const nameInput = document.getElementById('cust-name');
         const sInput = document.getElementById('start-date');
