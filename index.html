@@ -194,11 +194,27 @@
     const prices = { 'מעיל': 150, 'מכנס': 120, 'קסדה': 50, 'כפפות': 30, 'גוגלס': 40 };
     const sizes = { 'מעיל': ['S', 'M', 'L', 'XL'], 'מכנס': ['S', 'M', 'L', 'XL'], 'קסדה': ['S', 'M', 'L'], 'כפפות': ['S', 'M', 'L'], 'גוגלס': ['OS'] };
 
-    const products = [];
+    // החזרת רשימת המוצרים המקורית עם ארבעת המעילים הייחודיים ותמונותיהם
+    const products = [
+        { id: 'coat-men-1', name: 'מעיל גברים צהוב קולומביה', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.ibb.co/V9m6L3bX/1.jpg' },
+        { id: 'coat-men-2', name: 'מעיל גברים ספיידר אדום', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.ibb.co/689YV3gH/2.jpg' },
+        { id: 'coat-women-1', name: 'מעיל נשים סגול סלומון', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.ibb.co/v4m86M98/3.jpg' },
+        { id: 'coat-women-2', name: 'מעיל נשים לבן נורת פייס', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.ibb.co/wZpX0g7C/4.jpg' }
+    ];
+
+    // יצירה אוטומטית של שאר פריטי הציוד הנלווה כדי לא לרוקן את החנות
     cats.forEach(c => {
+        if (c === 'מעיל') return; // מדלגים על מעיל כי כבר הזנו אותם ידנית למעלה
         genders.forEach(g => {
             for(let i=1; i<=2; i++) {
-                products.push({ id: `${c}-${g}-${i}`, name: `${c} ${g} דגם ${i}`, cat: c, gender: g, price: prices[c], image: `https://placehold.jp/24/1a2a6c/ffffff/300x250.png?text=${c}+${g}` });
+                products.push({ 
+                    id: `${c}-${g}-${i}`, 
+                    name: `${c} ${g} דגם ${i}`, 
+                    cat: c, 
+                    gender: g, 
+                    price: prices[c], 
+                    image: `https://placehold.jp/24/1a2a6c/ffffff/300x250.png?text=${c}+${g}` 
+                });
             }
         });
     });
@@ -257,7 +273,6 @@
         render();
     }
 
-    // פונקציה שמתעדכנת בלייב כשמשנים מידה בכרטיס מוצר
     function onSizeChange(id) {
         const sizeEl = document.getElementById(`size-${id}`);
         const btnEl = document.getElementById(`btn-${id}`);
@@ -280,7 +295,6 @@
         grid.innerHTML = '';
         const filtered = products.filter(p => (currentCat === 'all' || p.cat === currentCat) && (currentGender === 'all' || p.gender === currentGender));
         filtered.forEach(p => {
-            // כברירת מחדל נבדוק את המידה הראשונה ברשימה של המוצר
             const defaultSize = sizes[p.cat][0];
             const isInCart = cartItems.some(i => i.id === p.id && i.size === defaultSize);
             
@@ -299,7 +313,6 @@
         });
     }
 
-    // הוספה או הסרה של שילוב ספציפי של מוצר + מידה
     function toggleCartItem(id) {
         const sizeEl = document.getElementById(`size-${id}`);
         const size = sizeEl ? sizeEl.value : 'OS';
@@ -314,7 +327,6 @@
         onSizeChange(id);
     }
 
-    // הסרה ישירה מתוך תצוגת עגלת הקניות
     function removeSpecificItem(id, size) {
         const idx = cartItems.findIndex(i => i.id === id && i.size === size);
         if (idx > -1) {
@@ -344,7 +356,8 @@
         const bundle = { gender: document.getElementById('bundle-gen').value, items: [] };
         cats.forEach(c => {
             const pId = document.getElementById(`wb-${c}`).value;
-            bundle.items.push({ name: products.find(p => p.id === pId).name, size: document.getElementById(`wbs-${c}`).value });
+            const foundProd = products.find(p => p.id === pId);
+            bundle.items.push({ name: foundProd ? foundProd.name : c, size: document.getElementById(`wbs-${c}`).value });
         });
         cartBundles.push(bundle);
         updateUI(); closePopups();
@@ -411,6 +424,7 @@
 
     function removeBundle(idx) { cartBundles.splice(idx, 1); updateUI(); }
 
+    // וידוא ושליחה לוואטסאפ
     function sendWhatsApp() {
         const nameInput = document.getElementById('cust-name');
         const sInput = document.getElementById('start-date');
