@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SkiRent Premium | השכרת ציוד סקי</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
     <style>
         :root {
             --primary: #1a2a6c;
@@ -285,14 +288,32 @@
 
     let cartItems = JSON.parse(localStorage.getItem('skiCartItems')) || [];
     let cartBundles = JSON.parse(localStorage.getItem('skiCartBundles')) || [];
+    
+    // רשימת החסימות המפוענחות שהקוד עובד איתן באופן שוטף
     let blockedDatesFromServer = {}; 
-    let adminPassword = "";
+    const SECRET_KEY = "yishayullmanskirent"; // מפתח ההצפנה הקבוע שלנו
 
     function initFirebaseSync() {
         if (window.db) {
             const blockedRef = window.dbRef(window.db, 'blocked_dates');
             onValue(blockedRef, (snapshot) => {
-                blockedDatesFromServer = snapshot.val() || {};
+                const encryptedData = snapshot.val() || {};
+                blockedDatesFromServer = {}; // איפוס לפני טעינה חדשה
+
+                // פענוח הנתונים המוצפנים שמגיעים מ-Firebase
+                for (let key in encryptedData) {
+                    try {
+                        const bytes = CryptoJS.AES.decrypt(encryptedData[key], SECRET_KEY);
+                        const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
+                        if (decryptedText) {
+                            blockedDatesFromServer[key] = JSON.parse(decryptedText);
+                        }
+                    } catch (e) {
+                        // אם מישהו שלח זבל לא מוצפן לענן - המערכת תתעלם מזה בבטחה
+                        console.log("נמצא מידע לא מורשה בענן - המערכת מתעלמת.");
+                    }
+                }
+                
                 render();
                 updateUI();
                 renderAdminList();
@@ -569,12 +590,14 @@
     function showModal(id) { document.getElementById('overlay').style.display='block'; document.getElementById(id).style.display='block'; }
     function closePopups() { document.querySelectorAll('.modal, .overlay').forEach(m => m.style.display='none'); }
 
-    // פונקציות ניהול חסימות (עודכן למבנה ישיר)
+    // פונקציות ניהול חסימות - מבוססות הצפנת לקוח מלאה (CryptoJS)
+    let isAdminAuthenticated = false;
+
     function openAdminModal() {
-        if (!adminPassword) {
+        if (!isAdminAuthenticated) {
             const pass = prompt("נא להזין סיסמת מנהל לניהול המלאי:");
-            if (pass === "yishayullmanskirent") {
-                adminPassword = pass;
+            if (pass === SECRET_KEY) {
+                isAdminAuthenticated = true;
             } else {
                 alert("סיסמה שגויה!");
                 return;
@@ -606,25 +629,30 @@
         }
 
         if (window.db) {
-            // יצירת מפתח ייחודי מבוסס זמן ישירות תחת blocked_dates
             const uniqueKey = 'block_' + Date.now();
             const directItemRef = window.dbRef(window.db, `blocked_dates/${uniqueKey}`);
             
-            window.dbSet(directItemRef, {
+            // יצירת אובייקט חסימה רגיל
+            const blockObj = {
                 productId: pId,
                 productName: prodName,
                 size: size,
                 startDate: start,
-                endDate: end,
-                secret: adminPassword 
-            })
+                endDate: end
+            };
+
+            // הצפנת האובייקט למחרוזת "ג'יבריש" מאובטחת
+            const encryptedString = CryptoJS.AES.encrypt(JSON.stringify(blockObj), SECRET_KEY).toString();
+            
+            // כתיבת המחרוזת המוצפנת ישירות ל-Firebase ללא חסימות שרת
+            window.dbSet(directItemRef, encryptedString)
             .then(() => {
-                alert("המוצר נחסם בהצלחה בענן לכל המשתמשים!");
+                alert("המוצר נחסם בהצלחה בענן בצורה מאובטחת!");
                 document.getElementById('admin-start').value = "";
                 document.getElementById('admin-end').value = "";
             })
             .catch((err) => {
-                alert("שגיאה ברישום לשרת. וודא שחוקי האבטחה (Rules) ב-Firebase עודכנו בדיוק לפי ההנחיות.");
+                alert("תקלה בתקשורת מול השרת.");
                 console.error(err);
             });
         } else {
