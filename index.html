@@ -231,9 +231,9 @@
 </div>
 
 <script>
-    // הגדרות חיבור לשרת האחסון הפשוט
-    const BIN_ID = "65f005a7266cfc3fde96df8f"; // מזהה קובץ החסימות שלך
-    const API_KEY = "$2a$10$A3aPXMRSPKEJKtNLgjR4o.YJWA06TL6jnPttQD5EtSTR9ak6RnSSK"; // המפתח המעודכן מהסרטון
+    // הגדרות חיבור לשרת האחסון
+    const BIN_ID = "6a0b5afa6610dd3ae8672c27"; // ה-Bin ID שלך מעודכן כאן!
+    const API_KEY = "$2a$10$A3aPXMRSPKEJKtNLgjR4o.YJWA06TL6jnPttQD5EtSTR9ak6RnSSK"; 
 
     const cats = ['מעיל', 'מכנס', 'קסדה', 'כפפות', 'גוגלס'];
     const genders = ['גברים', 'נשים', 'ילדים'];
@@ -267,8 +267,8 @@
     let cartBundles = JSON.parse(localStorage.getItem('skiCartBundles')) || [];
     let blockedDatesFromServer = []; 
 
-    // שליפת רשימת החסימות מהאינטרנט
     async function loadBlockedDates() {
+        if(BIN_ID === "") return;
         try {
             const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
                 headers: { "X-Master-Key": API_KEY }
@@ -279,14 +279,13 @@
             updateUI();
             renderAdminList();
         } catch (e) {
-            console.log("בעיה בטעינת החסימות, יוצר קובץ חדש...");
-            saveBlockedDatesToCloud([]);
+            console.log("שגיאה בטעינת נתונים מהענן");
         }
     }
 
     async function saveBlockedDatesToCloud(newBlocksArray) {
         try {
-            await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+            const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
                 method: 'PUT',
                 headers: {
                     "Content-Type": "application/json",
@@ -294,12 +293,16 @@
                 },
                 body: JSON.stringify({ blocks: newBlocksArray })
             });
-            blockedDatesFromServer = newBlocksArray;
-            render();
-            updateUI();
-            renderAdminList();
+            if(res.ok) {
+                blockedDatesFromServer = newBlocksArray;
+                render();
+                updateUI();
+                renderAdminList();
+            } else {
+                alert("תקלה בעדכון השרת. וודא שהמפתח וה-Bin ID נכונים.");
+            }
         } catch (e) {
-            alert("תקלה בעדכון השרת.");
+            alert("תקלה ברשת בשמירה לענן.");
         }
     }
 
@@ -568,7 +571,6 @@
     function showModal(id) { document.getElementById('overlay').style.display='block'; document.getElementById(id).style.display='block'; }
     function closePopups() { document.querySelectorAll('.modal, .overlay').forEach(m => m.style.display='none'); }
 
-    // פאנל הניהול האישי
     let isAdminAuthenticated = false;
 
     function openAdminModal() {
