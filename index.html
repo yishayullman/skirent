@@ -232,7 +232,6 @@
 </div>
 
 <script>
-    // הגדרות חיבור לשרת האחסון
     const BIN_ID = "6a0b5afa6610dd3ae8672c27"; 
     const API_KEY = "$2a$10$A3aPXMRSPKEJKtNLgjR4o.YJWA06TL6jnPttQD5EtSTR9ak6RnSSK"; 
 
@@ -325,17 +324,21 @@
         render();
     }
 
-    function isProductBlocked(id, size) {
+    function getProductBlockData(id, size) {
         const sDate = document.getElementById('start-date').value;
         const eDate = document.getElementById('end-date').value;
-        if (!sDate || !eDate) return false;
+        if (!sDate || !eDate) return null;
 
-        return blockedDatesFromServer.some(block => {
+        return blockedDatesFromServer.find(block => {
             return block.productId === id && 
                    block.size === size && 
                    sDate <= block.endDate && 
                    eDate >= block.startDate;
-        });
+        }) || null;
+    }
+
+    function isProductBlocked(id, size) {
+        return getProductBlockData(id, size) !== null;
     }
 
     function checkCartValidity() {
@@ -366,11 +369,11 @@
         
         const cardEl = sizeEl.closest('.card');
         const selectedSize = sizeEl.value;
-        const blocked = isProductBlocked(id, selectedSize);
+        const blockData = getProductBlockData(id, selectedSize);
 
-        if (blocked) {
+        if (blockData) {
             if (cardEl) cardEl.classList.add('size-blocked');
-            btnEl.innerText = `❌ מידה ${selectedSize} תפוסה בתאריכים אלו`;
+            btnEl.innerText = `❌ מידה ${selectedSize} תפוסה בין ${blockData.startDate} ל-${blockData.endDate}`;
             btnEl.className = "btn-select disabled-btn";
             btnEl.disabled = true;
         } else {
@@ -401,19 +404,19 @@
         
         filtered.forEach(p => {
             const defaultSize = sizes[p.cat][0];
-            const blocked = isProductBlocked(p.id, defaultSize);
+            const blockData = getProductBlockData(p.id, defaultSize);
             const isInCart = cartItems.some(i => i.id === p.id && i.size === defaultSize);
             
             grid.innerHTML += `
-                <div class="card ${blocked ? 'size-blocked' : ''}" id="card-${p.id}">
+                <div class="card ${blockData ? 'size-blocked' : ''}" id="card-${p.id}">
                     <img src="${p.image}" onclick="openLightbox('${p.image}')" title="לחץ להגדלה">
                     <h3>${p.name}</h3>
                     <select id="size-${p.id}" style="width:80%" onchange="onSizeChange('${p.id}')">
                         ${sizes[p.cat].map(s => `<option value="${s}">${s}</option>`).join('')}
                     </select>
                     <div style="color:var(--success); font-weight:bold; margin:10px 0;">₪${p.price} לשבוע</div>
-                    <button id="btn-${p.id}" ${blocked ? 'disabled' : ''} class="btn-select ${blocked ? 'disabled-btn' : (isInCart ? 'in-cart' : '')}" onclick="toggleCartItem('${p.id}')">
-                        ${blocked ? `❌ מידה ${defaultSize} תפוסה בתאריכים אלו` : (isInCart ? '✅ במידה זו בסל' : 'הוסף לסל')}
+                    <button id="btn-${p.id}" ${blockData ? 'disabled' : ''} class="btn-select ${blockData ? 'disabled-btn' : (isInCart ? 'in-cart' : '')}" onclick="toggleCartItem('${p.id}')">
+                        ${blockData ? `❌ מידה ${defaultSize} תפוסה בין ${blockData.startDate} ל-${blockData.endDate}` : (isInCart ? '✅ במידה זו בסל' : 'הוסף לסל')}
                     </button>
                 </div>`;
         });
@@ -460,7 +463,6 @@
         checkWizardSelectionValidity();
     }
 
-    // פונקציה חדשה: בודקת בזמן אמת בתוך המבצע אם המידה שנבחרה תפוסה ומעדכנת את הכפתור
     function checkWizardSelectionValidity() {
         const submitBtn = document.getElementById('bundle-submit-btn');
         if(!submitBtn) return;
@@ -475,16 +477,22 @@
             if(pIdEl && sizeEl) {
                 const pId = pIdEl.value;
                 const size = sizeEl.value;
-                if(isProductBlocked(pId, size)) {
+                const blockData = getProductBlockData(pId, size);
+                if(blockData) {
                     const foundProd = products.find(p => p.id === pId);
-                    blockedItemInfo = { name: foundProd ? foundProd.name : c, size: size };
+                    blockedItemInfo = { 
+                        name: foundProd ? foundProd.name : c, 
+                        size: size,
+                        start: blockData.startDate,
+                        end: blockData.endDate
+                    };
                     break; 
                 }
             }
         }
 
         if(blockedItemInfo) {
-            submitBtn.innerText = `❌ לא ניתן להוסיף - ${blockedItemInfo.name} במידה ${blockedItemInfo.size} תפוס!`;
+            submitBtn.innerText = `❌ תפוס! ${blockedItemInfo.name} (${blockedItemInfo.size}) חסום מ-${blockedItemInfo.start} עד ${blockedItemInfo.end}`;
             submitBtn.className = "btn-select disabled-btn";
             submitBtn.disabled = true;
         } else {
