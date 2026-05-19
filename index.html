@@ -110,12 +110,11 @@
             cursor: pointer; font-weight: bold; user-select: none;
         }
 
-        /* עיצוב לטבלת המידות */
-        .size-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
-        .size-table th, .size-table td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-        .size-table th { background-color: var(--primary); color: white; }
-        .size-table tr:nth-child(even) { background-color: #f9f9f9; }
         .size-link { color: var(--bundle); font-size: 0.85rem; font-weight: bold; text-decoration: underline; cursor: pointer; display: inline-block; margin-top: 5px; }
+        
+        /* עיצוב למחשבון המידות החדש */
+        .calc-box { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px; padding: 15px; margin-top: 10px; text-align: center; }
+        .calc-result { font-size: 1.3rem; font-weight: bold; color: var(--success); margin-top: 15px; display: none; background: #e8f5e9; padding: 10px; border-radius: 8px; border: 1px dashed var(--success); }
     </style>
 </head>
 <body>
@@ -208,33 +207,40 @@
 <div class="modal" id="sizeGuideModal" style="z-index: 2500;">
     <div class="modal-header">
         <span style="position:absolute; left:15px; cursor:pointer;" onclick="closeSizeGuide()">×</span>
-        <h3>📏 מדריך מידות ביגוד סקי</h3>
+        <h3>📏 מחשבון התאמת מידה חכם</h3>
     </div>
     <div class="modal-body">
-        <h4 style="margin-top:0; color:var(--primary);">גברים (מעילים ומכנסיים)</h4>
-        <table class="size-table">
-            <tr><th>מידה</th><th>גובה מומלץ</th><th>משקל מומלץ</th></tr>
-            <tr><td><b>S</b></td><td>165 - 172 ס"מ</td><td>60 - 70 ק"ג</td></tr>
-            <tr><td><b>M</b></td><td>170 - 178 ס"מ</td><td>70 - 82 ק"ג</td></tr>
-            <tr><td><b>L</b></td><td>175 - 185 ס"מ</td><td>80 - 92 ק"ג</td></tr>
-            <tr><td><b>XL</b></td><td>180 - 192 ס"מ</td><td>90 - 105 ק"ג</td></tr>
-        </table>
+        <p style="font-size: 0.9rem; color: #555; text-align: center;">הזינו את הנתונים שלכם והמערכת תחשב אוטומטית את המידה האידיאלית עבורכם לביגוד סקי נוח וחופשי.</p>
+        
+        <div class="calc-box">
+            <div style="margin-bottom: 12px;">
+                <label style="display:block; margin-bottom:5px;"><b>עבור מי הביגוד?</b></label>
+                <select id="calc-gender" style="width: 100%;">
+                    <option value="גברים">גבר 🧔</option>
+                    <option value="נשים">אישה 👩</option>
+                    <option value="ילדים">ילד/ה 🧒</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+                <div style="flex:1;">
+                    <label style="display:block; margin-bottom:5px;"><b>גובה (בס"מ):</b></label>
+                    <input type="number" id="calc-height" placeholder="למשל: 175" style="width: 85%;">
+                </div>
+                <div style="flex:1;">
+                    <label style="display:block; margin-bottom:5px;"><b>משקל (בק"ג):</b></label>
+                    <input type="number" id="calc-weight" placeholder="למשל: 78" style="width: 85%;">
+                </div>
+            </div>
+            <button onclick="calculateSkiSize()" class="btn-select" style="width:100%; background:var(--primary); margin-top:5px;">חשב מידה מתאימה 🚀</button>
+            
+            <div id="calc-result-box" class="calc-result"></div>
+        </div>
 
-        <h4 style="color:var(--primary); margin-top:20px;">נשים (מעילים ומכנסיים)</h4>
-        <table class="size-table">
-            <tr><th>מידה</th><th>גובה מומלץ</th><th>משקל מומלץ</th></tr>
-            <tr><td><b>S</b></td><td>155 - 164 ס"מ</td><td>48 - 57 ק"ג</td></tr>
-            <tr><td><b>M</b></td><td>162 - 170 ס"מ</td><td>56 - 66 ק"ג</td></tr>
-            <tr><td><b>L</b></td><td>168 - 176 ס"מ</td><td>65 - 76 ק"ג</td></tr>
-            <tr><td><b>XL</b></td><td>172 - 182 ס"מ</td><td>75 - 88 ק"ג</td></tr>
-        </table>
-
-        <h4 style="color:var(--primary); margin-top:20px;">קסדות וכפפות (כללי)</h4>
-        <p style="font-size:0.85rem; line-height:1.4; color:#555;">
-            <b>קסדות:</b> מידה S (היקף ראש 52-55 ס"מ) | מידה M (היקף 55-58 ס"מ) | מידה L (היקף 58-61 ס"מ).<br>
-            <b>כפפות:</b> מומלץ לבחור לפי מידת היד הרגילה שלכם בחורף. לגוגלס יש מידה אחת מתכווננת (OS).
+        <h4 style="color:var(--primary); margin-top:20px; margin-bottom:5px;">💡 טיפ חשוב לנוחות בשלג:</h4>
+        <p style="font-size:0.85rem; line-height:1.4; color:#666; margin-top:0;">
+            המחשבון שלנו לוקח בחשבון שאתם לובשים ביגוד טרמי או סווטשירט מתחת למעיל. בגדי סקי צריכים להיות מעט משוחררים כדי לאפשר תנועה חופשית בזמן הגלישה.
         </p>
-        <button class="btn-select" style="width:100%; margin-top:15px; background:#666;" onclick="closeSizeGuide()">הבנתי, סגור מדריך</button>
+        <button class="btn-select" style="width:100%; margin-top:10px; background:#666;" onclick="closeSizeGuide()">סגור מחשבון</button>
     </div>
 </div>
 
@@ -455,7 +461,7 @@
                         <select id="size-${p.id}" style="width:60%" onchange="onSizeChange('${p.id}')">
                             ${sizes[p.cat].map(s => `<option value="${s}">${s}</option>`).join('')}
                         </select>
-                        <span class="size-link" onclick="showSizeGuide()">מידות?</span>
+                        <span class="size-link" onclick="showSizeGuide('${p.gender}')">מידות?</span>
                     </div>
                     <div style="color:var(--success); font-weight:bold; margin:10px 0;">₪${p.price} לשבוע</div>
                     <button id="btn-${p.id}" ${blockData ? 'disabled' : ''} class="btn-select ${blockData ? 'disabled-btn' : (isInCart ? 'in-cart' : '')}" onclick="toggleCartItem('${p.id}')">
@@ -489,7 +495,7 @@
         body.innerHTML = `
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                 <label>עבור מי החבילה?</label>
-                <span class="size-link" style="font-size:0.95rem;" onclick="showSizeGuide()">📏 מה המידה שלי?</span>
+                <span class="size-link" style="font-size:0.95rem;" onclick="showSizeGuide()"> Geno 📏 התאם לי מידה בחשבון</span>
             </div>
             <select id="bundle-gen" style="width:100%; margin-bottom:10px;" onchange="updateWizardOptions()">
                 ${genders.map(g => `<option value="${g}">${g}</option>`).join('')}
@@ -576,11 +582,74 @@
         updateUI(); closePopups();
     }
 
-    function showSizeGuide() {
+    function showSizeGuide(optionalGender) {
+        if(optionalGender && (optionalGender === 'גברים' || optionalGender === 'נשים' || optionalGender === 'ילדים')) {
+            document.getElementById('calc-gender').value = optionalGender;
+        }
+        document.getElementById('calc-height').value = "";
+        document.getElementById('calc-weight').value = "";
+        document.getElementById('calc-result-box').style.display = "none";
         document.getElementById('sizeGuideModal').style.display = 'block';
     }
+    
     function closeSizeGuide() {
         document.getElementById('sizeGuideModal').style.display = 'none';
+    }
+
+    // פונקציית הלוגיקה והחישוב של המידה החכמה
+    function calculateSkiSize() {
+        const gender = document.getElementById('calc-gender').value;
+        const height = parseFloat(document.getElementById('calc-height').value);
+        const weight = parseFloat(document.getElementById('calc-weight').value);
+        const resultBox = document.getElementById('calc-result-box');
+
+        if(!height || !weight || height <= 0 || weight <= 0) {
+            alert("אנא הזינו ערכי גובה ומשקל תקינים.");
+            return;
+        }
+
+        let sizeByHeight = 'M';
+        let sizeByWeight = 'M';
+
+        if(gender === 'גברים') {
+            // חישוב לפי גובה גברים
+            if(height < 170) sizeByHeight = 'S';
+            else if(height <= 178) sizeByHeight = 'M';
+            else if(height <= 185) sizeByHeight = 'L';
+            else sizeByHeight = 'XL';
+
+            // חישוב לפי משקל גברים
+            if(weight < 70) sizeByWeight = 'S';
+            else if(weight <= 82) sizeByWeight = 'M';
+            else if(weight <= 92) sizeByWeight = 'L';
+            else sizeByWeight = 'XL';
+
+        } else if(gender === 'נשים') {
+            // חישוב לפי גובה נשים
+            if(height < 162) sizeByHeight = 'S';
+            else if(height <= 170) sizeByHeight = 'M';
+            else if(height <= 176) sizeByHeight = 'L';
+            else sizeByHeight = 'XL';
+
+            // חישוב לפי משקל נשים
+            if(weight < 56) sizeByWeight = 'S';
+            else if(weight <= 66) sizeByWeight = 'M';
+            else if(weight <= 76) sizeByWeight = 'L';
+            else sizeByWeight = 'XL';
+            
+        } else {
+            // ילדים (מידות כלליות מותאמות קטנות)
+            if(height < 130) { sizeByHeight = 'S'; sizeByWeight = 'S'; }
+            else if(height <= 145) { sizeByHeight = 'M'; sizeByWeight = 'M'; }
+            else { sizeByHeight = 'L'; sizeByWeight = 'L'; }
+        }
+
+        // המרת המידות למספרים בשביל לקחת את הגדולה מבניהם
+        const sizeOrder = { 'S': 1, 'M': 2, 'L': 3, 'XL': 4 };
+        let finalSize = sizeOrder[sizeByHeight] >= sizeOrder[sizeByWeight] ? sizeByHeight : sizeByWeight;
+
+        resultBox.innerHTML = `המידה המומלצת עבורך: <span style="font-size:1.6rem; color:var(--primary); font-weight:900;">${finalSize}</span>`;
+        resultBox.style.display = "block";
     }
 
     function updateUI() {
