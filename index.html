@@ -64,7 +64,6 @@
             padding-bottom: 20px; position: relative;
             transition: opacity 0.3s, filter 0.3s;
         }
-        /* האפקט האפור יופעל רק כשיש מחלקה ספציפית שמוזרקת בזמן אמת */
         .card.size-blocked { opacity: 0.65; filter: grayscale(0.6); }
         .card img { width: 100%; height: 250px; object-fit: contain; background: #f9f9f9; padding: 10px; cursor: pointer; transition: transform 0.2s; }
         .card img:hover { transform: scale(1.02); }
@@ -110,6 +109,12 @@
             position: absolute; top: 20px; left: 20px; color: white; font-size: 2.5rem;
             cursor: pointer; font-weight: bold; user-select: none;
         }
+
+        .size-link { color: var(--bundle); font-size: 0.85rem; font-weight: bold; text-decoration: underline; cursor: pointer; display: inline-block; margin-top: 5px; }
+        
+        /* עיצוב למחשבון המידות החדש */
+        .calc-box { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px; padding: 15px; margin-top: 10px; text-align: center; }
+        .calc-result { font-size: 1.3rem; font-weight: bold; color: var(--success); margin-top: 15px; display: none; background: #e8f5e9; padding: 10px; border-radius: 8px; border: 1px dashed var(--success); }
     </style>
 </head>
 <body>
@@ -195,7 +200,47 @@
     <div class="modal-header"><h3>בחירת חבילת קומפלט</h3></div>
     <div class="modal-body" id="bundle-wizard-body"></div>
     <div style="padding: 15px; text-align: center;">
-        <button class="btn-select" style="background:var(--success); width:100%;" onclick="saveBundleToCart()">אישור והוספה לסל</button>
+        <button id="bundle-submit-btn" class="btn-select" style="background:var(--success); width:100%;" onclick="saveBundleToCart()">אישור והוספה לסל</button>
+    </div>
+</div>
+
+<div class="modal" id="sizeGuideModal" style="z-index: 2500;">
+    <div class="modal-header">
+        <span style="position:absolute; left:15px; cursor:pointer;" onclick="closeSizeGuide()">×</span>
+        <h3>📏 מחשבון התאמת מידה חכם</h3>
+    </div>
+    <div class="modal-body">
+        <p style="font-size: 0.9rem; color: #555; text-align: center;">הזינו את הנתונים שלכם והמערכת תחשב אוטומטית את המידה האידיאלית עבורכם לביגוד סקי נוח וחופשי.</p>
+        
+        <div class="calc-box">
+            <div style="margin-bottom: 12px;">
+                <label style="display:block; margin-bottom:5px;"><b>עבור מי הביגוד?</b></label>
+                <select id="calc-gender" style="width: 100%;">
+                    <option value="גברים">גבר 🧔</option>
+                    <option value="נשים">אישה 👩</option>
+                    <option value="ילדים">ילד/ה 🧒</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+                <div style="flex:1;">
+                    <label style="display:block; margin-bottom:5px;"><b>גובה (בס"מ):</b></label>
+                    <input type="number" id="calc-height" placeholder="למשל: 175" style="width: 85%;">
+                </div>
+                <div style="flex:1;">
+                    <label style="display:block; margin-bottom:5px;"><b>משקל (בק"ג):</b></label>
+                    <input type="number" id="calc-weight" placeholder="למשל: 78" style="width: 85%;">
+                </div>
+            </div>
+            <button onclick="calculateSkiSize()" class="btn-select" style="width:100%; background:var(--primary); margin-top:5px;">חשב מידה מתאימה 🚀</button>
+            
+            <div id="calc-result-box" class="calc-result"></div>
+        </div>
+
+        <h4 style="color:var(--primary); margin-top:20px; margin-bottom:5px;">💡 טיפ חשוב לנוחות בשלג:</h4>
+        <p style="font-size:0.85rem; line-height:1.4; color:#666; margin-top:0;">
+            המחשבון שלנו לוקח בחשבון שאתם לובשים ביגוד טרמי או סווטשירט מתחת למעיל. בגדי סקי צריכים להיות מעט משוחררים כדי לאפשר תנועה חופשית בזמן הגלישה.
+        </p>
+        <button class="btn-select" style="width:100%; margin-top:10px; background:#666;" onclick="closeSizeGuide()">סגור מחשבון</button>
     </div>
 </div>
 
@@ -233,7 +278,6 @@
 </div>
 
 <script>
-    // הגדרות חיבור לשרת האחסון
     const BIN_ID = "6a0b5afa6610dd3ae8672c27"; 
     const API_KEY = "$2a$10$A3aPXMRSPKEJKtNLgjR4o.YJWA06TL6jnPttQD5EtSTR9ak6RnSSK"; 
 
@@ -326,17 +370,21 @@
         render();
     }
 
-    function isProductBlocked(id, size) {
+    function getProductBlockData(id, size) {
         const sDate = document.getElementById('start-date').value;
         const eDate = document.getElementById('end-date').value;
-        if (!sDate || !eDate) return false;
+        if (!sDate || !eDate) return null;
 
-        return blockedDatesFromServer.some(block => {
+        return blockedDatesFromServer.find(block => {
             return block.productId === id && 
                    block.size === size && 
                    sDate <= block.endDate && 
                    eDate >= block.startDate;
-        });
+        }) || null;
+    }
+
+    function isProductBlocked(id, size) {
+        return getProductBlockData(id, size) !== null;
     }
 
     function checkCartValidity() {
@@ -360,7 +408,6 @@
         render();
     }
 
-    // התיקון המרכזי כאן: החלפת המצב האפור לפי המידה שנבחרה
     function onSizeChange(id) {
         const sizeEl = document.getElementById(`size-${id}`);
         const btnEl = document.getElementById(`btn-${id}`);
@@ -368,15 +415,15 @@
         
         const cardEl = sizeEl.closest('.card');
         const selectedSize = sizeEl.value;
-        const blocked = isProductBlocked(id, selectedSize);
+        const blockData = getProductBlockData(id, selectedSize);
 
-        if (blocked) {
-            if (cardEl) cardEl.classList.add('size-blocked'); // הופך לאפור רק כשהמידה הזו ספציפית נבחרה ותפוסה
-            btnEl.innerText = `❌ מידה ${selectedSize} תפוסה בתאריכים אלו`;
+        if (blockData) {
+            if (cardEl) cardEl.classList.add('size-blocked');
+            btnEl.innerText = `❌ מידה ${selectedSize} תפוסה בין ${blockData.startDate} ל-${blockData.endDate}`;
             btnEl.className = "btn-select disabled-btn";
             btnEl.disabled = true;
         } else {
-            if (cardEl) cardEl.classList.remove('size-blocked'); // מחזיר לצבעוני אם פנוי
+            if (cardEl) cardEl.classList.remove('size-blocked');
             btnEl.disabled = false;
             const isThisSizeInCart = cartItems.some(i => i.id === id && i.size === selectedSize);
             if (isThisSizeInCart) {
@@ -403,20 +450,22 @@
         
         filtered.forEach(p => {
             const defaultSize = sizes[p.cat][0];
-            const blocked = isProductBlocked(p.id, defaultSize);
+            const blockData = getProductBlockData(p.id, defaultSize);
             const isInCart = cartItems.some(i => i.id === p.id && i.size === defaultSize);
             
-            // הורדה של מחלקת blocked הגורפת מהכרטיס בטעינה הראשונית
             grid.innerHTML += `
-                <div class="card ${blocked ? 'size-blocked' : ''}" id="card-${p.id}">
+                <div class="card ${blockData ? 'size-blocked' : ''}" id="card-${p.id}">
                     <img src="${p.image}" onclick="openLightbox('${p.image}')" title="לחץ להגדלה">
                     <h3>${p.name}</h3>
-                    <select id="size-${p.id}" style="width:80%" onchange="onSizeChange('${p.id}')">
-                        ${sizes[p.cat].map(s => `<option value="${s}">${s}</option>`).join('')}
-                    </select>
+                    <div style="display:flex; justify-content:center; align-items:center; gap:5px;">
+                        <select id="size-${p.id}" style="width:60%" onchange="onSizeChange('${p.id}')">
+                            ${sizes[p.cat].map(s => `<option value="${s}">${s}</option>`).join('')}
+                        </select>
+                        <span class="size-link" onclick="showSizeGuide('${p.gender}')">מידות?</span>
+                    </div>
                     <div style="color:var(--success); font-weight:bold; margin:10px 0;">₪${p.price} לשבוע</div>
-                    <button id="btn-${p.id}" ${blocked ? 'disabled' : ''} class="btn-select ${blocked ? 'disabled-btn' : (isInCart ? 'in-cart' : '')}" onclick="toggleCartItem('${p.id}')">
-                        ${blocked ? `❌ מידה ${defaultSize} תפוסה בתאריכים אלו` : (isInCart ? '✅ במידה זו בסל' : 'הוסף לסל')}
+                    <button id="btn-${p.id}" ${blockData ? 'disabled' : ''} class="btn-select ${blockData ? 'disabled-btn' : (isInCart ? 'in-cart' : '')}" onclick="toggleCartItem('${p.id}')">
+                        ${blockData ? `❌ מידה ${defaultSize} תפוסה בין ${blockData.startDate} ל-${blockData.endDate}` : (isInCart ? '✅ במידה זו בסל' : 'הוסף לסל')}
                     </button>
                 </div>`;
         });
@@ -443,7 +492,16 @@
 
     function openBundleWizard() {
         const body = document.getElementById('bundle-wizard-body');
-        body.innerHTML = `<label>עבור מי החבילה?</label><select id="bundle-gen" style="width:100%; margin-bottom:10px;" onchange="updateWizardOptions()">${genders.map(g => `<option value="${g}">${g}</option>`).join('')}</select><hr><div id="wizard-items"></div>`;
+        body.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <label>עבור מי החבילה?</label>
+                <span class="size-link" style="font-size:0.95rem;" onclick="showSizeGuide()"> Geno 📏 התאם לי מידה בחשבון</span>
+            </div>
+            <select id="bundle-gen" style="width:100%; margin-bottom:10px;" onchange="updateWizardOptions()">
+                ${genders.map(g => `<option value="${g}">${g}</option>`).join('')}
+            </select>
+            <hr>
+            <div id="wizard-items"></div>`;
         updateWizardOptions();
         showModal('bundleWizard');
     }
@@ -451,15 +509,62 @@
     function updateWizardOptions() {
         const g = document.getElementById('bundle-gen').value;
         document.getElementById('wizard-items').innerHTML = cats.map(c => `
-            <div style="margin-top:10px;"><label>${c}:</label>
-            <select id="wb-${c}" style="width:100%">${products.filter(p => p.cat === c && p.gender === g).map(p => `<option value="${p.id}">${p.name}</option>`).join('')}</select>
-            <select id="wbs-${c}" style="width:100%">${sizes[c].map(s => `<option value="${s}">${s}</option>`).join('')}</select></div>
+            <div style="margin-top:10px;"><label><b>${c}:</b></label>
+            <select id="wb-${c}" style="width:100%" onchange="checkWizardSelectionValidity()">
+                ${products.filter(p => p.cat === c && p.gender === g).map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
+            </select>
+            <select id="wbs-${c}" style="width:100%" onchange="checkWizardSelectionValidity()">
+                ${sizes[c].map(s => `<option value="${s}">${s}</option>`).join('')}
+            </select></div>
         `).join('');
+        
+        checkWizardSelectionValidity();
+    }
+
+    function checkWizardSelectionValidity() {
+        const submitBtn = document.getElementById('bundle-submit-btn');
+        if(!submitBtn) return;
+
+        let blockedItemInfo = null;
+
+        for(let i = 0; i < cats.length; i++) {
+            const c = cats[i];
+            const pIdEl = document.getElementById(`wb-${c}`);
+            const sizeEl = document.getElementById(`wbs-${c}`);
+            
+            if(pIdEl && sizeEl) {
+                const pId = pIdEl.value;
+                const size = sizeEl.value;
+                const blockData = getProductBlockData(pId, size);
+                if(blockData) {
+                    const foundProd = products.find(p => p.id === pId);
+                    blockedItemInfo = { 
+                        name: foundProd ? foundProd.name : c, 
+                        size: size,
+                        start: blockData.startDate,
+                        end: blockData.endDate
+                    };
+                    break; 
+                }
+            }
+        }
+
+        if(blockedItemInfo) {
+            submitBtn.innerText = `❌ תפוס! ${blockedItemInfo.name} (${blockedItemInfo.size}) חסום מ-${blockedItemInfo.start} עד ${blockedItemInfo.end}`;
+            submitBtn.className = "btn-select disabled-btn";
+            submitBtn.disabled = true;
+        } else {
+            submitBtn.innerText = "אישור והוספה לסל";
+            submitBtn.className = "btn-select";
+            submitBtn.style.background = "var(--success)";
+            submitBtn.disabled = false;
+        }
     }
 
     function saveBundleToCart() {
         const bundle = { gender: document.getElementById('bundle-gen').value, items: [] };
         let anyBlocked = false;
+        
         cats.forEach(c => {
             const pId = document.getElementById(`wb-${c}`).value;
             const size = document.getElementById(`wbs-${c}`).value;
@@ -469,12 +574,82 @@
         });
 
         if (anyBlocked) {
-            alert("לא ניתן להוסיף את החבילה - אחד או יותר מהפריטים שבחרת תפוס בתאריכים אלו.");
+            alert("אחד הפריטים תפוס. אנא שנה מוצר או מידה.");
             return;
         }
 
         cartBundles.push(bundle);
         updateUI(); closePopups();
+    }
+
+    function showSizeGuide(optionalGender) {
+        if(optionalGender && (optionalGender === 'גברים' || optionalGender === 'נשים' || optionalGender === 'ילדים')) {
+            document.getElementById('calc-gender').value = optionalGender;
+        }
+        document.getElementById('calc-height').value = "";
+        document.getElementById('calc-weight').value = "";
+        document.getElementById('calc-result-box').style.display = "none";
+        document.getElementById('sizeGuideModal').style.display = 'block';
+    }
+    
+    function closeSizeGuide() {
+        document.getElementById('sizeGuideModal').style.display = 'none';
+    }
+
+    // פונקציית הלוגיקה והחישוב של המידה החכמה
+    function calculateSkiSize() {
+        const gender = document.getElementById('calc-gender').value;
+        const height = parseFloat(document.getElementById('calc-height').value);
+        const weight = parseFloat(document.getElementById('calc-weight').value);
+        const resultBox = document.getElementById('calc-result-box');
+
+        if(!height || !weight || height <= 0 || weight <= 0) {
+            alert("אנא הזינו ערכי גובה ומשקל תקינים.");
+            return;
+        }
+
+        let sizeByHeight = 'M';
+        let sizeByWeight = 'M';
+
+        if(gender === 'גברים') {
+            // חישוב לפי גובה גברים
+            if(height < 170) sizeByHeight = 'S';
+            else if(height <= 178) sizeByHeight = 'M';
+            else if(height <= 185) sizeByHeight = 'L';
+            else sizeByHeight = 'XL';
+
+            // חישוב לפי משקל גברים
+            if(weight < 70) sizeByWeight = 'S';
+            else if(weight <= 82) sizeByWeight = 'M';
+            else if(weight <= 92) sizeByWeight = 'L';
+            else sizeByWeight = 'XL';
+
+        } else if(gender === 'נשים') {
+            // חישוב לפי גובה נשים
+            if(height < 162) sizeByHeight = 'S';
+            else if(height <= 170) sizeByHeight = 'M';
+            else if(height <= 176) sizeByHeight = 'L';
+            else sizeByHeight = 'XL';
+
+            // חישוב לפי משקל נשים
+            if(weight < 56) sizeByWeight = 'S';
+            else if(weight <= 66) sizeByWeight = 'M';
+            else if(weight <= 76) sizeByWeight = 'L';
+            else sizeByWeight = 'XL';
+            
+        } else {
+            // ילדים (מידות כלליות מותאמות קטנות)
+            if(height < 130) { sizeByHeight = 'S'; sizeByWeight = 'S'; }
+            else if(height <= 145) { sizeByHeight = 'M'; sizeByWeight = 'M'; }
+            else { sizeByHeight = 'L'; sizeByWeight = 'L'; }
+        }
+
+        // המרת המידות למספרים בשביל לקחת את הגדולה מבניהם
+        const sizeOrder = { 'S': 1, 'M': 2, 'L': 3, 'XL': 4 };
+        let finalSize = sizeOrder[sizeByHeight] >= sizeOrder[sizeByWeight] ? sizeByHeight : sizeByWeight;
+
+        resultBox.innerHTML = `המידה המומלצת עבורך: <span style="font-size:1.6rem; color:var(--primary); font-weight:900;">${finalSize}</span>`;
+        resultBox.style.display = "block";
     }
 
     function updateUI() {
