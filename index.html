@@ -64,7 +64,6 @@
             padding-bottom: 20px; position: relative;
             transition: opacity 0.3s, filter 0.3s;
         }
-        /* האפקט האפור יופעל רק כשיש מחלקה ספציפית שמוזרקת בזמן אמת */
         .card.size-blocked { opacity: 0.65; filter: grayscale(0.6); }
         .card img { width: 100%; height: 250px; object-fit: contain; background: #f9f9f9; padding: 10px; cursor: pointer; transition: transform 0.2s; }
         .card img:hover { transform: scale(1.02); }
@@ -195,7 +194,7 @@
     <div class="modal-header"><h3>בחירת חבילת קומפלט</h3></div>
     <div class="modal-body" id="bundle-wizard-body"></div>
     <div style="padding: 15px; text-align: center;">
-        <button class="btn-select" style="background:var(--success); width:100%;" onclick="saveBundleToCart()">אישור והוספה לסל</button>
+        <button id="bundle-submit-btn" class="btn-select" style="background:var(--success); width:100%;" onclick="saveBundleToCart()">אישור והוספה לסל</button>
     </div>
 </div>
 
@@ -360,7 +359,6 @@
         render();
     }
 
-    // התיקון המרכזי כאן: החלפת המצב האפור לפי המידה שנבחרה
     function onSizeChange(id) {
         const sizeEl = document.getElementById(`size-${id}`);
         const btnEl = document.getElementById(`btn-${id}`);
@@ -371,12 +369,12 @@
         const blocked = isProductBlocked(id, selectedSize);
 
         if (blocked) {
-            if (cardEl) cardEl.classList.add('size-blocked'); // הופך לאפור רק כשהמידה הזו ספציפית נבחרה ותפוסה
+            if (cardEl) cardEl.classList.add('size-blocked');
             btnEl.innerText = `❌ מידה ${selectedSize} תפוסה בתאריכים אלו`;
             btnEl.className = "btn-select disabled-btn";
             btnEl.disabled = true;
         } else {
-            if (cardEl) cardEl.classList.remove('size-blocked'); // מחזיר לצבעוני אם פנוי
+            if (cardEl) cardEl.classList.remove('size-blocked');
             btnEl.disabled = false;
             const isThisSizeInCart = cartItems.some(i => i.id === id && i.size === selectedSize);
             if (isThisSizeInCart) {
@@ -406,7 +404,6 @@
             const blocked = isProductBlocked(p.id, defaultSize);
             const isInCart = cartItems.some(i => i.id === p.id && i.size === defaultSize);
             
-            // הורדה של מחלקת blocked הגורפת מהכרטיס בטעינה הראשונית
             grid.innerHTML += `
                 <div class="card ${blocked ? 'size-blocked' : ''}" id="card-${p.id}">
                     <img src="${p.image}" onclick="openLightbox('${p.image}')" title="לחץ להגדלה">
@@ -451,15 +448,57 @@
     function updateWizardOptions() {
         const g = document.getElementById('bundle-gen').value;
         document.getElementById('wizard-items').innerHTML = cats.map(c => `
-            <div style="margin-top:10px;"><label>${c}:</label>
-            <select id="wb-${c}" style="width:100%">${products.filter(p => p.cat === c && p.gender === g).map(p => `<option value="${p.id}">${p.name}</option>`).join('')}</select>
-            <select id="wbs-${c}" style="width:100%">${sizes[c].map(s => `<option value="${s}">${s}</option>`).join('')}</select></div>
+            <div style="margin-top:10px;"><label><b>${c}:</b></label>
+            <select id="wb-${c}" style="width:100%" onchange="checkWizardSelectionValidity()">
+                ${products.filter(p => p.cat === c && p.gender === g).map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
+            </select>
+            <select id="wbs-${c}" style="width:100%" onchange="checkWizardSelectionValidity()">
+                ${sizes[c].map(s => `<option value="${s}">${s}</option>`).join('')}
+            </select></div>
         `).join('');
+        
+        checkWizardSelectionValidity();
+    }
+
+    // פונקציה חדשה: בודקת בזמן אמת בתוך המבצע אם המידה שנבחרה תפוסה ומעדכנת את הכפתור
+    function checkWizardSelectionValidity() {
+        const submitBtn = document.getElementById('bundle-submit-btn');
+        if(!submitBtn) return;
+
+        let blockedItemInfo = null;
+
+        for(let i = 0; i < cats.length; i++) {
+            const c = cats[i];
+            const pIdEl = document.getElementById(`wb-${c}`);
+            const sizeEl = document.getElementById(`wbs-${c}`);
+            
+            if(pIdEl && sizeEl) {
+                const pId = pIdEl.value;
+                const size = sizeEl.value;
+                if(isProductBlocked(pId, size)) {
+                    const foundProd = products.find(p => p.id === pId);
+                    blockedItemInfo = { name: foundProd ? foundProd.name : c, size: size };
+                    break; 
+                }
+            }
+        }
+
+        if(blockedItemInfo) {
+            submitBtn.innerText = `❌ לא ניתן להוסיף - ${blockedItemInfo.name} במידה ${blockedItemInfo.size} תפוס!`;
+            submitBtn.className = "btn-select disabled-btn";
+            submitBtn.disabled = true;
+        } else {
+            submitBtn.innerText = "אישור והוספה לסל";
+            submitBtn.className = "btn-select";
+            submitBtn.style.background = "var(--success)";
+            submitBtn.disabled = false;
+        }
     }
 
     function saveBundleToCart() {
         const bundle = { gender: document.getElementById('bundle-gen').value, items: [] };
         let anyBlocked = false;
+        
         cats.forEach(c => {
             const pId = document.getElementById(`wb-${c}`).value;
             const size = document.getElementById(`wbs-${c}`).value;
@@ -469,7 +508,7 @@
         });
 
         if (anyBlocked) {
-            alert("לא ניתן להוסיף את החבילה - אחד או יותר מהפריטים שבחרת תפוס בתאריכים אלו.");
+            alert("אחד הפריטים תפוס. אנא שנה מוצר או מידה.");
             return;
         }
 
