@@ -117,7 +117,6 @@
         .calc-box { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px; padding: 15px; margin-top: 10px; text-align: center; }
         .calc-result { font-size: 1.3rem; font-weight: bold; color: var(--success); margin-top: 15px; display: none; background: #e8f5e9; padding: 10px; border-radius: 8px; border: 1px dashed var(--success); }
 
-        /* סגנון חדש לכפתורי אפליקציות התשלום */
         .pay-methods { display: flex; gap: 10px; margin-top: 15px; }
         .pay-btn { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: bold; color: white; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
         .pay-btn:hover { filter: brightness(0.9); }
@@ -200,8 +199,8 @@
                 סה"כ לתשלום: <span style="font-size:1.4rem; font-weight:bold; color:var(--success);">₪<span id="final-price">0</span></span>
             </div>
             
-            <p style="font-size:0.85rem; text-align:center; margin-top:15px; color:#555; font-weight:bold;">לחצו על האפליקציה המועדפת לתשלום ושליחת ההזמנה:</p>
-            <div class="pay-methods">
+            <p style="font-size:0.85rem; text-align:center; margin-top:15px; color:#555; font-weight:bold;">לחצו על האפליקציה המועדפת לתשלום:</p>
+            <div class="pay-methods" id="pay-buttons-container">
                 <button onclick="processPaymentAndOrder('bit')" class="pay-btn btn-bit">📱 תשלום ב-bit</button>
                 <button onclick="processPaymentAndOrder('paybox')" class="pay-btn btn-paybox">💜 תשלום ב-PayBox</button>
             </div>
@@ -293,7 +292,7 @@
 <script>
     const BIN_ID = "6a0b5afa6610dd3ae8672c27"; 
     const API_KEY = "$2a$10$A3aPXMRSPKEJKtNLgjR4o.YJWA06TL6jnPttQD5EtSTR9ak6RnSSK"; 
-    const MERCHANT_PHONE = "0547884607"; // מספר הטלפון לקבלת כספים בביט ופייבוקס
+    const MERCHANT_PHONE = "0547884607"; 
 
     const cats = ['מעיל', 'מכנס', 'קסדה', 'כפפות', 'גוגלס'];
     const genders = ['גברים', 'נשים', 'ילדים'];
@@ -659,7 +658,7 @@
         resultBox.style.display = "block";
     }
 
-    // פונקציית העברת תשלום משולבת וואטסאפ חדשה
+    // פונקציית התשלום והוואטסאפ המשודרגת ללא תקלות פיירבייס
     function processPaymentAndOrder(method) {
         const nameInput = document.getElementById('cust-name');
         const sInput = document.getElementById('start-date');
@@ -669,8 +668,7 @@
         if(!nameInput.value.trim()) { alert("נא להזין שם מלא להזמנה לפני התשלום"); return; }
         if(!sInput.value || !eInput.value) { alert("נא לבחור תאריכי השכרה בראש העמוד"); return; }
 
-        // 1. קודם כל מכינים ושולחים את הודעת ההזמנה לוואטסאפ שלכם כדי שהמידע יישמר אצלכם
-        let msg = `שלום, ביצעתי הרגע תשלום ב-${method === 'bit' ? 'bit' : 'PayBox'} על סך ₪${finalPrice} עבור הזמנת ציוד סקי:\n`;
+        let msg = `שלום, אני מעוניין להזמין ציוד סקי (משולם ב-${method === 'bit' ? 'bit' : 'PayBox'} בסך ₪${finalPrice}):\n`;
         msg += `שם הלקוח: ${nameInput.value}\n`;
         msg += `תאריכים: ${sInput.value} עד ${eInput.value}\n\n`;
         
@@ -689,27 +687,42 @@
                 if(p) msg += `• ${p.name} (מידה: ${i.size})\n`;
             });
         }
-        
-        msg += `\nסה"כ שולם: ₪${finalPrice}`;
-        
-        // פתיחת וואטסאפ בחלון חדש
-        window.open(`https://wa.me/972549943477?text=${encodeURIComponent(msg)}`, '_blank');
+        msg += `\nסה"כ לתשלום: ₪${finalPrice}`;
 
-        // 2. פתיחת אפליקציית התשלום המתאימה
+        const whatsappUrl = `https://wa.me/972549943477?text=${encodeURIComponent(msg)}`;
+
         if (method === 'paybox') {
-            // קישור עמוק לפייבוקס שממלא אוטומטית מספר טלפון וסכום מדויק
-            const payboxUrl = `https://payboxapp.page.link/v1/payment?phone=${MERCHANT_PHONE}&amount=${finalPrice}`;
-            setTimeout(() => { window.location.href = payboxUrl; }, 800);
-        } else if (method === 'bit') {
-            // העתקת מספר הטלפון ללוח של הלקוח בצורה חלקה לטובת נוחות בביט
             navigator.clipboard.writeText(MERCHANT_PHONE).then(() => {
-                alert(`מספר הטלפון להעברה (${MERCHANT_PHONE}) הועתק אוטומטית ללוח שלך!\nכעת תועבר לאפליקציית ביט, כל שעליך לעשות הוא להדביק את המספר ולהעביר ₪${finalPrice}.`);
-                // פתיחת אפליקציית ביט בטלפון של הלקוח
+                alert(`🚨 שלב 1 מתוך 2:\nמספר הטלפון להעברה (${MERCHANT_PHONE}) הועתק ללוח שלך!\n\nכעת תועבר לאפליקציית פייבוקס. שלח שם ₪${finalPrice}.\n\n⚠️ חשוב מאוד: מיד לאחר התשלום, חזור לכאן ולחץ על כפתור הוואטסאפ כדי לשלוח את פירוט המידות של ההזמנה!`);
+                window.location.href = "paybox://";
+                showPostPaymentWhatsappButton(whatsappUrl);
+            }).catch(() => {
+                alert(`נא להעביר ₪${finalPrice} למספר ${MERCHANT_PHONE} בפייבוקס, ולאחר מכן לשלוח הודעה בוואטסאפ.`);
+                window.location.href = "paybox://";
+            });
+
+        } else if (method === 'bit') {
+            navigator.clipboard.writeText(MERCHANT_PHONE).then(() => {
+                alert(`🚨 שלב 1 מתוך 2:\nמספר הטלפון להעברה (${MERCHANT_PHONE}) הועתק ללוח שלך!\n\nכעת תועבר לאפליקציית ביט. שלח שם ₪${finalPrice}.\n\n⚠️ חשוב מאוד: מיד לאחר התשלום, חזור לכאן ולחץ על כפתור הוואטסאפ כדי לשלוח את פירוט המידות של ההזמנה!`);
                 window.location.href = "bitpay://";
+                showPostPaymentWhatsappButton(whatsappUrl);
             }).catch(() => {
                 alert(`נא להעביר ₪${finalPrice} למספר ${MERCHANT_PHONE} באפליקציית ביט.`);
                 window.location.href = "bitpay://";
             });
+        }
+    }
+
+    function showPostPaymentWhatsappButton(whatsappUrl) {
+        const btnContainer = document.getElementById('pay-buttons-container');
+        if (btnContainer) {
+            btnContainer.parentElement.innerHTML = `
+                <div style="padding:15px; background:#fff3cd; border:2px dashed #ffc107; border-radius:10px; text-align:center; margin-top:15px;">
+                    <h3 style="color:#856404; margin-top:0;">שילמתם באפליקציה? 🎉</h3>
+                    <p style="font-size:0.95rem; margin-bottom:15px;">כדי שהציוד יישמר לכם במלאי ונדע אילו מידות בחרתם, לחצו עכשיו על הכפתור הירוק ושילחו לנו את ההזמנה:</p>
+                    <a href="${whatsappUrl}" target="_blank" class="wa-btn" style="font-size:1.2rem; padding:15px; background-color:#25d366;">לחצו כאן לשליחת ההזמנה בוואטסאפ 💬</a>
+                </div>
+            `;
         }
     }
 
