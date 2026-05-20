@@ -478,7 +478,6 @@
                     <div style="display:flex; justify-content:center; align-items:center; gap:5px;">
                         <select id="size-${p.id}" style="width:60%" onchange="onSizeChange('${p.id}')">
                             ${sizes[p.cat].map(s => `<option value="${s}">${s}</option>`).join('')}
-                        </join('')}
                         </select>
                         <span class="size-link" onclick="showSizeGuide('${p.gender}')">מידות?</span>
                     </div>
@@ -664,7 +663,6 @@
         resultBox.style.display = "block";
     }
 
-    // פונקציית תשלום מעודכנת עם כפתור ביטול מובנה
     function processPaymentAndOrder(method) {
         const nameInput = document.getElementById('cust-name');
         const sInput = document.getElementById('start-date');
@@ -719,7 +717,6 @@
         }
     }
 
-    // הצגת תיבת הסטטוס עם כפתור ביטול / חזרה נוח
     function showPostPaymentWhatsappButton(whatsappUrl) {
         const container = document.getElementById('post-payment-container');
         if (container) {
@@ -735,7 +732,6 @@
         }
     }
 
-    // פונקציית ביטול שמנקה את אזור הוואטסאפ ומאפשרת לבחור משהו אחר
     function cancelPostPaymentView() {
         const container = document.getElementById('post-payment-container');
         if (container) {
