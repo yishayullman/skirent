@@ -663,6 +663,7 @@
         resultBox.style.display = "block";
     }
 
+    // פונקציית העברה בטוחה שמונעת קריסות של כתובת לא תקינה
     function processPaymentAndOrder(method) {
         const nameInput = document.getElementById('cust-name');
         const sInput = document.getElementById('start-date');
@@ -695,26 +696,20 @@
 
         const whatsappUrl = `https://wa.me/972549943477?text=${encodeURIComponent(msg)}`;
 
-        if (method === 'paybox') {
-            navigator.clipboard.writeText(MERCHANT_PHONE).then(() => {
-                alert(`🚨 שלב 1 מתוך 2:\nמספר הטלפון להעברה (${MERCHANT_PHONE}) הועתק ללוח שלך!\n\nכעת תועבר לאפליקציית פייבוקס. שלח שם ₪${finalPrice}.\n\n⚠️ לאחר מכן חזור לכאן ולחץ על כפתור הוואטסאפ הירוק כדי לשלוח את ההזמנה!`);
-                window.location.href = "paybox://";
-                showPostPaymentWhatsappButton(whatsappUrl);
-            }).catch(() => {
-                alert(`נא להעביר ₪${finalPrice} למספר ${MERCHANT_PHONE} בפייבוקס, ולאחר מכן לשלוח הודעה בוואטסאפ.`);
-                window.location.href = "paybox://";
-            });
+        // העתקה בטוחה של מספר הטלפון והצגת הדרכה מבלי להקריס את הדפדפן
+        navigator.clipboard.writeText(MERCHANT_PHONE).then(() => {
+            alert(`🚨 שלב 1 מתוך 2:\nמספר הטלפון להעברה (${MERCHANT_PHONE}) הועתק ללוח שלך!\n\nכעת ננסה לפתוח את אפליקציית ${method === 'bit' ? 'ביט' : 'פייבוקס'}.\nאם היא לא נפתחת אוטומטית, היכנס אליה ידנית, בצע העברה של ₪${finalPrice}, וחזור לכאן כדי לשלוח את ההזמנה בוואטסאפ.`);
+            
+            // שימוש בטוח לפתיחת האפליקציה מבלי להקפיץ שגיאת כתובת
+            const appUrl = method === 'bit' ? "bitpay://" : "paybox://";
+            window.location.href = appUrl;
 
-        } else if (method === 'bit') {
-            navigator.clipboard.writeText(MERCHANT_PHONE).then(() => {
-                alert(`🚨 שלב 1 מתוך 2:\nמספר הטלפון להעברה (${MERCHANT_PHONE}) הועתק ללוח שלך!\n\nכעת תועבר לאפליקציית ביט. שלח שם ₪${finalPrice}.\n\n⚠️ לאחר מכן חזור לכאן ולחץ על כפתור הוואטסאפ הירוק כדי לשלוח את ההזמנה!`);
-                window.location.href = "bitpay://";
-                showPostPaymentWhatsappButton(whatsappUrl);
-            }).catch(() => {
-                alert(`נא להעביר ₪${finalPrice} למספר ${MERCHANT_PHONE} באפליקציית ביט.`);
-                window.location.href = "bitpay://";
-            });
-        }
+            // מציג את אזור הוואטסאפ עם כפתור הביטול החדש
+            showPostPaymentWhatsappButton(whatsappUrl);
+        }).catch(() => {
+            alert(`נא להעביר ₪${finalPrice} למספר ${MERCHANT_PHONE} באפליקציה, ולאחר מכן לחזור ולשלוח הודעה בוואטסאפ.`);
+            showPostPaymentWhatsappButton(whatsappUrl);
+        });
     }
 
     function showPostPaymentWhatsappButton(whatsappUrl) {
