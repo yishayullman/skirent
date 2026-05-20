@@ -14,6 +14,8 @@
             --danger: #e74c3c;
             --whatsapp: #25d366;
             --bundle: #6c5ce7;
+            --bit: #00c2cb;
+            --paybox: #4a148c;
         }
 
         body {
@@ -112,9 +114,15 @@
 
         .size-link { color: var(--bundle); font-size: 0.85rem; font-weight: bold; text-decoration: underline; cursor: pointer; display: inline-block; margin-top: 5px; }
         
-        /* עיצוב למחשבון המידות החדש */
         .calc-box { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px; padding: 15px; margin-top: 10px; text-align: center; }
         .calc-result { font-size: 1.3rem; font-weight: bold; color: var(--success); margin-top: 15px; display: none; background: #e8f5e9; padding: 10px; border-radius: 8px; border: 1px dashed var(--success); }
+
+        /* סגנון חדש לכפתורי אפליקציות התשלום */
+        .pay-methods { display: flex; gap: 10px; margin-top: 15px; }
+        .pay-btn { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: bold; color: white; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+        .pay-btn:hover { filter: brightness(0.9); }
+        .btn-bit { background-color: var(--bit); color: #1a1a1a; }
+        .btn-paybox { background-color: var(--paybox); }
     </style>
 </head>
 <body>
@@ -191,7 +199,12 @@
             <div style="padding:15px; background:#f0fdf4; border-radius:10px; text-align:center; border: 1px solid #dcfce7;">
                 סה"כ לתשלום: <span style="font-size:1.4rem; font-weight:bold; color:var(--success);">₪<span id="final-price">0</span></span>
             </div>
-            <button onclick="sendWhatsApp()" style="width:100%; background:var(--whatsapp); color:white; padding:15px; border-radius:10px; border:none; font-weight:bold; cursor:pointer; margin-top:15px; font-size:1.1rem;">✅ שלח הזמנה לוואטסאפ</button>
+            
+            <p style="font-size:0.85rem; text-align:center; margin-top:15px; color:#555; font-weight:bold;">לחצו על האפליקציה המועדפת לתשלום ושליחת ההזמנה:</p>
+            <div class="pay-methods">
+                <button onclick="processPaymentAndOrder('bit')" class="pay-btn btn-bit">📱 תשלום ב-bit</button>
+                <button onclick="processPaymentAndOrder('paybox')" class="pay-btn btn-paybox">💜 תשלום ב-PayBox</button>
+            </div>
         </div>
     </div>
 </div>
@@ -280,6 +293,7 @@
 <script>
     const BIN_ID = "6a0b5afa6610dd3ae8672c27"; 
     const API_KEY = "$2a$10$A3aPXMRSPKEJKtNLgjR4o.YJWA06TL6jnPttQD5EtSTR9ak6RnSSK"; 
+    const MERCHANT_PHONE = "0547884607"; // מספר הטלפון לקבלת כספים בביט ופייבוקס
 
     const cats = ['מעיל', 'מכנס', 'קסדה', 'כפפות', 'גוגלס'];
     const genders = ['גברים', 'נשים', 'ילדים'];
@@ -495,7 +509,7 @@
         body.innerHTML = `
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                 <label>עבור מי החבילה?</label>
-                <span class="size-link" style="font-size:0.95rem;" onclick="showSizeGuide()"> Geno 📏 התאם לי מידה בחשבון</span>
+                <span class="size-link" style="font-size:0.95rem;" onclick="showSizeGuide()">📏 התאם לי מידה בחשבון</span>
             </div>
             <select id="bundle-gen" style="width:100%; margin-bottom:10px;" onchange="updateWizardOptions()">
                 ${genders.map(g => `<option value="${g}">${g}</option>`).join('')}
@@ -596,7 +610,6 @@
         document.getElementById('sizeGuideModal').style.display = 'none';
     }
 
-    // פונקציית הלוגיקה והחישוב של המידה החכמה
     function calculateSkiSize() {
         const gender = document.getElementById('calc-gender').value;
         const height = parseFloat(document.getElementById('calc-height').value);
@@ -612,44 +625,92 @@
         let sizeByWeight = 'M';
 
         if(gender === 'גברים') {
-            // חישוב לפי גובה גברים
             if(height < 170) sizeByHeight = 'S';
             else if(height <= 178) sizeByHeight = 'M';
             else if(height <= 185) sizeByHeight = 'L';
             else sizeByHeight = 'XL';
 
-            // חישוב לפי משקל גברים
             if(weight < 70) sizeByWeight = 'S';
             else if(weight <= 82) sizeByWeight = 'M';
             else if(weight <= 92) sizeByWeight = 'L';
             else sizeByWeight = 'XL';
 
         } else if(gender === 'נשים') {
-            // חישוב לפי גובה נשים
             if(height < 162) sizeByHeight = 'S';
             else if(height <= 170) sizeByHeight = 'M';
             else if(height <= 176) sizeByHeight = 'L';
             else sizeByHeight = 'XL';
 
-            // חישוב לפי משקל נשים
             if(weight < 56) sizeByWeight = 'S';
             else if(weight <= 66) sizeByWeight = 'M';
             else if(weight <= 76) sizeByWeight = 'L';
             else sizeByWeight = 'XL';
             
         } else {
-            // ילדים (מידות כלליות מותאמות קטנות)
             if(height < 130) { sizeByHeight = 'S'; sizeByWeight = 'S'; }
             else if(height <= 145) { sizeByHeight = 'M'; sizeByWeight = 'M'; }
             else { sizeByHeight = 'L'; sizeByWeight = 'L'; }
         }
 
-        // המרת המידות למספרים בשביל לקחת את הגדולה מבניהם
         const sizeOrder = { 'S': 1, 'M': 2, 'L': 3, 'XL': 4 };
         let finalSize = sizeOrder[sizeByHeight] >= sizeOrder[sizeByWeight] ? sizeByHeight : sizeByWeight;
 
         resultBox.innerHTML = `המידה המומלצת עבורך: <span style="font-size:1.6rem; color:var(--primary); font-weight:900;">${finalSize}</span>`;
         resultBox.style.display = "block";
+    }
+
+    // פונקציית העברת תשלום משולבת וואטסאפ חדשה
+    function processPaymentAndOrder(method) {
+        const nameInput = document.getElementById('cust-name');
+        const sInput = document.getElementById('start-date');
+        const eInput = document.getElementById('end-date');
+        const finalPrice = document.getElementById('final-price').innerText;
+
+        if(!nameInput.value.trim()) { alert("נא להזין שם מלא להזמנה לפני התשלום"); return; }
+        if(!sInput.value || !eInput.value) { alert("נא לבחור תאריכי השכרה בראש העמוד"); return; }
+
+        // 1. קודם כל מכינים ושולחים את הודעת ההזמנה לוואטסאפ שלכם כדי שהמידע יישמר אצלכם
+        let msg = `שלום, ביצעתי הרגע תשלום ב-${method === 'bit' ? 'bit' : 'PayBox'} על סך ₪${finalPrice} עבור הזמנת ציוד סקי:\n`;
+        msg += `שם הלקוח: ${nameInput.value}\n`;
+        msg += `תאריכים: ${sInput.value} עד ${eInput.value}\n\n`;
+        
+        if(cartBundles.length > 0) {
+            msg += `--- חבילות קומפלט ---\n`;
+            cartBundles.forEach((b, i) => {
+                msg += `🎁 חבילה ${i+1} (${b.gender}):\n${b.items.map(it => `  - ${it.name} (${it.size})`).join('\n')}\n`;
+            });
+            msg += `\n`;
+        }
+        
+        if(cartItems.length > 0) {
+            msg += `--- פריטים בודדים ---\n`;
+            cartItems.forEach(i => {
+                const p = products.find(x => x.id === i.id);
+                if(p) msg += `• ${p.name} (מידה: ${i.size})\n`;
+            });
+        }
+        
+        msg += `\nסה"כ שולם: ₪${finalPrice}`;
+        
+        // פתיחת וואטסאפ בחלון חדש
+        window.open(`https://wa.me/972549943477?text=${encodeURIComponent(msg)}`, '_blank');
+
+        // 2. פתיחת אפליקציית התשלום המתאימה
+        if (method === 'paybox') {
+            // קישור עמוק לפייבוקס שממלא אוטומטית מספר טלפון וסכום מדויק
+            const payboxUrl = `https://payboxapp.page.link/v1/payment?phone=${MERCHANT_PHONE}&amount=${finalPrice}`;
+            setTimeout(() => { window.location.href = payboxUrl; }, 800);
+        } else if (method === 'bit') {
+            // העתקת מספר הטלפון ללוח של הלקוח בצורה חלקה לטובת נוחות בביט
+            navigator.clipboard.writeText(MERCHANT_PHONE).then(() => {
+                alert(`מספר הטלפון להעברה (${MERCHANT_PHONE}) הועתק אוטומטית ללוח שלך!\nכעת תועבר לאפליקציית ביט, כל שעליך לעשות הוא להדביק את המספר ולהעביר ₪${finalPrice}.`);
+                // פתיחת אפליקציית ביט בטלפון של הלקוח
+                window.location.href = "bitpay://";
+            }).catch(() => {
+                alert(`נא להעביר ₪${finalPrice} למספר ${MERCHANT_PHONE} באפליקציית ביט.`);
+                window.location.href = "bitpay://";
+            });
+        }
     }
 
     function updateUI() {
@@ -714,38 +775,6 @@
     }
 
     function removeBundle(idx) { cartBundles.splice(idx, 1); updateUI(); }
-
-    function sendWhatsApp() {
-        const nameInput = document.getElementById('cust-name');
-        const sInput = document.getElementById('start-date');
-        const eInput = document.getElementById('end-date');
-
-        if(!nameInput.value.trim()) { alert("נא להזין שם מלא להזמנה"); return; }
-        if(!sInput.value || !eInput.value) { alert("נא לבחור תאריכי השכרה בראש העמוד"); return; }
-
-        let msg = `שלום, אני מעוניין להזמין ציוד סקי:\n`;
-        msg += `שם: ${nameInput.value}\n`;
-        msg += `תאריכים: ${sInput.value} עד ${eInput.value}\n\n`;
-        
-        if(cartBundles.length > 0) {
-            msg += `--- חבילות קומפלט ---\n`;
-            cartBundles.forEach((b, i) => {
-                msg += `🎁 חבילה ${i+1} (${b.gender}):\n${b.items.map(it => `  - ${it.name} (${it.size})`).join('\n')}\n`;
-            });
-            msg += `\n`;
-        }
-        
-        if(cartItems.length > 0) {
-            msg += `--- פריטים בודדים ---\n`;
-            cartItems.forEach(i => {
-                const p = products.find(x => x.id === i.id);
-                if(p) msg += `• ${p.name} (מידה: ${i.size})\n`;
-            });
-        }
-        
-        msg += `\nסה"כ לתשלום: ₪${document.getElementById('final-price').innerText}`;
-        window.open(`https://wa.me/972549943477?text=${encodeURIComponent(msg)}`, '_blank');
-    }
 
     function showModal(id) { document.getElementById('overlay').style.display='block'; document.getElementById(id).style.display='block'; }
     function closePopups() { document.querySelectorAll('.modal, .overlay').forEach(m => m.style.display='none'); }
