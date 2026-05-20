@@ -122,6 +122,9 @@
         .pay-btn:hover { filter: brightness(0.9); }
         .btn-bit { background-color: var(--bit); color: #1a1a1a; }
         .btn-paybox { background-color: var(--paybox); }
+        
+        .back-btn { background: none; border: none; color: #7f8c8d; text-decoration: underline; cursor: pointer; font-size: 0.85rem; margin-top: 10px; font-weight: bold; }
+        .back-btn:hover { color: #333; }
     </style>
 </head>
 <body>
@@ -200,10 +203,12 @@
             </div>
             
             <p style="font-size:0.85rem; text-align:center; margin-top:15px; color:#555; font-weight:bold;">לחצו על האפליקציה המועדפת לתשלום:</p>
-            <div class="pay-methods" id="pay-buttons-container">
+            <div class="pay-methods">
                 <button onclick="processPaymentAndOrder('bit')" class="pay-btn btn-bit">📱 תשלום ב-bit</button>
                 <button onclick="processPaymentAndOrder('paybox')" class="pay-btn btn-paybox">💜 תשלום ב-PayBox</button>
             </div>
+            
+            <div id="post-payment-container"></div>
         </div>
     </div>
 </div>
@@ -473,6 +478,7 @@
                     <div style="display:flex; justify-content:center; align-items:center; gap:5px;">
                         <select id="size-${p.id}" style="width:60%" onchange="onSizeChange('${p.id}')">
                             ${sizes[p.cat].map(s => `<option value="${s}">${s}</option>`).join('')}
+                        </join('')}
                         </select>
                         <span class="size-link" onclick="showSizeGuide('${p.gender}')">מידות?</span>
                     </div>
@@ -658,7 +664,7 @@
         resultBox.style.display = "block";
     }
 
-    // פונקציית התשלום והוואטסאפ המשודרגת ללא תקלות פיירבייס
+    // פונקציית תשלום מעודכנת עם כפתור ביטול מובנה
     function processPaymentAndOrder(method) {
         const nameInput = document.getElementById('cust-name');
         const sInput = document.getElementById('start-date');
@@ -693,7 +699,7 @@
 
         if (method === 'paybox') {
             navigator.clipboard.writeText(MERCHANT_PHONE).then(() => {
-                alert(`🚨 שלב 1 מתוך 2:\nמספר הטלפון להעברה (${MERCHANT_PHONE}) הועתק ללוח שלך!\n\nכעת תועבר לאפליקציית פייבוקס. שלח שם ₪${finalPrice}.\n\n⚠️ חשוב מאוד: מיד לאחר התשלום, חזור לכאן ולחץ על כפתור הוואטסאפ כדי לשלוח את פירוט המידות של ההזמנה!`);
+                alert(`🚨 שלב 1 מתוך 2:\nמספר הטלפון להעברה (${MERCHANT_PHONE}) הועתק ללוח שלך!\n\nכעת תועבר לאפליקציית פייבוקס. שלח שם ₪${finalPrice}.\n\n⚠️ לאחר מכן חזור לכאן ולחץ על כפתור הוואטסאפ הירוק כדי לשלוח את ההזמנה!`);
                 window.location.href = "paybox://";
                 showPostPaymentWhatsappButton(whatsappUrl);
             }).catch(() => {
@@ -703,7 +709,7 @@
 
         } else if (method === 'bit') {
             navigator.clipboard.writeText(MERCHANT_PHONE).then(() => {
-                alert(`🚨 שלב 1 מתוך 2:\nמספר הטלפון להעברה (${MERCHANT_PHONE}) הועתק ללוח שלך!\n\nכעת תועבר לאפליקציית ביט. שלח שם ₪${finalPrice}.\n\n⚠️ חשוב מאוד: מיד לאחר התשלום, חזור לכאן ולחץ על כפתור הוואטסאפ כדי לשלוח את פירוט המידות של ההזמנה!`);
+                alert(`🚨 שלב 1 מתוך 2:\nמספר הטלפון להעברה (${MERCHANT_PHONE}) הועתק ללוח שלך!\n\nכעת תועבר לאפליקציית ביט. שלח שם ₪${finalPrice}.\n\n⚠️ לאחר מכן חזור לכאן ולחץ על כפתור הוואטסאפ הירוק כדי לשלוח את ההזמנה!`);
                 window.location.href = "bitpay://";
                 showPostPaymentWhatsappButton(whatsappUrl);
             }).catch(() => {
@@ -713,16 +719,27 @@
         }
     }
 
+    // הצגת תיבת הסטטוס עם כפתור ביטול / חזרה נוח
     function showPostPaymentWhatsappButton(whatsappUrl) {
-        const btnContainer = document.getElementById('pay-buttons-container');
-        if (btnContainer) {
-            btnContainer.parentElement.innerHTML = `
+        const container = document.getElementById('post-payment-container');
+        if (container) {
+            container.innerHTML = `
                 <div style="padding:15px; background:#fff3cd; border:2px dashed #ffc107; border-radius:10px; text-align:center; margin-top:15px;">
                     <h3 style="color:#856404; margin-top:0;">שילמתם באפליקציה? 🎉</h3>
-                    <p style="font-size:0.95rem; margin-bottom:15px;">כדי שהציוד יישמר לכם במלאי ונדע אילו מידות בחרתם, לחצו עכשיו על הכפתור הירוק ושילחו לנו את ההזמנה:</p>
-                    <a href="${whatsappUrl}" target="_blank" class="wa-btn" style="font-size:1.2rem; padding:15px; background-color:#25d366;">לחצו כאן לשליחת ההזמנה בוואטסאפ 💬</a>
+                    <p style="font-size:0.92rem; margin-bottom:12px;">כדי שהציוד יישמר לכם במלאי ונדע מה בחרתם, לחצו כאן:</p>
+                    <a href="${whatsappUrl}" target="_blank" class="wa-btn" style="font-size:1.1rem; padding:12px; background-color:#25d366;">לחצו כאן לשליחת ההזמנה בוואטסאפ 💬</a>
+                    <br>
+                    <button onclick="cancelPostPaymentView()" class="back-btn">⬅️ טעיתי / רוצה לשנות אמצעי תשלום</button>
                 </div>
             `;
+        }
+    }
+
+    // פונקציית ביטול שמנקה את אזור הוואטסאפ ומאפשרת לבחור משהו אחר
+    function cancelPostPaymentView() {
+        const container = document.getElementById('post-payment-container');
+        if (container) {
+            container.innerHTML = '';
         }
     }
 
@@ -790,7 +807,7 @@
     function removeBundle(idx) { cartBundles.splice(idx, 1); updateUI(); }
 
     function showModal(id) { document.getElementById('overlay').style.display='block'; document.getElementById(id).style.display='block'; }
-    function closePopups() { document.querySelectorAll('.modal, .overlay').forEach(m => m.style.display='none'); }
+    function closePopups() { document.querySelectorAll('.modal, .overlay').forEach(m => m.style.display='none'); cancelPostPaymentView(); }
 
     let isAdminAuthenticated = false;
 
