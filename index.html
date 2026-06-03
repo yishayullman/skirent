@@ -304,13 +304,17 @@
     const prices = { 'מעיל': 150, 'מכנס': 120, 'קסדה': 50, 'כפפות': 30, 'גוגלס': 40 };
     const sizes = { 'מעיל': ['S', 'M', 'L', 'XL'], 'מכנס': ['S', 'M', 'L', 'XL'], 'קסדה': ['S', 'M', 'L'], 'כפפות': ['S', 'M', 'L'], 'גוגלס': ['OS'] };
 
+    // הוספת התמונה החדשה ישירות למעיל ילדים דגם 1 במערך
     const products = [
         { id: 'coat-men-1', name: 'מעיל גברים דגם 1', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.postimg.cc/0yfCcb9Q/7b788b3f-6662-402b-a041-8b6c85e1b681.jpg' },
         { id: 'coat-men-2', name: 'מעיל גברים דגם 2', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.postimg.cc/v84gKDtZ/659f2dd7-c29c-41b9-8e5b-549f51a432c3.jpg' },
         { id: 'coat-women-1', name: 'מעיל נשים דגם 1', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.postimg.cc/5NtPTBkL/1a256f0f-8a9a-4c42-b6f8-242afd02df85.jpg' },
-        { id: 'coat-women-2', name: 'מעיל נשים דגם 2', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.postimg.cc/wZpX0g7C/4.jpg' }
+        { id: 'coat-women-2', name: 'מעיל נשים דגם 2', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.postimg.cc/wZpX0g7C/4.jpg' },
+        { id: 'coat-ילדים-1', name: 'מעיל ילדים דגם 1', cat: 'מעיל', gender: 'ילדים', price: 150, image: 'https://i.postimg.cc/NfSWR6ZV/2b4135cc-835d-4e0e-9e44-e211b7f73959.jpg' },
+        { id: 'coat-ילדים-2', name: 'מעיל ילדים דגם 2', cat: 'מעיל', gender: 'ילדים', price: 150, image: 'https://placehold.jp/24/1a2a6c/ffffff/300x250.png?text=מעיל+ילדים+2' }
     ];
 
+    // יצירת שאר פריטי המלאי האוטומטיים (למעט מעילים שכבר הוגדרו במלואם למעלה)
     cats.forEach(c => {
         if (c === 'מעיל') return; 
         genders.forEach(g => {
@@ -321,7 +325,7 @@
                     cat: c, 
                     gender: g, 
                     price: prices[c], 
-                    image: `https://placehold.jp/24/1a2a6c/ffffff/300x250.png?text=${c}+${g}` 
+                    image: `https://placehold.jp/24/1a2a6c/ffffff/300x250.png?text=${c}+${g}+${i}` 
                 });
             }
         });
@@ -663,7 +667,6 @@
         resultBox.style.display = "block";
     }
 
-    // פונקציית העברה בטוחה שמונעת קריסות של כתובת לא תקינה
     function processPaymentAndOrder(method) {
         const nameInput = document.getElementById('cust-name');
         const sInput = document.getElementById('start-date');
@@ -696,15 +699,12 @@
 
         const whatsappUrl = `https://wa.me/972549943477?text=${encodeURIComponent(msg)}`;
 
-        // העתקה בטוחה של מספר הטלפון והצגת הדרכה מבלי להקריס את הדפדפן
         navigator.clipboard.writeText(MERCHANT_PHONE).then(() => {
             alert(`🚨 שלב 1 מתוך 2:\nמספר הטלפון להעברה (${MERCHANT_PHONE}) הועתק ללוח שלך!\n\nכעת ננסה לפתוח את אפליקציית ${method === 'bit' ? 'ביט' : 'פייבוקס'}.\nאם היא לא נפתחת אוטומטית, היכנס אליה ידנית, בצע העברה של ₪${finalPrice}, וחזור לכאן כדי לשלוח את ההזמנה בוואטסאפ.`);
             
-            // שימוש בטוח לפתיחת האפליקציה מבלי להקפיץ שגיאת כתובת
             const appUrl = method === 'bit' ? "bitpay://" : "paybox://";
             window.location.href = appUrl;
 
-            // מציג את אזור הוואטסאפ עם כפתור הביטול החדש
             showPostPaymentWhatsappButton(whatsappUrl);
         }).catch(() => {
             alert(`נא להעביר ₪${finalPrice} למספר ${MERCHANT_PHONE} באפליקציה, ולאחר מכן לחזור ולשלוח הודעה בוואטסאפ.`);
