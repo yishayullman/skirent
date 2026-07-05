@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3LP80T8MM"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-K3LP80T8MM');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkiRent Premium | השכרת ציוד סקי</title>
+    <title>SkiRent Premium | השכרת ציוד סקי וסנובורד בגבעת שמואל</title>
     <style>
         :root {
             --primary: #1a2a6c;
+            --secondary: #0077b6;
             --accent: #f2a900;
             --white: #ffffff;
             --gray: #f4f4f4;
@@ -14,19 +22,23 @@
             --danger: #e74c3c;
             --whatsapp: #25d366;
             --bundle: #6c5ce7;
+            --bit: #00c2cb;
+            --paybox: #4a148c;
         }
 
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
             margin: 0; padding: 0;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+            background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), 
                         url('https://images.unsplash.com/photo-1482867996988-29ec3aee816d?auto=format&fit=crop&w=1920&q=80');
             background-attachment: fixed;
             background-size: cover;
             color: #333;
         }
 
-        header { text-align: center; color: white; padding: 40px 20px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+        header { text-align: center; color: white; padding: 40px 20px; text-shadow: 2px 2px 10px rgba(0,0,0,0.6); }
+        header h1 { margin-bottom: 5px; font-size: 2.8rem; }
+        header p { font-size: 1.2rem; margin-top: 5px; }
 
         nav {
             background: rgba(255, 255, 255, 0.95);
@@ -38,42 +50,85 @@
 
         .container { max-width: 1100px; margin: auto; padding: 20px; }
 
+        .about-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px 25px;
+            margin-bottom: 25px;
+            text-align: center;
+            line-height: 1.6;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .about-section p { margin: 0; font-size: 1.1rem; color: #444; }
+
         .bundle-banner {
             background: linear-gradient(135deg, var(--bundle), #a29bfe);
-            color: white; border-radius: 15px; padding: 20px;
-            text-align: center; margin-bottom: 30px; border: 2px solid white;
+            color: white; border-radius: 15px; padding: 25px;
+            text-align: center; margin-bottom: 30px; box-shadow: 0 8px 20px rgba(108, 92, 231, 0.3);
+            border: 2px solid rgba(255,255,255,0.4);
         }
 
         .tools-section {
-            background: rgba(255, 255, 255, 0.9); border-radius: 15px; padding: 20px; margin-bottom: 30px; text-align: center;
+            background: rgba(255, 255, 255, 0.92); border-radius: 15px; padding: 20px; margin-bottom: 30px; text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        .filter-group { margin-bottom: 15px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .filter-group { margin: 15px 0; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
         
         .cat-btn {
-            padding: 8px 20px; border-radius: 30px; border: 2px solid var(--primary);
-            background: white; color: var(--primary); cursor: pointer; font-weight: bold; transition: 0.3s;
+            padding: 8px 22px; border-radius: 25px; border: 2px solid var(--primary);
+            background: white; color: var(--primary); cursor: pointer; font-weight: bold; 
+            font-size: 1rem; transition: all 0.2s ease-in-out;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
         }
-        .cat-btn.active { background: var(--primary); color: white; }
+        .cat-btn:hover, .cat-btn.active { background: var(--primary); color: white; transform: translateY(-2px); }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+        .category-block { display: block; }
+        .category-title {
+            color: white; text-align: right; margin: 35px 10px 15px 10px;
+            font-size: 1.8rem; text-shadow: 1px 1px 5px rgba(0,0,0,0.6);
+            border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 5px;
+        }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; justify-content: center; margin-bottom: 20px; }
         
         .card {
             background: white; border-radius: 15px; overflow: hidden;
             box-shadow: 0 10px 20px rgba(0,0,0,0.2); text-align: center;
             padding-bottom: 20px; position: relative;
-            transition: opacity 0.3s, filter 0.3s;
+            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+            transition: transform 0.2s;
         }
+        .card h3 { width: 90%; margin: 15px auto 5px auto; font-size: 1.2rem; }
         .card.size-blocked { opacity: 0.65; filter: grayscale(0.6); }
-        .card img { width: 100%; height: 250px; object-fit: contain; background: #f9f9f9; padding: 10px; cursor: pointer; transition: transform 0.2s; }
-        .card img:hover { transform: scale(1.02); }
+        
+        .img-container { width: 100%; height: 280px; overflow: hidden; position: relative; background: #f8f9fa; }
+        .card img { width: 100%; height: 100%; object-fit: contain; padding: 10px; box-sizing: border-box; cursor: pointer; transition: transform 0.3s; }
+        .card img:hover { transform: scale(1.03); }
+
+        .image-nav-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5); color: white; border: none;
+            padding: 10px 15px; cursor: pointer; font-size: 1.5rem; border-radius: 5px; z-index: 10;
+        }
+        .image-nav-btn:hover { background: rgba(0, 0, 0, 0.8); }
 
         .btn-select {
             background: var(--primary); color: white; border: none;
-            padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 80%;
+            padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 85%; 
+            margin: 10px auto !important; display: flex !important; justify-content: center; align-items: center; text-align: center; box-sizing: border-box;
         }
         .btn-select.in-cart { background: var(--success); }
         .btn-select.disabled-btn { background: #7f8c8d; cursor: not-allowed; }
+
+        .faq-section {
+            background: rgba(255, 255, 255, 0.95); border-radius: 15px; padding: 30px; margin-top: 40px; box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .faq-section h2 { color: var(--primary); text-align: center; margin-bottom: 25px; font-size: 1.8rem; }
+        .faq-item { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .faq-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .faq-item h4 { margin: 0 0 8px 0; font-size: 1.15rem; color: #222; font-weight: 600; }
+        .faq-item p { margin: 0; font-size: 1rem; color: #555; line-height: 1.5; }
 
         .modal {
             display: none; position: fixed; top: 50%; left: 50%;
@@ -81,16 +136,14 @@
             border-radius: 20px; z-index: 2000; width: 95%; max-width: 500px; box-shadow: 0 20px 60px rgba(0,0,0,0.4);
         }
         .modal-header { background: var(--primary); color: white; padding: 15px; text-align: center; border-radius: 20px 20px 0 0; position: relative; }
-        .modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; }
+        .modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; text-align: center; }
         
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1500; }
-        
-        input, select { padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin: 5px; font-family: inherit; font-size: 1rem; }
+        input, select { padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin: 5px auto; font-family: inherit; font-size: 1rem; display: inline-block; }
 
         .cart-item { 
             display: flex; justify-content: space-between; align-items: center; 
-            padding: 12px; border-bottom: 1px solid #eee; background: #fff;
-            margin-bottom: 5px; border-radius: 8px;
+            padding: 12px; border-bottom: 1px solid #eee; background: #fff; margin-bottom: 5px; border-radius: 8px; text-align: right;
         }
         .cart-bundle-item { 
             background: #f0f4ff; border: 1px dashed var(--bundle); 
@@ -98,21 +151,24 @@
         }
         .remove-btn { color: var(--danger); cursor: pointer; font-weight: bold; font-size: 1.2rem; }
         
-        .wa-btn { background: var(--whatsapp); color: white; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; width: 100%; text-decoration: none; display: inline-block; margin-top: 10px; text-align: center; }
-
-        .lightbox {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.9); z-index: 3000; justify-content: center; align-items: center;
+        .wa-btn {
+            background: var(--whatsapp); color: white; padding: 12px; border-radius: 10px; border: none; font-weight: bold;
+            cursor: pointer; width: 85%; max-width: 320px; text-decoration: none; display: flex; justify-content: center; align-items: center; margin: 15px auto; text-align: center; box-sizing: border-box;
         }
+
+        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 3000; justify-content: center; align-items: center; }
         .lightbox img { max-width: 90%; max-height: 85vh; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .lightbox-close {
-            position: absolute; top: 20px; left: 20px; color: white; font-size: 2.5rem;
-            cursor: pointer; font-weight: bold; user-select: none;
-        }
+        .lightbox-close { position: absolute; top: 20px; left: 20px; color: white; font-size: 2.5rem; cursor: pointer; font-weight: bold; user-select: none; }
 
-        .size-link { color: var(--bundle); font-size: 0.85rem; font-weight: bold; text-decoration: underline; cursor: pointer; display: inline-block; margin-top: 5px; }
+        .pay-methods { display: flex; gap: 10px; margin-top: 15px; justify-content: center; width: 100%; }
+        .pay-btn { flex: 1; max-width: 180px; padding: 12px; border-radius: 10px; border: none; font-weight: bold; color: white; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+        .pay-btn:hover { filter: brightness(0.9); }
+        .btn-bit { background-color: var(--bit); color: #1a1a1a; }
+        .btn-paybox { background-color: var(--paybox); }
         
-        /* עיצוב למחשבון המידות החדש */
+        .back-btn { background: none; border: none; color: #7f8c8d; text-decoration: underline; cursor: pointer; font-size: 0.85rem; margin: 10px auto 0 auto; font-weight: bold; display: block; }
+        .size-link { color: var(--secondary); font-size: 0.85rem; font-weight: bold; text-decoration: underline; cursor: pointer; display: inline-block; margin-top: 5px; }
+        
         .calc-box { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px; padding: 15px; margin-top: 10px; text-align: center; }
         .calc-result { font-size: 1.3rem; font-weight: bold; color: var(--success); margin-top: 15px; display: none; background: #e8f5e9; padding: 10px; border-radius: 8px; border: 1px dashed var(--success); }
     </style>
@@ -121,7 +177,7 @@
 
 <header>
     <h1>SkiRent Premium</h1>
-    <p>ציוד סקי פרימיום להשכרה | גבעת שמואל</p>
+    <p>השכרת ביגוד וציוד סקי פרימיום בגבעת שמואל והמרכז</p>
 </header>
 
 <nav>
@@ -130,11 +186,17 @@
 </nav>
 
 <div class="container">
+    <div class="about-section">
+        <p>
+            טסים לחופשת סקי בקרוב? ב-<strong>SkiRent Premium</strong> תמצאו ציוד וביגוד סקי ברמה הגבוהה ביותר ולכל המשפחה. אנו מציעים חבילות "קומפלט" משתלמות או השכרה של פריטים בודדים. מודדים, אוספים בקלות מגבעת שמואל ויוצאים לחופשה בראש שקט ומוגן מהקור!
+        </p>
+    </div>
+
     <div class="bundle-banner">
-        <h2>⛷️ מבצע "קומפלט" שבועי</h2>
+        <h2>⛷️ מבצע "קומפלט" שבועי משתלם</h2>
         <p>מעיל + מכנס + קסדה + גוגלס + כפפות</p>
-        <div style="font-size: 1.5rem; font-weight: bold;">₪350 לשבוע בלבד</div>
-        <button onclick="openBundleWizard()" style="background:white; color:var(--bundle); border:none; padding:10px 20px; border-radius:20px; font-weight:bold; margin-top:10px; cursor:pointer;">הוסף חבילה בהתאמה אישית ✅</button>
+        <div style="font-size: 1.6rem; font-weight: bold; margin: 10px 0;">₪350 לשבוע בלבד</div>
+        <button onclick="openBundleWizard()" style="background:white; color:var(--bundle); border:none; padding:12px 25px; border-radius:25px; font-weight:bold; font-size:1.05rem; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.15);">הרכב חבילת קומפלט בהתאמה אישית ✅</button>
     </div>
 
     <div class="tools-section">
@@ -142,30 +204,67 @@
             <div><label><b>מתאריך:</b></label> <input type="date" id="start-date" onchange="validateDates()"></div>
             <div><label><b>עד תאריך:</b></label> <input type="date" id="end-date" onchange="validateDates()"></div>
         </div>
+        <div id="duration-info" style="font-weight:bold; color:var(--primary); margin-bottom:15px;">נא לבחור תאריכים</div>
 
-        <div class="filter-group">
-            <button class="cat-btn active" onclick="filterGender('all', this)">הכל</button>
-            <button class="cat-btn" onclick="filterGender('גברים', this)">גברים 🧔</button>
-            <button class="cat-btn" onclick="filterGender('נשים', this)">נשים 👩</button>
-            <button class="cat-btn" onclick="filterGender('ילדים', this)">ילדים 🧒</button>
-        </div>
+        <div style="border-top: 1px solid #ddd; padding-top: 15px;">
+            <div class="filter-group">
+                <button class="cat-btn active" onclick="filterGender('all', this)">הכל</button>
+                <button class="cat-btn" onclick="filterGender('גברים', this)">גברים 🧔</button>
+                <button class="cat-btn" onclick="filterGender('נשים', this)">נשים 👩</button>
+                <button class="cat-btn" onclick="filterGender('ילדים', this)">ילדים 🧒</button>
+            </div>
 
-        <div class="filter-group">
-            <button class="cat-btn active" onclick="filterCategory('all', this)">כל המוצרים</button>
-            <button class="cat-btn" onclick="filterCategory('מעיל', this)">מעילים</button>
-            <button class="cat-btn" onclick="filterCategory('מכנס', this)">מכנסיים</button>
-            <button class="cat-btn" onclick="filterCategory('קסדה', this)">קסדות</button>
-            <button class="cat-btn" onclick="filterCategory('כפפות', this)">כפפות</button>
-            <button class="cat-btn" onclick="filterCategory('גוגלס', this)">גוגלס</button>
+            <div class="filter-group">
+                <button class="cat-btn active" onclick="filterCategory('all', this)">הצג את כל הקטגוריות</button>
+                <button class="cat-btn" onclick="filterCategory('מעיל', this)">🧥 מעילים</button>
+                <button class="cat-btn" onclick="filterCategory('מכנס', this)">👖 מכנסיים</button>
+                <button class="cat-btn" onclick="filterCategory('קסדה', this)">🪖 קסדות</button>
+                <button class="cat-btn" onclick="filterCategory('כפפות', this)">🧤 כפפות</button>
+                <button class="cat-btn" onclick="filterCategory('גוגלס', this)">🥽 גוגלס</button>
+            </div>
         </div>
-        <div id="duration-info" style="font-weight:bold; color:var(--primary); margin-top:10px;">נא לבחור תאריכים</div>
     </div>
 
-    <div class="grid" id="product-grid"></div>
+    <div id="block-מעיל" class="category-block">
+        <div class="category-title">🧥 מעילי סקי</div>
+        <div class="grid" id="grid-מעיל"></div>
+    </div>
+    <div id="block-מכנס" class="category-block">
+        <div class="category-title">👖 מכנסי סקי וסנובורד</div>
+        <div class="grid" id="grid-מכנס"></div>
+    </div>
+    <div id="block-קסדה" class="category-block">
+        <div class="category-title">🪖 קסדות מגן</div>
+        <div class="grid" id="grid-קסדה"></div>
+    </div>
+    <div id="block-כפפות" class="category-block">
+        <div class="category-title">🧤 כפפות תרמיות אטומות</div>
+        <div class="grid" id="grid-כפפות"></div>
+    </div>
+    <div id="block-גוגלס" class="category-block">
+        <div class="category-title">🥽 משקפת גוגלס (Goggles)</div>
+        <div class="grid" id="grid-גוגלס"></div>
+    </div>
+
+    <div class="faq-section">
+        <h2>שאלות נפוצות על השכרת ציוד סקי</h2>
+        <div class="faq-item">
+            <h4>איך עובד חישוב תקופת ההשכרה לחופשה?</h4>
+            <p>המחירים שלנו מותאמים מראש לחופשות סקי סטנדרטיות (שבוע שלם). המערכת מחשבת אוטומטית שבועות השכרה בהתאם לתאריכים שתבחרו, כך שיש לכם מספיק זמן לאסוף את הציוד בנחת לפני הטיסה ולהחזיר אותו אחרי הנחיתה.</p>
+        </div>
+        <div class="faq-item">
+            <h4>איך אדע איזו מידת ביגוד לבחור?</h4>
+            <p>פיתחנו עבורכם "מחשבון התאמת מידה חכם" הזמין בלחיצה מכל כרטיסיית פריט או באשף החבילות. בנוסף, בעת האיסוף אצלנו בגבעת שמואל תוכלו למדוד את הביגוד ולוודא התאמה מלאה ונוחות מקסימלית.</p>
+        </div>
+        <div class="faq-item">
+            <h4>מה היתרון של חבילת ה"קומפלט"?</h4>
+            <p>חבילת הקומפלט סוגרת לכם את כל הפינות במחיר מוזל ומשתלם במיוחד (350 ש"ח לשבוע) וכוללת את חמשת פריטי החובה: מעיל, מכנס, קסדה תקנית, כפפות אטומות ומשקפת גוגלס.</p>
+        </div>
+    </div>
 </div>
 
 <div style="text-align: center; margin: 40px 0 20px 0;">
-    <button onclick="openAdminModal()" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid white; padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 0.85rem;">🔧 ניהול מלאי חסום</button>
+    <button onclick="openAdminModal()" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid white; padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 0.85rem;">⚙️ פאנל ניהול מלאי</button>
 </div>
 
 <div class="overlay" id="overlay" onclick="closePopups()"></div>
@@ -182,22 +281,32 @@
     </div>
     <div class="modal-body">
         <div id="cart-list"></div>
-        <div id="checkout-area" style="display:none; margin-top:20px;">
+        <div id="checkout-area" style="display:none; margin-top:20px; text-align: center;">
             <hr>
-            <div style="margin:15px 0;">
+            <div style="margin:15px auto; text-align: center;">
                 <label><b>שם מלא להזמנה:</b></label><br>
-                <input type="text" id="cust-name" placeholder="הכנס שם מלא" style="width:95%; padding:10px; margin-top:5px;">
+                <input type="text" id="cust-name" placeholder="הכנס שם מלא" style="width:90%; padding:10px; margin-top:5px; box-sizing: border-box; text-align: center;">
             </div>
-            <div style="padding:15px; background:#f0fdf4; border-radius:10px; text-align:center; border: 1px solid #dcfce7;">
+            <div style="padding:15px; background:#f0fdf4; border-radius:10px; text-align:center; border: 1px solid #dcfce7; width: 90%; margin: 0 auto; box-sizing: border-box;">
                 סה"כ לתשלום: <span style="font-size:1.4rem; font-weight:bold; color:var(--success);">₪<span id="final-price">0</span></span>
             </div>
-            <button onclick="sendWhatsApp()" style="width:100%; background:var(--whatsapp); color:white; padding:15px; border-radius:10px; border:none; font-weight:bold; cursor:pointer; margin-top:15px; font-size:1.1rem;">✅ שלח הזמנה לוואטסאפ</button>
+            
+            <p style="font-size:0.85rem; text-align:center; margin-top:15px; color:#555; font-weight:bold;">לחצו על האפליקציה המועדפת לתשלום ושריון ההזמנה:</p>
+            <div class="pay-methods">
+                <button onclick="processPaymentAndOrder('bit')" class="pay-btn btn-bit">📱 bit</button>
+                <button onclick="processPaymentAndOrder('paybox')" class="pay-btn btn-paybox">💜 PayBox</button>
+            </div>
+            
+            <div id="post-payment-container" style="text-align: center; margin-top: 15px;"></div>
         </div>
     </div>
 </div>
 
 <div class="modal" id="bundleWizard">
-    <div class="modal-header"><h3>בחירת חבילת קומפלט</h3></div>
+    <div class="modal-header">
+        <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
+        <h3>בחירת חבילת קומפלט</h3>
+    </div>
     <div class="modal-body" id="bundle-wizard-body"></div>
     <div style="padding: 15px; text-align: center;">
         <button id="bundle-submit-btn" class="btn-select" style="background:var(--success); width:100%;" onclick="saveBundleToCart()">אישור והוספה לסל</button>
@@ -238,48 +347,59 @@
 
         <h4 style="color:var(--primary); margin-top:20px; margin-bottom:5px;">💡 טיפ חשוב לנוחות בשלג:</h4>
         <p style="font-size:0.85rem; line-height:1.4; color:#666; margin-top:0;">
-            המחשבון שלנו לוקח בחשבון שאתם לובשים ביגוד טרמי או סווטשירט מתחת למעיל. בגדי סקי צריכים להיות מעט משוחררים כדי לאפשר תנועה חופשית בזמן הגלישה.
+            המחשבון שלנו לוקח בחשבון שאתם לובשים ביגוד תרמי או סווטשירט מתחת למעיל. בגדי סקי צריכים להיות מעט משוחררים כדי לאפשר תנועה חופשית בזמן הגלישה.
         </p>
         <button class="btn-select" style="width:100%; margin-top:10px; background:#666;" onclick="closeSizeGuide()">סגור מחשבון</button>
     </div>
 </div>
 
 <div class="modal" id="contactModal">
-    <div class="modal-header"><h3>פרטי איסוף וקשר</h3></div>
-    <div class="modal-body" style="text-align:center;">
+    <div class="modal-header">
+        <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
+        <h3>פרטי איסוף וקשר</h3>
+    </div>
+    <div class="modal-body" style="text-align:center; display:flex; flex-direction:column; align-items:center;">
         <p><strong>🏠 כתובת:</strong> יהודה הלוי 58, גבעת שמואל</p>
         <p><strong>📞 טלפון:</strong> 054-9943477</p>
-        <button class="btn-select" style="background:#4285F4; margin-bottom:10px;" onclick="window.open('http://maps.google.com/?q=יהודה+הלוי+58+גבעת+שמואל')">📍 ניווט ליעד</button>
+        <button class="btn-select" style="background:#4285F4;" onclick="window.open('https://maps.google.com/?q=יהודה+הלוי+58+גבעת+שמואל')">📍 ניווט ליעד</button>
         <a href="https://wa.me/972549943477" target="_blank" class="wa-btn">💬 שלח לנו הודעה בוואטסאפ</a>
-        <button class="btn-select" style="margin-top:15px; background:#666;" onclick="closePopups()">סגור</button>
+        <button class="btn-select" style="background:#666;" onclick="closePopups()">סגור</button>
     </div>
 </div>
 
 <div class="modal" id="adminModal">
-    <div class="modal-header"><h3>🛠️ פאנל ניהול חסימות מלאי</h3></div>
+    <div class="modal-header">
+        <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
+        <h3>🛠️ פאנל ניהול חסימות מלאי</h3>
+    </div>
     <div class="modal-body">
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 15px; text-align: center;">
             <label><b>בחר מוצר לחסימה:</b></label><br>
             <select id="admin-prod-select" style="width: 100%;"></select>
         </div>
-        <div style="margin-bottom: 15px;">
+        <div style="margin-bottom: 15px; text-align: center;">
             <label><b>בחר מידה:</b></label><br>
             <select id="admin-size-select" style="width: 100%;"></select>
         </div>
-        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+        <div style="display: flex; gap: 10px; margin-bottom: 15px; justify-content: center;">
             <div><label>מאיזה תאריך:</label><input type="date" id="admin-start"></div>
             <div><label>עד תאריך:</label><input type="date" id="admin-end"></div>
         </div>
-        <button onclick="submitBlock()" style="width:100%; background:var(--danger); color:white; padding:10px; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">🔒 חסום מוצר זה</button>
+        <button onclick="submitBlock()" style="width:100%; background:var(--danger); color:white; padding:10px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin: 0 auto;">🔒 חסום מוצר זה</button>
         <hr>
         <h4>רשימת חסימות פעילות בענן:</h4>
-        <div id="admin-blocks-list" style="max-height: 200px; overflow-y:auto; font-size:0.9rem;"></div>
+        <div id="admin-blocks-list" style="max-height: 200px; overflow-y:auto; font-size:0.9rem; text-align: right;"></div>
     </div>
 </div>
 
 <script>
+    let currentImageIndex = {};
+    let touchStartX = 0;
+    let touchEndX = 0;
+
     const BIN_ID = "6a0b5afa6610dd3ae8672c27"; 
     const API_KEY = "$2a$10$A3aPXMRSPKEJKtNLgjR4o.YJWA06TL6jnPttQD5EtSTR9ak6RnSSK"; 
+    const MERCHANT_PHONE = "0547884607";
 
     const cats = ['מעיל', 'מכנס', 'קסדה', 'כפפות', 'גוגלס'];
     const genders = ['גברים', 'נשים', 'ילדים'];
@@ -287,12 +407,13 @@
     const sizes = { 'מעיל': ['S', 'M', 'L', 'XL'], 'מכנס': ['S', 'M', 'L', 'XL'], 'קסדה': ['S', 'M', 'L'], 'כפפות': ['S', 'M', 'L'], 'גוגלס': ['OS'] };
 
     const products = [
-        { id: 'coat-men-1', name: 'מעיל גברים דגם 1', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.postimg.cc/0yfCcb9Q/7b788b3f-6662-402b-a041-8b6c85e1b681.jpg' },
-        { id: 'coat-men-2', name: 'מעיל גברים דגם 2', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.postimg.cc/v84gKDtZ/659f2dd7-c29c-41b9-8e5b-549f51a432c3.jpg' },
-        { id: 'coat-women-1', name: 'מעיל נשים דגם 1', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.postimg.cc/5NtPTBkL/1a256f0f-8a9a-4c42-b6f8-242afd02df85.jpg' },
-        { id: 'coat-women-2', name: 'מעיל נשים דגם 2', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.postimg.cc/wZpX0g7C/4.jpg' }
+        { id: 'coat-men-1', name: 'מעיל גברים דגם Alpha', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.postimg.cc/0yfCcb9Q/7b788b3f-6662-402b-a041-8b6c85e1b681.jpg' },
+        { id: 'coat-men-2', name: 'מעיל גברים דגם Pro', cat: 'מעיל', gender: 'גברים', price: 150, image: 'https://i.postimg.cc/v84gKDtZ/659f2dd7-c29c-41b9-8e5b-549f51a432c3.jpg' },
+        { id: 'coat-women-1', name: 'מעיל נשים דגם Snow', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.postimg.cc/5NtPTBkL/1a256f0f-8a9a-4c42-b6f8-242afd02df85.jpg' },
+        { id: 'coat-women-2', name: 'מעיל נשים דגם Alpine', cat: 'מעיל', gender: 'נשים', price: 150, image: 'https://i.postimg.cc/wZpX0g7C/4.jpg' }
     ];
 
+    // יצירת מוצרים להדגמה בשאר הקטגוריות
     cats.forEach(c => {
         if (c === 'מעיל') return; 
         genders.forEach(g => {
@@ -405,7 +526,13 @@
         btn.parentElement.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentCat = c;
-        render();
+        
+        cats.forEach(category => {
+            const blockEl = document.getElementById(`block-${category}`);
+            if (blockEl) {
+                blockEl.style.display = (c === 'all' || c === category) ? 'block' : 'none';
+            }
+        });
     }
 
     function onSizeChange(id) {
@@ -419,7 +546,7 @@
 
         if (blockData) {
             if (cardEl) cardEl.classList.add('size-blocked');
-            btnEl.innerText = `❌ מידה ${selectedSize} תפוסה בין ${blockData.startDate} ל-${blockData.endDate}`;
+            btnEl.innerText = `❌ מידה ${selectedSize} תפוסה בתאריכים אלו`;
             btnEl.className = "btn-select disabled-btn";
             btnEl.disabled = true;
         } else {
@@ -427,7 +554,7 @@
             btnEl.disabled = false;
             const isThisSizeInCart = cartItems.some(i => i.id === id && i.size === selectedSize);
             if (isThisSizeInCart) {
-                btnEl.innerText = "✅ במידה זו בסל";
+                btnEl.innerText = "✅ במידה זו בסל ההזמנות";
                 btnEl.className = "btn-select in-cart";
             } else {
                 btnEl.innerText = "הוסף לסל";
@@ -443,29 +570,49 @@
     function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
 
     function render() {
-        const grid = document.getElementById('product-grid');
-        if(!grid) return;
-        grid.innerHTML = '';
+        cats.forEach(c => {
+            const gridEl = document.getElementById(`grid-${c}`);
+            if (gridEl) gridEl.innerHTML = '';
+        });
+
         const filtered = products.filter(p => (currentCat === 'all' || p.cat === currentCat) && (currentGender === 'all' || p.gender === currentGender));
         
         filtered.forEach(p => {
             const defaultSize = sizes[p.cat][0];
             const blockData = getProductBlockData(p.id, defaultSize);
             const isInCart = cartItems.some(i => i.id === p.id && i.size === defaultSize);
+            const targetGrid = document.getElementById(`grid-${p.cat}`);
             
-            grid.innerHTML += `
+            if (!targetGrid) return;
+
+            const imageHTML = p.images ? `
+                <div style="position:relative; width:100%; height:100%;">
+                    <img id="img-${p.id}" 
+                        src="${p.images[0]}" 
+                        onclick="openLightbox('${p.images[0]}')"
+                        ontouchstart="handleTouchStart(event)"
+                        ontouchend="handleTouchEnd(event, '${p.id}')">
+                    <button onclick="prevImage('${p.id}')" class="image-nav-btn" style="left:5px;">‹</button>
+                    <button onclick="nextImage('${p.id}')" class="image-nav-btn" style="right:5px;">›</button>
+                </div>
+            ` : `<img src="${p.image}" onclick="openLightbox('${p.image}')" title="לחץ להגדלה">`;
+
+            targetGrid.innerHTML += `
                 <div class="card ${blockData ? 'size-blocked' : ''}" id="card-${p.id}">
-                    <img src="${p.image}" onclick="openLightbox('${p.image}')" title="לחץ להגדלה">
+                    <div class="img-container">
+                        ${imageHTML}
+                    </div>
                     <h3>${p.name}</h3>
-                    <div style="display:flex; justify-content:center; align-items:center; gap:5px;">
-                        <select id="size-${p.id}" style="width:60%" onchange="onSizeChange('${p.id}')">
+                    <div style="display:flex; justify-content:center; align-items:center; gap:8px; margin: 5px 0;">
+                        <span style="font-size:0.9rem; font-weight:bold;">מידה:</span>
+                        <select id="size-${p.id}" style="width:45%; margin:0;" onchange="onSizeChange('${p.id}')">
                             ${sizes[p.cat].map(s => `<option value="${s}">${s}</option>`).join('')}
                         </select>
                         <span class="size-link" onclick="showSizeGuide('${p.gender}')">מידות?</span>
                     </div>
-                    <div style="color:var(--success); font-weight:bold; margin:10px 0;">₪${p.price} לשבוע</div>
+                    <div style="color:var(--success); font-weight:bold; margin:8px 0;">₪${p.price} לשבוע</div>
                     <button id="btn-${p.id}" ${blockData ? 'disabled' : ''} class="btn-select ${blockData ? 'disabled-btn' : (isInCart ? 'in-cart' : '')}" onclick="toggleCartItem('${p.id}')">
-                        ${blockData ? `❌ מידה ${defaultSize} תפוסה בין ${blockData.startDate} ל-${blockData.endDate}` : (isInCart ? '✅ במידה זו בסל' : 'הוסף לסל')}
+                        ${blockData ? `❌ מידה ${defaultSize} תפוסה` : (isInCart ? '✅ במידה זו בסל' : 'הוסף לסל')}
                     </button>
                 </div>`;
         });
@@ -494,14 +641,14 @@
         const body = document.getElementById('bundle-wizard-body');
         body.innerHTML = `
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <label>עבור מי החבילה?</label>
-                <span class="size-link" style="font-size:0.95rem;" onclick="showSizeGuide()"> Geno 📏 התאם לי מידה בחשבון</span>
+                <label><b>עבור מי החבילה?</b></label>
+                <span class="size-link" style="font-size:0.95rem;" onclick="showSizeGuide()">📏 מחשבון מידות חכם</span>
             </div>
             <select id="bundle-gen" style="width:100%; margin-bottom:10px;" onchange="updateWizardOptions()">
                 ${genders.map(g => `<option value="${g}">${g}</option>`).join('')}
             </select>
             <hr>
-            <div id="wizard-items"></div>`;
+            <div id="wizard-items" style="text-align: right;"></div>`;
         updateWizardOptions();
         showModal('bundleWizard');
     }
@@ -509,13 +656,17 @@
     function updateWizardOptions() {
         const g = document.getElementById('bundle-gen').value;
         document.getElementById('wizard-items').innerHTML = cats.map(c => `
-            <div style="margin-top:10px;"><label><b>${c}:</b></label>
-            <select id="wb-${c}" style="width:100%" onchange="checkWizardSelectionValidity()">
-                ${products.filter(p => p.cat === c && p.gender === g).map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
-            </select>
-            <select id="wbs-${c}" style="width:100%" onchange="checkWizardSelectionValidity()">
-                ${sizes[c].map(s => `<option value="${s}">${s}</option>`).join('')}
-            </select></div>
+            <div style="margin-top:12px; background:#f9f9f9; padding:10px; border-radius:8px; border:1px solid #eee;">
+                <label style="display:block; margin-bottom:5px;"><b>${c}:</b></label>
+                <div style="display:flex; gap:10px;">
+                    <select id="wb-${c}" style="flex:2; margin:0;" onchange="checkWizardSelectionValidity()">
+                        ${products.filter(p => p.cat === c && p.gender === g).map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
+                    </select>
+                    <select id="wbs-${c}" style="flex:1; margin:0;" onchange="checkWizardSelectionValidity()">
+                        ${sizes[c].map(s => `<option value="${s}">${s}</option>`).join('')}
+                    </select>
+                </div>
+            </div>
         `).join('');
         
         checkWizardSelectionValidity();
@@ -540,9 +691,7 @@
                     const foundProd = products.find(p => p.id === pId);
                     blockedItemInfo = { 
                         name: foundProd ? foundProd.name : c, 
-                        size: size,
-                        start: blockData.startDate,
-                        end: blockData.endDate
+                        size: size
                     };
                     break; 
                 }
@@ -550,11 +699,11 @@
         }
 
         if(blockedItemInfo) {
-            submitBtn.innerText = `❌ תפוס! ${blockedItemInfo.name} (${blockedItemInfo.size}) חסום מ-${blockedItemInfo.start} עד ${blockedItemInfo.end}`;
+            submitBtn.innerText = `❌ תפוס! ${blockedItemInfo.name} (${blockedItemInfo.size}) חסום בתאריכים אלו`;
             submitBtn.className = "btn-select disabled-btn";
             submitBtn.disabled = true;
         } else {
-            submitBtn.innerText = "אישור והוספה לסל";
+            submitBtn.innerText = "אישור והוספת החבילה לסל";
             submitBtn.className = "btn-select";
             submitBtn.style.background = "var(--success)";
             submitBtn.disabled = false;
@@ -574,7 +723,7 @@
         });
 
         if (anyBlocked) {
-            alert("אחד הפריטים תפוס. אנא שנה מוצר או מידה.");
+            alert("אחד הפריטים תפוס בתאריכים שבחרת. אנא שנה מוצר או מידה.");
             return;
         }
 
@@ -596,7 +745,6 @@
         document.getElementById('sizeGuideModal').style.display = 'none';
     }
 
-    // פונקציית הלוגיקה והחישוב של המידה החכמה
     function calculateSkiSize() {
         const gender = document.getElementById('calc-gender').value;
         const height = parseFloat(document.getElementById('calc-height').value);
@@ -612,39 +760,33 @@
         let sizeByWeight = 'M';
 
         if(gender === 'גברים') {
-            // חישוב לפי גובה גברים
             if(height < 170) sizeByHeight = 'S';
             else if(height <= 178) sizeByHeight = 'M';
             else if(height <= 185) sizeByHeight = 'L';
             else sizeByHeight = 'XL';
 
-            // חישוב לפי משקל גברים
             if(weight < 70) sizeByWeight = 'S';
             else if(weight <= 82) sizeByWeight = 'M';
             else if(weight <= 92) sizeByWeight = 'L';
             else sizeByWeight = 'XL';
 
         } else if(gender === 'נשים') {
-            // חישוב לפי גובה נשים
             if(height < 162) sizeByHeight = 'S';
             else if(height <= 170) sizeByHeight = 'M';
             else if(height <= 176) sizeByHeight = 'L';
             else sizeByHeight = 'XL';
 
-            // חישוב לפי משקל נשים
             if(weight < 56) sizeByWeight = 'S';
             else if(weight <= 66) sizeByWeight = 'M';
             else if(weight <= 76) sizeByWeight = 'L';
             else sizeByWeight = 'XL';
             
         } else {
-            // ילדים (מידות כלליות מותאמות קטנות)
             if(height < 130) { sizeByHeight = 'S'; sizeByWeight = 'S'; }
             else if(height <= 145) { sizeByHeight = 'M'; sizeByWeight = 'M'; }
             else { sizeByHeight = 'L'; sizeByWeight = 'L'; }
         }
 
-        // המרת המידות למספרים בשביל לקחת את הגדולה מבניהם
         const sizeOrder = { 'S': 1, 'M': 2, 'L': 3, 'XL': 4 };
         let finalSize = sizeOrder[sizeByHeight] >= sizeOrder[sizeByWeight] ? sizeByHeight : sizeByWeight;
 
@@ -664,7 +806,7 @@
         if (s && e && e >= s) {
             const diffDays = Math.ceil(Math.abs(new Date(e) - new Date(s)) / (1000 * 60 * 60 * 24));
             weeks = Math.max(1, Math.ceil(diffDays / 7));
-            document.getElementById('duration-info').innerText = `תקופה: ${weeks} שבועות`;
+            document.getElementById('duration-info').innerText = `תקופת חישוב: ${weeks} שבועות`;
         } else {
             document.getElementById('duration-info').innerText = "נא לבחור תאריכים";
         }
@@ -715,22 +857,24 @@
 
     function removeBundle(idx) { cartBundles.splice(idx, 1); updateUI(); }
 
-    function sendWhatsApp() {
+    // מערכת תשלום והזמנה מתקדמת שהועתקה מאתר הגלישה
+    function processPaymentAndOrder(method) {
         const nameInput = document.getElementById('cust-name');
         const sInput = document.getElementById('start-date');
         const eInput = document.getElementById('end-date');
+        const finalPrice = document.getElementById('final-price').innerText;
 
-        if(!nameInput.value.trim()) { alert("נא להזין שם מלא להזמנה"); return; }
+        if(!nameInput.value.trim()) { alert("נא להזין שם מלא להזמנה לפני התשלום"); return; }
         if(!sInput.value || !eInput.value) { alert("נא לבחור תאריכי השכרה בראש העמוד"); return; }
 
-        let msg = `שלום, אני מעוניין להזמין ציוד סקי:\n`;
-        msg += `שם: ${nameInput.value}\n`;
+        let msg = `שלום, אני מעוניין להזמין ציוד סקי (משולם ב-${method === 'bit' ? 'bit' : 'PayBox'} בסך ₪${finalPrice}):\n`;
+        msg += `שם הלקוח: ${nameInput.value}\n`;
         msg += `תאריכים: ${sInput.value} עד ${eInput.value}\n\n`;
         
         if(cartBundles.length > 0) {
             msg += `--- חבילות קומפלט ---\n`;
             cartBundles.forEach((b, i) => {
-                msg += `🎁 חבילה ${i+1} (${b.gender}):\n${b.items.map(it => `  - ${it.name} (${it.size})`).join('\n')}\n`;
+                msg += `🎁 חבילה ${i+1} (${b.gender}):\n${b.items.map(it => `  - ${it.name} (מידה: ${it.size})`).join('\n')}\n`;
             });
             msg += `\n`;
         }
@@ -743,12 +887,45 @@
             });
         }
         
-        msg += `\nסה"כ לתשלום: ₪${document.getElementById('final-price').innerText}`;
-        window.open(`https://wa.me/972549943477?text=${encodeURIComponent(msg)}`, '_blank');
+        msg += `\nסה"כ לתשלום: ₪${finalPrice}`;
+
+        const whatsappUrl = `https://wa.me/972549943477?text=${encodeURIComponent(msg)}`;
+        const appName = method === 'bit' ? 'ביט (bit)' : 'פייבוקס (PayBox)';
+
+        navigator.clipboard.writeText(MERCHANT_PHONE).then(() => {
+            alert(`שלב 1 מתוך 2 באשר להזמנה:\n\nהעתקנו עבורך את מספר הטלפון להעברה (${MERCHANT_PHONE}) באופן אוטומטי.\n\nמה שצריך לעשות כעת:\n1. המערכת תנסה להעביר אותך אוטומטית לאפליקציית ${appName}. העבר שם ₪${finalPrice} למספר שהועתק.\n2. 📱 אם האפליקציה לא נפתחה אוטומטית: היכנס אליה באופן עצמאי מהטלפון, בצע את ההעברה למספר ${MERCHANT_PHONE}.\n3. ⚠️ שלב חובה בסיום: מיד לאחר ההעברה, חזור לכאן (לעגלת האתר) ולחץ על כפתור הוואטסאפ הירוק שיופיע, כדי לשלוח אלינו את פרטי ההזמנה ולשריין את הציוד!`);
+            
+            const appUrl = method === 'bit' ? "bitpay://" : "paybox://";
+            window.location.href = appUrl;
+
+            showPostPaymentWhatsappButton(whatsappUrl);
+        }).catch(() => {
+            alert(`שלב 1 מתוך 2 באשר להזמנה:\n\nיש להיכנס כעת באופן עצמאי לאפליקציית ${appName}, ולהעביר ידנית ₪${finalPrice} למספר ${MERCHANT_PHONE}.\n\n⚠️ שלב חובה בסיום: מיד לאחר ביצוע ההעברה, חזור לכאן (לעגלת האתר) ולחץ על כפתור הוואטסאפ הירוק שיופיע, כדי לשלוח אלינו את פרטי ההזמנה המדויקים ולשריין את הציוד!`);
+            showPostPaymentWhatsappButton(whatsappUrl);
+        });
+    }
+
+    function showPostPaymentWhatsappButton(whatsappUrl) {
+        const container = document.getElementById('post-payment-container');
+        if (container) {
+            container.innerHTML = `
+                <div style="padding:15px; background:#fff3cd; border:2px dashed #ffc107; border-radius:10px; text-align:center; margin:15px auto; width: 90%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center;">
+                    <h3 style="color:#856404; margin:0 auto 5px auto; text-align: center;">שלב אחרון לסיום! 🎉</h3>
+                    <p style="font-size:0.92rem; margin: 0 auto 12px auto; text-align: center;">אם ביצעתם את ההעברה באפליקציה, לחצו כעת על הכפתור כדי לשלוח אלינו את הפירוט האוטומטי ולשריין את המלאי:</p>
+                    <a href="${whatsappUrl}" target="_blank" class="wa-btn" style="font-size:1.1rem; padding:12px; background-color:#25d366; width: 90%; margin: 5px auto;">לחצו כאן לשליחת ההודעה</a>
+                    <button onclick="cancelPostPaymentView()" class="back-btn">⬅️ טעיתי / רוצה לשנות אמצעי תשלום</button>
+                </div>
+            `;
+        }
+    }
+
+    function cancelPostPaymentView() {
+        const container = document.getElementById('post-payment-container');
+        if (container) { container.innerHTML = ''; }
     }
 
     function showModal(id) { document.getElementById('overlay').style.display='block'; document.getElementById(id).style.display='block'; }
-    function closePopups() { document.querySelectorAll('.modal, .overlay').forEach(m => m.style.display='none'); }
+    function closePopups() { document.querySelectorAll('.modal, .overlay').forEach(m => m.style.display='none'); cancelPostPaymentView(); }
 
     let isAdminAuthenticated = false;
 
@@ -820,6 +997,38 @@
                     <button onclick="removeBlock(${b.id})" style="background:var(--danger); color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">שחרר</button>
                 </div>`;
         });
+    }
+
+    function nextImage(id) {
+        const product = products.find(p => p.id === id);
+        if (!product || !product.images) return;
+
+        currentImageIndex[id] = (currentImageIndex[id] || 0) + 1;
+        if (currentImageIndex[id] >= product.images.length) { currentImageIndex[id] = 0; }
+
+        const img = document.getElementById(`img-${id}`);
+        img.src = product.images[currentImageIndex[id]];
+        img.onclick = () => openLightbox(img.src);
+    }
+
+    function prevImage(id) {
+        const product = products.find(p => p.id === id);
+        if (!product || !product.images) return;
+    
+        currentImageIndex[id] = (currentImageIndex[id] || 0) - 1;
+        if (currentImageIndex[id] < 0) { currentImageIndex[id] = product.images.length - 1; }
+    
+        const img = document.getElementById(`img-${id}`);
+        img.src = product.images[currentImageIndex[id]];
+        img.onclick = () => openLightbox(img.src);
+    }
+    
+    function handleTouchStart(e) { touchStartX = e.changedTouches[0].screenX; }
+    function handleTouchEnd(e, id) { touchEndX = e.changedTouches[0].screenX; handleSwipe(id); }
+    function handleSwipe(id) {
+        const diff = touchStartX - touchEndX;
+        if (Math.abs(diff) < 40) return;
+        if (diff > 0) { nextImage(id); } else { prevImage(id); }
     }
 
     render(); updateUI();
