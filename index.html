@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
+    <!-- Google Tag Manager -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3LP80T8MM"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -29,8 +30,9 @@
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
             margin: 0; padding: 0;
+            /* הוחלפה תמונת הרקע לתמונת סקי מובהקת */
             background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), 
-                        url('https://images.unsplash.com/photo-1482867996988-29ec3aee816d?auto=format&fit=crop&w=1920&q=80');
+                        url('https://images.unsplash.com/photo-1551524559-8af4e6624178?auto=format&fit=crop&w=1920&q=80');
             background-attachment: fixed;
             background-size: cover;
             color: #333;
@@ -225,6 +227,7 @@
         </div>
     </div>
 
+    <!-- בלוקים של קטגוריות -->
     <div id="block-מעיל" class="category-block">
         <div class="category-title">🧥 מעילי סקי</div>
         <div class="grid" id="grid-מעיל"></div>
@@ -274,6 +277,7 @@
     <img id="lightbox-img" src="" alt="תצוגה מוגדלת">
 </div>
 
+<!-- מודל עגלה ותשלום -->
 <div class="modal" id="cartModal">
     <div class="modal-header">
         <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
@@ -397,8 +401,13 @@
     let touchStartX = 0;
     let touchEndX = 0;
 
-    const BIN_ID = "6a0b5afa6610dd3ae8672c27"; 
+    // ==========================================
+    // שים לב: עליך ליצור BIN_ID חדש ב-JSONBin.io
+    // ולהכניס אותו כאן, כדי שלא יתנגש עם אתר הגלישה!
+    // ==========================================
+    const BIN_ID = "6a4a2528f5f4af5e2961d974"; 
     const API_KEY = "$2a$10$A3aPXMRSPKEJKtNLgjR4o.YJWA06TL6jnPttQD5EtSTR9ak6RnSSK"; 
+    
     const MERCHANT_PHONE = "0547884607";
 
     const cats = ['מעיל', 'מכנס', 'קסדה', 'כפפות', 'גוגלס'];
@@ -435,7 +444,7 @@
     let blockedDatesFromServer = []; 
 
     async function loadBlockedDates() {
-        if(BIN_ID === "") return;
+        if(BIN_ID === "" || BIN_ID === "הכנס_כאן_BIN_ID_חדש_של_הסקי") return;
         try {
             const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
                 headers: { "X-Master-Key": API_KEY }
@@ -857,7 +866,6 @@
 
     function removeBundle(idx) { cartBundles.splice(idx, 1); updateUI(); }
 
-    // מערכת תשלום והזמנה מתקדמת שהועתקה מאתר הגלישה
     function processPaymentAndOrder(method) {
         const nameInput = document.getElementById('cust-name');
         const sInput = document.getElementById('start-date');
@@ -953,6 +961,11 @@
     }
 
     function submitBlock() {
+        if(BIN_ID === "" || BIN_ID === "הכנס_כאן_BIN_ID_חדש_של_הסקי") {
+            alert("שגיאה! עדיין לא הכנסת BIN_ID חדש בקוד. אנא פתח מסד ב-JSONBin.io והזן את ה-ID בשורה 352 בקוד.");
+            return;
+        }
+
         const pId = document.getElementById('admin-prod-select').value;
         const size = document.getElementById('admin-size-select').value;
         const start = document.getElementById('admin-start').value;
