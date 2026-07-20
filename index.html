@@ -440,11 +440,10 @@
     let touchEndX = 0;
 
     // ==========================================
-    // הערת אבטחה: מפתח ה-API והלוגיקה מוצגים כאן זמנית.
-    // מומלץ מאוד להעביר קריאות אלו ל-Backend קטן (ראו הסבר בנפרד).
+    // כל הקריאות לנתוני הזמינות עוברות עכשיו דרך פונקציית ה-Vercel המאובטחת שלך.
+    // המפתח והסיסמה כבר לא חשופים כאן בקוד - הם שמורים ב-Vercel Environment Variables.
     // ==========================================
-    const BIN_ID = "6a4a2528f5f4af5e2961d974"; 
-    const API_KEY = "$2a$10$A3aPXMRSPKEJKtNLgjR4o.YJWA06TL6jnPttQD5EtSTR9ak6RnSSK"; 
+    const API_BASE = "https://skirent-ten.vercel.app/api/blocks";
     
     const MERCHANT_PHONE = "0547884607";
 
@@ -494,14 +493,11 @@
     }
 
     async function loadBlockedDates() {
-        if(BIN_ID === "" || BIN_ID === "הכנס_כאן_BIN_ID_חדש_של_הסקי") return;
         try {
-            const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-                headers: { "X-Master-Key": API_KEY }
-            });
+            const res = await fetch(API_BASE);
             if (!res.ok) throw new Error("bad response");
             const data = await res.json();
-            blockedDatesFromServer = data.record.blocks || [];
+            blockedDatesFromServer = data.blocks || [];
             cloudLoadFailed = false;
             document.getElementById('cloud-status').style.display = 'none';
             render();
@@ -520,11 +516,11 @@
         const submitBtn = document.getElementById('admin-submit-btn');
         if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = "שומר..."; }
         try {
-            const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+            const res = await fetch(API_BASE, {
                 method: 'PUT',
                 headers: {
                     "Content-Type": "application/json",
-                    "X-Master-Key": API_KEY
+                    "X-Admin-Password": adminPassword || ""
                 },
                 body: JSON.stringify({ blocks: newBlocksArray })
             });
@@ -533,9 +529,13 @@
                 render();
                 updateUI();
                 renderAdminList();
-                showToast("המוצר נחסם בהצלחה לכולם!", "success");
+                showToast("הפעולה בוצעה בהצלחה!", "success");
+            } else if (res.status === 401) {
+                isAdminAuthenticated = false;
+                adminPassword = "";
+                showToast("סיסמת מנהל שגויה. נסה להיכנס לפאנל הניהול שוב.", "error");
             } else {
-                showToast("תקלה בעדכון השרת. וודא שהמפתח וה-Bin ID נכונים.", "error");
+                showToast("תקלה בעדכון השרת. נסה שוב בעוד רגע.", "error");
             }
         } catch (e) {
             showToast("תקלה ברשת בשמירה לענן. נסה שוב בעוד רגע.", "error");
@@ -1008,16 +1008,16 @@
     function closePopups() { document.querySelectorAll('.modal, .overlay').forEach(m => m.style.display='none'); cancelPostPaymentView(); }
 
     let isAdminAuthenticated = false;
+    let adminPassword = "";
 
     function openAdminModal() {
         if (!isAdminAuthenticated) {
             const pass = prompt("נא להזין סיסמת מנהל לניהול המלאי:");
-            if (pass === "yishayullmanskirent") {
-                isAdminAuthenticated = true;
-            } else {
-                showToast("סיסמה שגויה!", "error");
-                return;
-            }
+            if (!pass) return;
+            // הסיסמה נבדקת בפועל מול השרת בפעולה הראשונה (חסימה/שחרור).
+            // אם היא שגויה, תופיע הודעת שגיאה ותתבקש להזין אותה שוב.
+            adminPassword = pass;
+            isAdminAuthenticated = true;
         }
         
         const pSelect = document.getElementById('admin-prod-select');
@@ -1033,11 +1033,6 @@
     }
 
     async function submitBlock() {
-        if(BIN_ID === "" || BIN_ID === "הכנס_כאן_BIN_ID_חדש_של_הסקי") {
-            showToast("שגיאה! עדיין לא הכנסת BIN_ID חדש בקוד.", "error");
-            return;
-        }
-
         const pId = document.getElementById('admin-prod-select').value;
         const size = document.getElementById('admin-size-select').value;
         const start = document.getElementById('admin-start').value;
@@ -1049,10 +1044,10 @@
 
         // רענון נתונים טרי מהענן לפני שמירה, כדי להקטין סיכוי להתנגשות עם עדכון של מנהל אחר
         try {
-            const freshRes = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { "X-Master-Key": API_KEY } });
+            const freshRes = await fetch(API_BASE);
             if (freshRes.ok) {
                 const freshData = await freshRes.json();
-                blockedDatesFromServer = freshData.record.blocks || [];
+                blockedDatesFromServer = freshData.blocks || [];
             }
         } catch (e) { /* אם הרענון נכשל, נמשיך עם הנתונים הקיימים */ }
 
