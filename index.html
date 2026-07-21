@@ -43,7 +43,16 @@
                         url('https://images.unsplash.com/photo-1551524559-8af4e6624178?auto=format&fit=crop&w=1920&q=80');
             background-attachment: fixed;
             background-size: cover;
+            background-position: center;
             color: #333;
+        }
+
+        /* בדפדפנים ניידים (בעיקר ספארי באייפון) background-attachment: fixed
+           לא נתמך היטב וגורם לרקע להיעלם - לכן במסכים קטנים משתמשים בגלילה רגילה */
+        @media (max-width: 900px) {
+            body {
+                background-attachment: scroll;
+            }
         }
 
         header { text-align: center; color: white; padding: 40px 20px; text-shadow: 2px 2px 10px rgba(0,0,0,0.6); }
@@ -1215,6 +1224,13 @@
     }
 
     render(); updateUI();
+
+    // רישום Service Worker - נדרש כדי שכפתור התקנת האפליקציה יופיע (בעיקר באנדרואיד/כרום)
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js').catch((e) => console.log('SW registration failed', e));
+        });
+    }
 </script>
 </body>
 </html>
