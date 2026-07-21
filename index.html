@@ -245,13 +245,6 @@
         </div>
         <div id="duration-info" style="font-weight:bold; color:var(--primary); margin-bottom:10px;">נא לבחור תאריכים</div>
         <div id="availability-loading" style="font-size:0.85rem; color:#888; margin-bottom:10px;">🔄 טוען נתוני זמינות עדכניים...</div>
-        <div style="margin-bottom:15px;">
-            <label style="display:inline-flex; align-items:center; gap:6px; font-size:0.95rem; cursor:pointer;">
-                <input type="checkbox" id="show-available-only" onchange="render()" style="margin:0; width:auto;">
-                הצג רק פריטים זמינים בתאריכים שנבחרו
-            </label>
-            <div style="font-size:0.75rem; color:#888; margin-top:4px;">* הבדיקה מתבצעת לפי המידה שמוצגת כברירת מחדל בכל כרטיס. אם תשנו מידה בכרטיס, ייתכן שהזמינות תשתנה.</div>
-        </div>
         <div id="cloud-status" class="cloud-status">⚠️ לא ניתן כרגע לטעון את נתוני הזמינות מהענן. ייתכן שחלק מהמידע על מוצרים תפוסים לא יוצג. נסו לרענן את הדף, ואם הבעיה נמשכת - צרו איתנו קשר.</div>
 
         <div style="border-top: 1px solid #ddd; padding-top: 15px;">
@@ -699,18 +692,7 @@
             if (gridEl) gridEl.innerHTML = '';
         });
 
-        const showAvailableOnly = document.getElementById('show-available-only') ? document.getElementById('show-available-only').checked : false;
-
-        const filtered = products.filter(p => {
-            if (currentCat !== 'all' && p.cat !== currentCat) return false;
-            if (currentGender !== 'all' && p.gender !== currentGender) return false;
-            if (showAvailableOnly) {
-                // מסתיר פריט אם המידה המוצגת כברירת מחדל על הכרטיס תפוסה בתאריכים שנבחרו
-                const defaultSize = sizes[p.cat][0];
-                if (isProductBlocked(p.id, defaultSize)) return false;
-            }
-            return true;
-        });
+        const filtered = products.filter(p => (currentCat === 'all' || p.cat === currentCat) && (currentGender === 'all' || p.gender === currentGender));
         
         filtered.forEach(p => {
             const defaultSize = sizes[p.cat][0];
