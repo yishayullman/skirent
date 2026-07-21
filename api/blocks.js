@@ -1,3 +1,4 @@
+
 // api/blocks.js
 // פונקציית Serverless להעלאה ל-Vercel (או Netlify עם שינוי קל בפורמט).
 // מטרתה: להסתיר את מפתח ה-API של JSONBin מהקוד שרץ בדפדפן.
@@ -16,18 +17,18 @@
 //      ADMIN_PASSWORD = הסיסמה שתרצה (החלף את זו שהייתה חשופה בקוד)
 // 4. פרוס (Deploy). הכתובת שלך תהיה: https://<your-project>.vercel.app/api/blocks
 // 5. בקוד האתר (index.html), במקום לקרוא ישירות ל-jsonbin, קרא לכתובת הזו.
-
+ 
 export default async function handler(req, res) {
   const BIN_ID = process.env.JSONBIN_ID;
   const API_KEY = process.env.JSONBIN_KEY;
   const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-
+ 
   // אפשר CORS בסיסי אם האתר מתארח בדומיין נפרד
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Admin-Password');
   if (req.method === 'OPTIONS') return res.status(200).end();
-
+ 
   try {
     if (req.method === 'GET') {
       // קריאת רשימת החסימות - פתוח לכולם, אין בזה סוד
@@ -37,14 +38,14 @@ export default async function handler(req, res) {
       const data = await r.json();
       return res.status(200).json(data.record || { blocks: [] });
     }
-
+ 
     if (req.method === 'PUT') {
       // כתיבה (חסימה/שחרור) - דורש סיסמת מנהל תקינה שנשלחת מהקליינט
       const providedPassword = req.headers['x-admin-password'];
       if (providedPassword !== ADMIN_PASSWORD) {
         return res.status(401).json({ error: 'סיסמת מנהל שגויה' });
       }
-
+ 
       const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
         method: 'PUT',
         headers: {
@@ -53,15 +54,17 @@ export default async function handler(req, res) {
         },
         body: JSON.stringify(req.body),
       });
-
+ 
       if (!r.ok) {
-        return res.status(502).json({ error: 'עדכון מול JSONBin נכשל' });
+        const errorText = await r.text();
+        return res.status(502).json({ error: 'עדכון מול JSONBin נכשל', jsonbin_status: r.status, jsonbin_response: errorText });
       }
       return res.status(200).json({ ok: true });
     }
-
+ 
     return res.status(405).json({ error: 'שיטה לא נתמכת' });
   } catch (e) {
     return res.status(500).json({ error: 'שגיאת שרת', details: String(e) });
   }
 }
+ 
