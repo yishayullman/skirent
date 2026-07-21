@@ -12,10 +12,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SkiRent Premium | השכרת ציוד סקי וסנובורד בגבעת שמואל</title>
-    <meta name="description" content="השכרת ביגוד וציוד סקי פרימיום בגבעת שמואל - מעילים, מכנסיים, קסדות, כפפות וגוגלס. חבילות קומפלט משתלמות, איסוף קל והתאמת מידה חכמה.">
+    <meta name="description" content="השכרת ציוד סקי וסנובורד בגבעת שמואל - מעילים, מכנסיים, קסדות, כפפות וגוגלס להשכרה. חבילות קומפלט משתלמות, איסוף קל והתאמת מידה חכמה לחופשת הסקי שלכם.">
     <meta property="og:title" content="SkiRent Premium | השכרת ציוד סקי וסנובורד בגבעת שמואל">
-    <meta property="og:description" content="חבילות קומפלט משתלמות להשכרת ציוד סקי - מעיל, מכנס, קסדה, כפפות וגוגלס. איסוף בגבעת שמואל.">
+    <meta property="og:description" content="חבילות קומפלט משתלמות להשכרת ציוד סקי - מעיל, מכנס, קסדה, כפפות וגוגלס. איסוף קל בגבעת שמואל.">
     <meta property="og:type" content="website">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a2a6c">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
     <style>
         :root {
             --primary: #1a2a6c;
@@ -227,10 +231,17 @@
 
     <div class="tools-section">
         <div style="display:flex; justify-content:center; align-items: center; gap:15px; flex-wrap:wrap; margin-bottom:15px;">
-            <div><label><b>מתאריך:</b></label> <input type="date" id="start-date" onchange="validateDates()"></div>
-            <div><label><b>עד תאריך:</b></label> <input type="date" id="end-date" onchange="validateDates()"></div>
+            <div><label for="start-date"><b>מתאריך:</b></label> <input type="date" id="start-date" onchange="validateDates()"></div>
+            <div><label for="end-date"><b>עד תאריך:</b></label> <input type="date" id="end-date" onchange="validateDates()"></div>
         </div>
-        <div id="duration-info" style="font-weight:bold; color:var(--primary); margin-bottom:15px;">נא לבחור תאריכים</div>
+        <div id="duration-info" style="font-weight:bold; color:var(--primary); margin-bottom:10px;">נא לבחור תאריכים</div>
+        <div id="availability-loading" style="font-size:0.85rem; color:#888; margin-bottom:10px;">🔄 טוען נתוני זמינות עדכניים...</div>
+        <div style="margin-bottom:15px;">
+            <label style="display:inline-flex; align-items:center; gap:6px; font-size:0.95rem; cursor:pointer;">
+                <input type="checkbox" id="show-available-only" onchange="render()" style="margin:0; width:auto;">
+                הצג רק פריטים זמינים בתאריכים שנבחרו
+            </label>
+        </div>
         <div id="cloud-status" class="cloud-status">⚠️ לא ניתן כרגע לטעון את נתוני הזמינות מהענן. ייתכן שחלק מהמידע על מוצרים תפוסים לא יוצג. נסו לרענן את הדף, ואם הבעיה נמשכת - צרו איתנו קשר.</div>
 
         <div style="border-top: 1px solid #ddd; padding-top: 15px;">
@@ -326,7 +337,7 @@
         <div id="checkout-area" style="display:none; margin-top:20px; text-align: center;">
             <hr>
             <div style="margin:15px auto; text-align: center;">
-                <label><b>שם מלא להזמנה:</b></label><br>
+                <label for="cust-name"><b>שם מלא להזמנה:</b></label><br>
                 <input type="text" id="cust-name" placeholder="הכנס שם מלא" style="width:90%; padding:10px; margin-top:5px; box-sizing: border-box; text-align: center;">
             </div>
             <div style="padding:15px; background:#f0fdf4; border-radius:10px; text-align:center; border: 1px solid #dcfce7; width: 90%; margin: 0 auto; box-sizing: border-box;">
@@ -429,16 +440,16 @@
     </div>
     <div class="modal-body">
         <div style="margin-bottom: 15px; text-align: center;">
-            <label><b>בחר מוצר לחסימה:</b></label><br>
+            <label for="admin-prod-select"><b>בחר מוצר לחסימה:</b></label><br>
             <select id="admin-prod-select" style="width: 100%;"></select>
         </div>
         <div style="margin-bottom: 15px; text-align: center;">
-            <label><b>בחר מידה:</b></label><br>
+            <label for="admin-size-select"><b>בחר מידה:</b></label><br>
             <select id="admin-size-select" style="width: 100%;"></select>
         </div>
         <div style="display: flex; gap: 10px; margin-bottom: 15px; justify-content: center;">
-            <div><label>מאיזה תאריך:</label><input type="date" id="admin-start"></div>
-            <div><label>עד תאריך:</label><input type="date" id="admin-end"></div>
+            <div><label for="admin-start">מאיזה תאריך:</label><input type="date" id="admin-start"></div>
+            <div><label for="admin-end">עד תאריך:</label><input type="date" id="admin-end"></div>
         </div>
         <button id="admin-submit-btn" onclick="submitBlock()" style="width:100%; background:var(--danger); color:white; padding:10px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin: 0 auto;">🔒 חסום מוצר זה</button>
         <hr>
@@ -522,6 +533,9 @@
             const statusEl = document.getElementById('cloud-status');
             if (statusEl) statusEl.style.display = 'block';
             showToast("לא הצלחנו לטעון את נתוני הזמינות מהענן. חלק מהמידע על תפוסה עלול להיות לא מעודכן.", "error", 6000);
+        } finally {
+            const loadingEl = document.getElementById('availability-loading');
+            if (loadingEl) loadingEl.style.display = 'none';
         }
     }
 
@@ -563,12 +577,28 @@
     document.getElementById('start-date').min = todayStr;
     document.getElementById('end-date').min = todayStr;
 
+    // שחזור תאריכים שנבחרו בביקור קודם (אם עדיין תקפים - לא בעבר)
+    (function restoreSavedDates() {
+        const savedStart = localStorage.getItem('skiStartDate');
+        const savedEnd = localStorage.getItem('skiEndDate');
+        if (savedStart && savedStart >= todayStr) {
+            document.getElementById('start-date').value = savedStart;
+            document.getElementById('end-date').min = savedStart;
+        }
+        if (savedEnd && savedEnd >= todayStr && (!savedStart || savedEnd >= savedStart)) {
+            document.getElementById('end-date').value = savedEnd;
+        }
+    })();
+
     function validateDates() {
         const sInput = document.getElementById('start-date');
         const eInput = document.getElementById('end-date');
         if (sInput.value && sInput.value < todayStr) { sInput.value = ""; return; }
         if (sInput.value) { eInput.min = sInput.value; }
         if (sInput.value && eInput.value && eInput.value < sInput.value) { eInput.value = ""; }
+
+        localStorage.setItem('skiStartDate', sInput.value || "");
+        localStorage.setItem('skiEndDate', eInput.value || "");
         
         checkCartValidity();
         updateUI();
@@ -659,7 +689,17 @@
             if (gridEl) gridEl.innerHTML = '';
         });
 
-        const filtered = products.filter(p => (currentCat === 'all' || p.cat === currentCat) && (currentGender === 'all' || p.gender === currentGender));
+        const showAvailableOnly = document.getElementById('show-available-only') ? document.getElementById('show-available-only').checked : false;
+
+        const filtered = products.filter(p => {
+            if (currentCat !== 'all' && p.cat !== currentCat) return false;
+            if (currentGender !== 'all' && p.gender !== currentGender) return false;
+            if (showAvailableOnly) {
+                const anySizeAvailable = sizes[p.cat].some(s => !isProductBlocked(p.id, s));
+                if (!anySizeAvailable) return false;
+            }
+            return true;
+        });
         
         filtered.forEach(p => {
             const defaultSize = sizes[p.cat][0];
@@ -673,13 +713,14 @@
                 <div style="position:relative; width:100%; height:100%;">
                     <img id="img-${p.id}" 
                         src="${p.images[0]}" 
+                        alt="${p.name}"
                         onclick="openLightbox('${p.images[0]}')"
                         ontouchstart="handleTouchStart(event)"
                         ontouchend="handleTouchEnd(event, '${p.id}')">
                     <button onclick="prevImage('${p.id}')" class="image-nav-btn" style="left:5px;">‹</button>
                     <button onclick="nextImage('${p.id}')" class="image-nav-btn" style="right:5px;">›</button>
                 </div>
-            ` : `<img src="${p.image}" onclick="openLightbox('${p.image}')" title="לחץ להגדלה">`;
+            ` : `<img src="${p.image}" alt="${p.name}" onclick="openLightbox('${p.image}')" title="לחץ להגדלה">`;
 
             targetGrid.innerHTML += `
                 <div class="card ${blockData ? 'size-blocked' : ''}" id="card-${p.id}">
