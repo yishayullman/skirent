@@ -409,6 +409,19 @@
     </div>
 </div>
 
+<div class="modal" id="adminLoginModal" style="z-index: 2600;">
+    <div class="modal-header">
+        <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
+        <h3>🔐 כניסת מנהל</h3>
+    </div>
+    <div class="modal-body" style="text-align:center;">
+        <p style="font-size:0.9rem; color:#555;">נא להזין סיסמת מנהל לניהול המלאי:</p>
+        <input type="password" id="admin-login-input" placeholder="סיסמה" style="width:80%; text-align:center; font-size:1.1rem;" onkeydown="if(event.key==='Enter') submitAdminLogin();">
+        <div id="admin-login-error" style="color:var(--danger); font-size:0.9rem; margin-top:8px; display:none;">סיסמה שגויה, נסה שוב.</div>
+        <button id="admin-login-submit" class="btn-select" style="background:var(--primary); margin-top:15px;" onclick="submitAdminLogin()">כניסה</button>
+    </div>
+</div>
+
 <div class="modal" id="adminModal">
     <div class="modal-header">
         <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
@@ -1010,33 +1023,55 @@
     let isAdminAuthenticated = false;
     let adminPassword = "";
 
-    async function openAdminModal() {
-        if (!isAdminAuthenticated) {
-            const pass = prompt("נא להזין סיסמת מנהל לניהול המלאי:");
-            if (!pass) return;
-
-            const openBtn = document.querySelector('button[onclick="openAdminModal()"]');
-            const originalText = openBtn ? openBtn.innerText : null;
-            if (openBtn) { openBtn.disabled = true; openBtn.innerText = "בודק סיסמה..."; }
-
-            try {
-                const res = await fetch(API_BASE, {
-                    method: 'POST',
-                    headers: { "X-Admin-Password": pass }
-                });
-                if (!res.ok) {
-                    showToast("סיסמה שגויה!", "error");
-                    return;
-                }
-                adminPassword = pass;
-                isAdminAuthenticated = true;
-            } catch (e) {
-                showToast("שגיאת רשת בבדיקת הסיסמה. נסה שוב.", "error");
-                return;
-            } finally {
-                if (openBtn) { openBtn.disabled = false; openBtn.innerText = originalText; }
-            }
+    function openAdminModal() {
+        if (isAdminAuthenticated) {
+            populateAndShowAdminPanel();
+            return;
         }
+        const input = document.getElementById('admin-login-input');
+        const errorEl = document.getElementById('admin-login-error');
+        if (input) input.value = "";
+        if (errorEl) errorEl.style.display = "none";
+        showModal('adminLoginModal');
+        setTimeout(() => { if (input) input.focus(); }, 100);
+    }
+
+    async function submitAdminLogin() {
+        const input = document.getElementById('admin-login-input');
+        const errorEl = document.getElementById('admin-login-error');
+        const submitBtn = document.getElementById('admin-login-submit');
+        const pass = input ? input.value : "";
+
+        if (!pass) {
+            if (errorEl) { errorEl.innerText = "נא להזין סיסמה."; errorEl.style.display = "block"; }
+            return;
+        }
+
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = "בודק..."; }
+        if (errorEl) errorEl.style.display = "none";
+
+        try {
+            const res = await fetch(API_BASE, {
+                method: 'POST',
+                headers: { "X-Admin-Password": pass }
+            });
+            if (!res.ok) {
+                if (errorEl) { errorEl.innerText = "סיסמה שגויה, נסה שוב."; errorEl.style.display = "block"; }
+                if (input) { input.value = ""; input.focus(); }
+                return;
+            }
+            adminPassword = pass;
+            isAdminAuthenticated = true;
+            closePopups();
+            populateAndShowAdminPanel();
+        } catch (e) {
+            if (errorEl) { errorEl.innerText = "שגיאת רשת, נסה שוב."; errorEl.style.display = "block"; }
+        } finally {
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = "כניסה"; }
+        }
+    }
+
+    function populateAndShowAdminPanel() {
         
         const pSelect = document.getElementById('admin-prod-select');
         pSelect.innerHTML = products.map(p => `<option value="${p.id}">${p.name} (${p.gender})</option>`).join('');
