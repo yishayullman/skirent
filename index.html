@@ -1010,14 +1010,32 @@
     let isAdminAuthenticated = false;
     let adminPassword = "";
 
-    function openAdminModal() {
+    async function openAdminModal() {
         if (!isAdminAuthenticated) {
             const pass = prompt("נא להזין סיסמת מנהל לניהול המלאי:");
             if (!pass) return;
-            // הסיסמה נבדקת בפועל מול השרת בפעולה הראשונה (חסימה/שחרור).
-            // אם היא שגויה, תופיע הודעת שגיאה ותתבקש להזין אותה שוב.
-            adminPassword = pass;
-            isAdminAuthenticated = true;
+
+            const openBtn = document.querySelector('button[onclick="openAdminModal()"]');
+            const originalText = openBtn ? openBtn.innerText : null;
+            if (openBtn) { openBtn.disabled = true; openBtn.innerText = "בודק סיסמה..."; }
+
+            try {
+                const res = await fetch(API_BASE, {
+                    method: 'POST',
+                    headers: { "X-Admin-Password": pass }
+                });
+                if (!res.ok) {
+                    showToast("סיסמה שגויה!", "error");
+                    return;
+                }
+                adminPassword = pass;
+                isAdminAuthenticated = true;
+            } catch (e) {
+                showToast("שגיאת רשת בבדיקת הסיסמה. נסה שוב.", "error");
+                return;
+            } finally {
+                if (openBtn) { openBtn.disabled = false; openBtn.innerText = originalText; }
+            }
         }
         
         const pSelect = document.getElementById('admin-prod-select');
