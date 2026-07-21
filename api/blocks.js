@@ -25,7 +25,7 @@ export default async function handler(req, res) {
  
   // אפשר CORS בסיסי אם האתר מתארח בדומיין נפרד
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Admin-Password');
   if (req.method === 'OPTIONS') return res.status(200).end();
  
@@ -37,6 +37,15 @@ export default async function handler(req, res) {
       });
       const data = await r.json();
       return res.status(200).json(data.record || { blocks: [] });
+    }
+ 
+    if (req.method === 'POST') {
+      // בדיקת סיסמה בלבד - לא נוגע בנתונים כלל, רק מאשר/דוחה כניסה לפאנל הניהול
+      const providedPassword = req.headers['x-admin-password'];
+      if (providedPassword !== ADMIN_PASSWORD) {
+        return res.status(401).json({ error: 'סיסמת מנהל שגויה' });
+      }
+      return res.status(200).json({ ok: true });
     }
  
     if (req.method === 'PUT') {
