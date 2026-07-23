@@ -538,10 +538,10 @@
     const sizes = { 'מעיל': ['S', 'M', 'L', 'XL'], 'מכנס': ['S', 'M', 'L', 'XL'], 'קסדה': ['S', 'M', 'L'], 'כפפות': ['S', 'M', 'L'], 'גוגלס': ['OS'] };
 
     const products = [
-        { id: 'coat-men-1', name: 'מעיל גברים דגם Alpha', cat: 'מעיל', gender: 'גברים', price: 150, image: 'coat-men-1.jpg' },
-        { id: 'coat-men-2', name: 'מעיל גברים דגם Pro', cat: 'מעיל', gender: 'גברים', price: 150, image: 'coat-men-2.png' },
-        { id: 'coat-women-1', name: 'מעיל נשים דגם Snow', cat: 'מעיל', gender: 'נשים', price: 150, image: 'coat-women-1.jpg' },
-        { id: 'coat-women-2', name: 'מעיל נשים דגם Alpine', cat: 'מעיל', gender: 'נשים', price: 150, image: `https://placehold.jp/24/1a2a6c/ffffff/300x250.png?text=מעיל+נשים` }
+        { id: 'coat-men-1', name: 'מעיל גברים 1', cat: 'מעיל', gender: 'גברים', price: 150, image: 'coat-men-1.jpg' },
+        { id: 'coat-men-2', name: 'מעיל גברים 2', cat: 'מעיל', gender: 'גברים', price: 150, image: 'coat-men-2.png' },
+        { id: 'coat-women-1', name: 'מעיל נשים 1', cat: 'מעיל', gender: 'נשים', price: 150, image: 'coat-women-1.jpg' },
+        { id: 'coat-women-2', name: 'מעיל נשים 2', cat: 'מעיל', gender: 'נשים', price: 150, image: `https://placehold.jp/24/1a2a6c/ffffff/300x250.png?text=מעיל+נשים` }
     ];
 
     // יצירת מוצרים להדגמה בשאר הקטגוריות
@@ -551,7 +551,7 @@
             for(let i=1; i<=2; i++) {
                 products.push({ 
                     id: `${c}-${g}-${i}`, 
-                    name: `${c} ${g} דגם ${i}`, 
+                    name: `${c} ${g} ${i}`, 
                     cat: c, 
                     gender: g, 
                     price: prices[c], 
