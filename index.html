@@ -231,6 +231,14 @@
         .admin-review-item .a-btn { border: none; border-radius: 6px; padding: 5px 12px; font-size: 0.85rem; cursor: pointer; color: white; font-weight: bold; }
         .admin-review-item .a-btn.delete { background: var(--danger); }
         .admin-review-item .a-btn.restore { background: var(--success); }
+
+        .order-card { background: #f9f9f9; border: 1px solid #eee; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; text-align: right; }
+        .order-card .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .order-card .order-date { font-size: 0.8rem; color: #999; }
+        .order-card .order-total { color: var(--success); font-weight: bold; }
+        .order-card .order-items { font-size: 0.85rem; color: #555; line-height: 1.5; margin: 6px 0; }
+        .order-card .order-actions { display: flex; gap: 8px; margin-top: 8px; }
+        .order-card .order-actions button { flex: 1; border: none; border-radius: 6px; padding: 8px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -243,6 +251,7 @@
 <nav>
     <a onclick="showModal('cartModal')" style="color: #e67e22;">🛒 הסל שלי (<span id="cart-count">0</span>)</a>
     <a onclick="openReviewsModal()" style="color: #f2a900;">⭐ ביקורות</a>
+    <a onclick="openOrderHistoryModal()" style="color: #0077b6;">📋 ההזמנות שלי</a>
     <a onclick="showModal('contactModal')">📍 איסוף וקשר</a>
 </nav>
 
@@ -438,6 +447,23 @@
     </div>
     <div class="modal-body">
         <div id="reviews-summary" class="review-summary" style="display:none;"></div>
+
+        <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:12px;">
+            <select id="reviews-star-filter" onchange="renderReviewsPublic()" style="margin:0;">
+                <option value="all">כל הדירוגים</option>
+                <option value="5">5 כוכבים</option>
+                <option value="4">4 כוכבים</option>
+                <option value="3">3 כוכבים</option>
+                <option value="2">2 כוכבים</option>
+                <option value="1">כוכב אחד</option>
+            </select>
+            <select id="reviews-sort" onchange="renderReviewsPublic()" style="margin:0;">
+                <option value="newest">החדשות ביותר</option>
+                <option value="highest">דירוג גבוה קודם</option>
+                <option value="lowest">דירוג נמוך קודם</option>
+            </select>
+        </div>
+
         <div id="reviews-list"></div>
 
         <hr>
@@ -461,6 +487,17 @@
             <textarea id="review-text" rows="3" placeholder="ספרו לנו על החוויה שלכם..." style="width:85%; padding:10px; border-radius:8px; border:1px solid #ccc; font-family:inherit; font-size:1rem; resize:vertical;"></textarea>
         </div>
         <button id="review-submit-btn" class="btn-select" style="background:var(--success); margin-top:15px;" onclick="submitReview()">שלח ביקורת</button>
+    </div>
+</div>
+
+<div class="modal" id="orderHistoryModal" style="max-width: 550px;">
+    <div class="modal-header">
+        <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
+        <h3>📋 ההזמנות שלי</h3>
+    </div>
+    <div class="modal-body">
+        <p style="font-size:0.85rem; color:#777; text-align:center; margin-top:0;">ההזמנות מוצגות רק בדפדפן הזה, על סמך פעולות תשלום קודמות שביצעת באתר.</p>
+        <div id="order-history-list"></div>
     </div>
 </div>
 
@@ -1069,6 +1106,8 @@
         
         msg += `\nסה"כ לתשלום: ₪${finalPrice}`;
 
+        saveOrderToHistory(nameInput.value, sInput.value, eInput.value, finalPrice);
+
         const whatsappUrl = `https://wa.me/972549943477?text=${encodeURIComponent(msg)}`;
         const appName = method === 'bit' ? 'ביט (bit)' : 'פייבוקס (PayBox)';
 
@@ -1282,22 +1321,44 @@
         const summaryEl = document.getElementById('reviews-summary');
         if (!listEl) return;
 
-        const visibleReviews = reviewsFromServer.filter(r => !r.deleted).sort((a, b) => new Date(b.date) - new Date(a.date));
+        const allVisible = reviewsFromServer.filter(r => !r.deleted);
 
-        if (visibleReviews.length === 0) {
+        // הממוצע הכללי תמיד מחושב מכל הביקורות, בלי קשר לסינון התצוגה
+        if (allVisible.length === 0) {
             listEl.innerHTML = "<p style='text-align:center; color:#666;'>עדיין אין ביקורות - היו הראשונים לכתוב!</p>";
             if (summaryEl) summaryEl.style.display = 'none';
+            return;
+        }
+
+        const avg = allVisible.reduce((sum, r) => sum + r.stars, 0) / allVisible.length;
+        if (summaryEl) {
+            summaryEl.style.display = 'block';
+            summaryEl.innerHTML = `
+                <div class="avg-num">${avg.toFixed(1)}</div>
+                <div class="star-display">${starsToDisplay(Math.round(avg))}</div>
+                <div style="font-size:0.85rem; color:#777; margin-top:4px;">מבוסס על ${allVisible.length} ביקורות</div>
+            `;
+        }
+
+        const filterEl = document.getElementById('reviews-star-filter');
+        const sortEl = document.getElementById('reviews-sort');
+        const starFilter = filterEl ? filterEl.value : 'all';
+        const sortMode = sortEl ? sortEl.value : 'newest';
+
+        let filteredReviews = allVisible.filter(r => starFilter === 'all' || r.stars === parseInt(starFilter, 10));
+
+        if (sortMode === 'highest') {
+            filteredReviews.sort((a, b) => b.stars - a.stars || new Date(b.date) - new Date(a.date));
+        } else if (sortMode === 'lowest') {
+            filteredReviews.sort((a, b) => a.stars - b.stars || new Date(b.date) - new Date(a.date));
         } else {
-            const avg = visibleReviews.reduce((sum, r) => sum + r.stars, 0) / visibleReviews.length;
-            if (summaryEl) {
-                summaryEl.style.display = 'block';
-                summaryEl.innerHTML = `
-                    <div class="avg-num">${avg.toFixed(1)}</div>
-                    <div class="star-display">${starsToDisplay(Math.round(avg))}</div>
-                    <div style="font-size:0.85rem; color:#777; margin-top:4px;">מבוסס על ${visibleReviews.length} ביקורות</div>
-                `;
-            }
-            listEl.innerHTML = visibleReviews.map(r => `
+            filteredReviews.sort((a, b) => new Date(b.date) - new Date(a.date));
+        }
+
+        if (filteredReviews.length === 0) {
+            listEl.innerHTML = "<p style='text-align:center; color:#666;'>אין ביקורות התואמות את הסינון שנבחר.</p>";
+        } else {
+            listEl.innerHTML = filteredReviews.map(r => `
                 <div class="review-card">
                     <div class="review-header">
                         <span class="review-name">${r.name}</span>
@@ -1402,6 +1463,108 @@
     }
 
     setupStarInput();
+
+    // ==================== היסטוריית הזמנות (מקומית, בדפדפן בלבד) ====================
+
+    function getOrderHistory() {
+        try {
+            return JSON.parse(localStorage.getItem('skiOrderHistory')) || [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function saveOrderToHistory(customerName, startDate, endDate, totalPrice) {
+        const history = getOrderHistory();
+        const order = {
+            id: Date.now(),
+            date: new Date().toISOString(),
+            customerName,
+            startDate,
+            endDate,
+            totalPrice,
+            bundles: JSON.parse(JSON.stringify(cartBundles)),
+            items: JSON.parse(JSON.stringify(cartItems)),
+        };
+        history.unshift(order);
+        // שומרים עד 20 הזמנות אחרונות בלבד, כדי לא להעמיס את הזיכרון המקומי
+        localStorage.setItem('skiOrderHistory', JSON.stringify(history.slice(0, 20)));
+    }
+
+    function openOrderHistoryModal() {
+        renderOrderHistory();
+        showModal('orderHistoryModal');
+    }
+
+    function renderOrderHistory() {
+        const listEl = document.getElementById('order-history-list');
+        if (!listEl) return;
+        const history = getOrderHistory();
+
+        if (history.length === 0) {
+            listEl.innerHTML = "<p style='text-align:center; color:#666;'>עדיין לא ביצעת הזמנות דרך האתר הזה.</p>";
+            return;
+        }
+
+        listEl.innerHTML = history.map(o => {
+            const itemsText = [
+                ...o.bundles.map(b => `🎁 חבילת קומפלט - ${b.gender}`),
+                ...o.items.map(i => {
+                    const p = products.find(x => x.id === i.id);
+                    return p ? `${p.name} (${i.size})` : null;
+                }).filter(Boolean)
+            ].join(' • ');
+
+            return `
+                <div class="order-card">
+                    <div class="order-header">
+                        <b>${o.customerName}</b>
+                        <span class="order-date">${new Date(o.date).toLocaleDateString('he-IL')}</span>
+                    </div>
+                    <div style="font-size:0.85rem; color:#666;">תאריכי השכרה: ${o.startDate} עד ${o.endDate}</div>
+                    <div class="order-items">${itemsText || 'אין פרטי פריטים'}</div>
+                    <div class="order-total">סה"כ: ₪${o.totalPrice}</div>
+                    <div class="order-actions">
+                        <button style="background:var(--primary); color:white;" onclick="reorderFromHistory(${o.id})">הזמן שוב</button>
+                        <button style="background:#eee; color:#555;" onclick="removeOrderFromHistory(${o.id})">מחק מההיסטוריה</button>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    function reorderFromHistory(orderId) {
+        const history = getOrderHistory();
+        const order = history.find(o => o.id === orderId);
+        if (!order) return;
+
+        cartBundles = JSON.parse(JSON.stringify(order.bundles || []));
+        cartItems = JSON.parse(JSON.stringify(order.items || []));
+
+        if (order.startDate >= todayStr) {
+            document.getElementById('start-date').value = order.startDate;
+            document.getElementById('end-date').min = order.startDate;
+            if (order.endDate >= order.startDate) {
+                document.getElementById('end-date').value = order.endDate;
+            }
+            localStorage.setItem('skiStartDate', order.startDate);
+            localStorage.setItem('skiEndDate', order.endDate);
+        } else {
+            showToast("תאריכי ההזמנה הקודמת כבר עברו - נא לבחור תאריכים חדשים.", "info", 5000);
+        }
+
+        checkCartValidity();
+        updateUI();
+        render();
+        closePopups();
+        showModal('cartModal');
+        showToast("הפריטים מההזמנה הקודמת נוספו לסל. בדוק זמינות במידות ותאריכים.", "success", 5000);
+    }
+
+    function removeOrderFromHistory(orderId) {
+        const history = getOrderHistory().filter(o => o.id !== orderId);
+        localStorage.setItem('skiOrderHistory', JSON.stringify(history));
+        renderOrderHistory();
+    }
 
     function nextImage(id) {
         const product = products.find(p => p.id === id);
