@@ -210,6 +210,27 @@
         .calc-result { font-size: 1.3rem; font-weight: bold; color: var(--success); margin-top: 15px; display: none; background: #e8f5e9; padding: 10px; border-radius: 8px; border: 1px dashed var(--success); }
 
         .cloud-status { font-size: 0.85rem; margin-top: 8px; color: #b45309; display: none; }
+
+        .star-rating { display: flex; flex-direction: row-reverse; justify-content: center; gap: 4px; font-size: 2rem; margin: 10px 0; direction: ltr; }
+        .star-rating .star { cursor: pointer; color: #ddd; transition: color 0.15s; }
+        .star-rating .star.filled { color: #f2a900; }
+        .star-display { color: #f2a900; font-size: 1.1rem; letter-spacing: 2px; direction: ltr; display: inline-block; }
+        .star-display .empty { color: #ddd; }
+
+        .review-card { background: #f9f9f9; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; text-align: right; border: 1px solid #eee; }
+        .review-card .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .review-card .review-name { font-weight: bold; color: var(--primary); }
+        .review-card .review-date { font-size: 0.75rem; color: #999; }
+        .review-card .review-text { font-size: 0.95rem; color: #444; margin-top: 6px; line-height: 1.4; }
+        .review-summary { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .review-summary .avg-num { font-size: 2.2rem; font-weight: bold; color: var(--primary); }
+
+        .admin-review-item { background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; text-align: right; }
+        .admin-review-item.is-deleted { opacity: 0.55; background: #fdf0f0; }
+        .admin-review-item .arow { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+        .admin-review-item .a-btn { border: none; border-radius: 6px; padding: 5px 12px; font-size: 0.85rem; cursor: pointer; color: white; font-weight: bold; }
+        .admin-review-item .a-btn.delete { background: var(--danger); }
+        .admin-review-item .a-btn.restore { background: var(--success); }
     </style>
 </head>
 <body>
@@ -221,6 +242,7 @@
 
 <nav>
     <a onclick="showModal('cartModal')" style="color: #e67e22;">🛒 הסל שלי (<span id="cart-count">0</span>)</a>
+    <a onclick="openReviewsModal()" style="color: #f2a900;">⭐ ביקורות</a>
     <a onclick="showModal('contactModal')">📍 איסוף וקשר</a>
 </nav>
 
@@ -409,6 +431,39 @@
     </div>
 </div>
 
+<div class="modal" id="reviewsModal" style="max-width: 550px;">
+    <div class="modal-header">
+        <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
+        <h3>⭐ ביקורות לקוחות</h3>
+    </div>
+    <div class="modal-body">
+        <div id="reviews-summary" class="review-summary" style="display:none;"></div>
+        <div id="reviews-list"></div>
+
+        <hr>
+        <h4 style="color:var(--primary); text-align:center;">כתבו ביקורת משלכם</h4>
+        <div style="text-align:center;">
+            <label><b>שם:</b></label><br>
+            <input type="text" id="review-name" placeholder="השם שלך" style="width:85%; text-align:center;">
+        </div>
+        <div style="text-align:center;">
+            <label><b>דירוג:</b></label>
+            <div class="star-rating" id="review-star-input">
+                <span class="star" data-value="1">★</span>
+                <span class="star" data-value="2">★</span>
+                <span class="star" data-value="3">★</span>
+                <span class="star" data-value="4">★</span>
+                <span class="star" data-value="5">★</span>
+            </div>
+        </div>
+        <div style="text-align:center;">
+            <label><b>תגובה (אופציונלי):</b></label><br>
+            <textarea id="review-text" rows="3" placeholder="ספרו לנו על החוויה שלכם..." style="width:85%; padding:10px; border-radius:8px; border:1px solid #ccc; font-family:inherit; font-size:1rem; resize:vertical;"></textarea>
+        </div>
+        <button id="review-submit-btn" class="btn-select" style="background:var(--success); margin-top:15px;" onclick="submitReview()">שלח ביקורת</button>
+    </div>
+</div>
+
 <div class="modal" id="contactModal">
     <div class="modal-header">
         <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
@@ -458,6 +513,9 @@
         <hr>
         <h4>רשימת חסימות פעילות בענן:</h4>
         <div id="admin-blocks-list" style="max-height: 200px; overflow-y:auto; font-size:0.9rem; text-align: right;"></div>
+        <hr>
+        <h4>⭐ ניהול ביקורות:</h4>
+        <div id="admin-reviews-list" style="max-height: 260px; overflow-y:auto; font-size:0.9rem;"></div>
     </div>
 </div>
 
@@ -506,6 +564,7 @@
     let cartItems = JSON.parse(localStorage.getItem('skiCartItems')) || [];
     let cartBundles = JSON.parse(localStorage.getItem('skiCartBundles')) || [];
     let blockedDatesFromServer = []; 
+    let reviewsFromServer = [];
     let cloudLoadFailed = false;
 
     function showToast(message, type = 'info', duration = 4000) {
@@ -525,11 +584,14 @@
             if (!res.ok) throw new Error("bad response");
             const data = await res.json();
             blockedDatesFromServer = data.blocks || [];
+            reviewsFromServer = data.reviews || [];
             cloudLoadFailed = false;
             document.getElementById('cloud-status').style.display = 'none';
             render();
             updateUI();
             renderAdminList();
+            renderReviewsPublic();
+            renderAdminReviews();
         } catch (e) {
             console.log("שגיאה בטעינת נתונים מהענן", e);
             cloudLoadFailed = true;
@@ -552,7 +614,7 @@
                     "Content-Type": "application/json",
                     "X-Admin-Password": adminPassword || ""
                 },
-                body: JSON.stringify({ blocks: newBlocksArray })
+                body: JSON.stringify({ action: 'save_blocks', blocks: newBlocksArray })
             });
             if(res.ok) {
                 blockedDatesFromServer = newBlocksArray;
@@ -1116,6 +1178,7 @@
         };
         pSelect.onchange();
 
+        renderAdminReviews();
         showModal('adminModal');
     }
 
@@ -1174,6 +1237,171 @@
                 </div>`;
         });
     }
+
+    // ==================== ביקורות ====================
+
+    let selectedReviewStars = 0;
+
+    function starsToDisplay(stars) {
+        let out = '';
+        for (let i = 1; i <= 5; i++) {
+            out += i <= stars ? '★' : '<span class="empty">★</span>';
+        }
+        return out;
+    }
+
+    function setupStarInput() {
+        const starEls = document.querySelectorAll('#review-star-input .star');
+        starEls.forEach(el => {
+            el.addEventListener('click', () => {
+                selectedReviewStars = parseInt(el.getAttribute('data-value'), 10);
+                highlightStars(selectedReviewStars);
+            });
+        });
+    }
+
+    function highlightStars(count) {
+        const starEls = document.querySelectorAll('#review-star-input .star');
+        starEls.forEach(el => {
+            const v = parseInt(el.getAttribute('data-value'), 10);
+            el.classList.toggle('filled', v <= count);
+        });
+    }
+
+    function openReviewsModal() {
+        document.getElementById('review-name').value = "";
+        document.getElementById('review-text').value = "";
+        selectedReviewStars = 0;
+        highlightStars(0);
+        renderReviewsPublic();
+        showModal('reviewsModal');
+    }
+
+    function renderReviewsPublic() {
+        const listEl = document.getElementById('reviews-list');
+        const summaryEl = document.getElementById('reviews-summary');
+        if (!listEl) return;
+
+        const visibleReviews = reviewsFromServer.filter(r => !r.deleted).sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        if (visibleReviews.length === 0) {
+            listEl.innerHTML = "<p style='text-align:center; color:#666;'>עדיין אין ביקורות - היו הראשונים לכתוב!</p>";
+            if (summaryEl) summaryEl.style.display = 'none';
+        } else {
+            const avg = visibleReviews.reduce((sum, r) => sum + r.stars, 0) / visibleReviews.length;
+            if (summaryEl) {
+                summaryEl.style.display = 'block';
+                summaryEl.innerHTML = `
+                    <div class="avg-num">${avg.toFixed(1)}</div>
+                    <div class="star-display">${starsToDisplay(Math.round(avg))}</div>
+                    <div style="font-size:0.85rem; color:#777; margin-top:4px;">מבוסס על ${visibleReviews.length} ביקורות</div>
+                `;
+            }
+            listEl.innerHTML = visibleReviews.map(r => `
+                <div class="review-card">
+                    <div class="review-header">
+                        <span class="review-name">${r.name}</span>
+                        <span class="review-date">${new Date(r.date).toLocaleDateString('he-IL')}</span>
+                    </div>
+                    <div class="star-display">${starsToDisplay(r.stars)}</div>
+                    ${r.text ? `<div class="review-text">${r.text}</div>` : ''}
+                </div>
+            `).join('');
+        }
+    }
+
+    async function submitReview() {
+        const name = document.getElementById('review-name').value.trim();
+        const text = document.getElementById('review-text').value.trim();
+        const submitBtn = document.getElementById('review-submit-btn');
+
+        if (!name) { showToast("נא להזין שם.", "error"); return; }
+        if (!selectedReviewStars) { showToast("נא לבחור דירוג בכוכבים.", "error"); return; }
+
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = "שולח..."; }
+        try {
+            const res = await fetch(API_BASE, {
+                method: 'PUT',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: 'add_review', review: { name, stars: selectedReviewStars, text } })
+            });
+            if (res.ok) {
+                const data = await res.json();
+                if (data.review) reviewsFromServer.push(data.review);
+                document.getElementById('review-name').value = "";
+                document.getElementById('review-text').value = "";
+                selectedReviewStars = 0;
+                highlightStars(0);
+                renderReviewsPublic();
+                renderAdminReviews();
+                showToast("תודה על הביקורת!", "success");
+            } else {
+                showToast("תקלה בשליחת הביקורת. נסה שוב.", "error");
+            }
+        } catch (e) {
+            showToast("שגיאת רשת. נסה שוב.", "error");
+        } finally {
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = "שלח ביקורת"; }
+        }
+    }
+
+    function renderAdminReviews() {
+        const list = document.getElementById('admin-reviews-list');
+        if (!list) return;
+        list.innerHTML = "";
+
+        if (reviewsFromServer.length === 0) {
+            list.innerHTML = "<p style='color:#666;'>עדיין אין ביקורות.</p>";
+            return;
+        }
+
+        const sorted = [...reviewsFromServer].sort((a, b) => new Date(b.date) - new Date(a.date));
+        sorted.forEach(r => {
+            list.innerHTML += `
+                <div class="admin-review-item ${r.deleted ? 'is-deleted' : ''}">
+                    <div class="arow">
+                        <div>
+                            <b>${r.name}</b> - <span class="star-display" style="font-size:0.9rem;">${starsToDisplay(r.stars)}</span>
+                            ${r.deleted ? '<span style="color:var(--danger); font-size:0.8rem;"> (נמחקה)</span>' : ''}
+                        </div>
+                        ${r.deleted
+                            ? `<button class="a-btn restore" onclick="setReviewStatus(${r.id}, false)">שחזר</button>`
+                            : `<button class="a-btn delete" onclick="setReviewStatus(${r.id}, true)">מחק</button>`}
+                    </div>
+                    ${r.text ? `<div class="review-text" style="margin-top:6px;">${r.text}</div>` : ''}
+                </div>`;
+        });
+    }
+
+    async function setReviewStatus(reviewId, deleted) {
+        try {
+            const res = await fetch(API_BASE, {
+                method: 'PUT',
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Admin-Password": adminPassword || ""
+                },
+                body: JSON.stringify({ action: 'set_review_status', reviewId, deleted })
+            });
+            if (res.ok) {
+                const r = reviewsFromServer.find(rv => rv.id === reviewId);
+                if (r) r.deleted = deleted;
+                renderAdminReviews();
+                renderReviewsPublic();
+                showToast(deleted ? "הביקורת נמחקה." : "הביקורת שוחזרה.", "success");
+            } else if (res.status === 401) {
+                isAdminAuthenticated = false;
+                adminPassword = "";
+                showToast("סיסמת מנהל שגויה. נסה להיכנס לפאנל הניהול שוב.", "error");
+            } else {
+                showToast("תקלה בעדכון הביקורת.", "error");
+            }
+        } catch (e) {
+            showToast("שגיאת רשת. נסה שוב.", "error");
+        }
+    }
+
+    setupStarInput();
 
     function nextImage(id) {
         const product = products.find(p => p.id === id);
