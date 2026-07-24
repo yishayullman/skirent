@@ -389,6 +389,18 @@
     </div>
 </div>
 
+<div class="modal" id="paymentInstructionsModal" style="max-width: 480px; z-index: 3500;">
+    <div class="modal-header">
+        <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePaymentInstructionsModal()">×</span>
+        <h3>💳 הוראות תשלום</h3>
+    </div>
+    <div class="modal-body" id="paymentInstructionsBody" style="text-align:center;">
+    </div>
+    <div style="padding: 0 20px 20px 20px; text-align:center;">
+        <button class="btn-select" style="background:#666; width:100%;" onclick="closePaymentInstructionsModal()">הבנתי, סגור חלון זה</button>
+    </div>
+</div>
+
 <div class="modal" id="bundleWizard">
     <div class="modal-header">
         <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
@@ -577,6 +589,8 @@
     const products = [
         { id: 'coat-men-1', name: 'מעיל גברים 1', cat: 'מעיל', gender: 'גברים', price: 150, image: 'coat-men-1.jpg' },
         { id: 'coat-men-2', name: 'מעיל גברים 2', cat: 'מעיל', gender: 'גברים', price: 150, image: 'coat-men-2.png' },
+        { id: 'coat-men-3', name: 'מעיל גברים 3', cat: 'מעיל', gender: 'גברים', price: 150, image: 'coat-men-3.jpg' },
+        { id: 'coat-men-4', name: 'מעיל גברים 4', cat: 'מעיל', gender: 'גברים', price: 150, image: 'coat-men-4.jpg' },
         { id: 'coat-women-1', name: 'מעיל נשים 1', cat: 'מעיל', gender: 'נשים', price: 150, image: 'coat-women-1.jpg' },
         { id: 'coat-women-2', name: 'מעיל נשים 2', cat: 'מעיל', gender: 'נשים', price: 150, image: `https://placehold.jp/24/1a2a6c/ffffff/300x250.png?text=מעיל+נשים` }
     ];
@@ -1117,16 +1131,34 @@
         if (btnPaybox) btnPaybox.disabled = true;
 
         navigator.clipboard.writeText(MERCHANT_PHONE).then(() => {
-            showToast(`מספר הטלפון להעברה (${MERCHANT_PHONE}) הועתק. עבור ל-${appName}, בצע העברה של ₪${finalPrice}, וחזור ללחוץ על כפתור הוואטסאפ למטה.`, "info", 7000);
+            showPaymentInstructionsModal(appName, finalPrice, true);
             
             const appUrl = method === 'bit' ? "bitpay://" : "paybox://";
             window.location.href = appUrl;
 
             showPostPaymentWhatsappButton(whatsappUrl);
         }).catch(() => {
-            showToast(`יש להעביר ידנית ₪${finalPrice} למספר ${MERCHANT_PHONE} דרך ${appName}, ולאחר מכן ללחוץ על כפתור הוואטסאפ למטה.`, "info", 7000);
+            showPaymentInstructionsModal(appName, finalPrice, false);
             showPostPaymentWhatsappButton(whatsappUrl);
         });
+    }
+
+    function showPaymentInstructionsModal(appName, finalPrice, wasCopied) {
+        const bodyEl = document.getElementById('paymentInstructionsBody');
+        if (bodyEl) {
+            bodyEl.innerHTML = wasCopied ? `
+                <p style="font-size:1.4rem; margin:0 0 15px 0;">✅ מספר הטלפון הועתק!</p>
+                <div style="font-size:1.6rem; font-weight:bold; color:var(--primary); background:#f0f4ff; padding:10px; border-radius:10px; margin-bottom:15px; direction:ltr;">${MERCHANT_PHONE}</div>
+                <p style="font-size:1.15rem; line-height:1.6;">עברו לאפליקציית <b>${appName}</b> והעבירו <b style="color:var(--success);">₪${finalPrice}</b> למספר שהועתק.</p>
+                <p style="font-size:1rem; color:#666; margin-top:15px;">לאחר ההעברה, חזרו לכאן ולחצו על כפתור הוואטסאפ הירוק כדי לשלוח לנו את פרטי ההזמנה.</p>
+            ` : `
+                <p style="font-size:1.3rem; margin:0 0 15px 0;">📋 יש להעביר ידנית</p>
+                <div style="font-size:1.6rem; font-weight:bold; color:var(--primary); background:#f0f4ff; padding:10px; border-radius:10px; margin-bottom:15px; direction:ltr;">${MERCHANT_PHONE}</div>
+                <p style="font-size:1.15rem; line-height:1.6;">היכנסו לאפליקציית <b>${appName}</b> והעבירו <b style="color:var(--success);">₪${finalPrice}</b> למספר שמופיע למעלה.</p>
+                <p style="font-size:1rem; color:#666; margin-top:15px;">לאחר ההעברה, חזרו לכאן ולחצו על כפתור הוואטסאפ הירוק כדי לשלוח לנו את פרטי ההזמנה.</p>
+            `;
+        }
+        showModal('paymentInstructionsModal');
     }
 
     function showPostPaymentWhatsappButton(whatsappUrl) {
@@ -1154,6 +1186,7 @@
 
     function showModal(id) { document.getElementById('overlay').style.display='block'; document.getElementById(id).style.display='block'; }
     function closePopups() { document.querySelectorAll('.modal, .overlay').forEach(m => m.style.display='none'); cancelPostPaymentView(); }
+    function closePaymentInstructionsModal() { document.getElementById('paymentInstructionsModal').style.display = 'none'; }
 
     let isAdminAuthenticated = false;
     let adminPassword = "";
