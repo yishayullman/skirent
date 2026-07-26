@@ -244,111 +244,112 @@
 <body>
 
 <header>
-    <h1>skirent-il</h1>
-    <p>השכרת ביגוד וציוד סקי פרימיום בגבעת שמואל והמרכז</p>
+    <h1 data-i18n="headerTitle">skirent-il</h1>
+    <p data-i18n="headerSubtitle">השכרת ביגוד וציוד סקי פרימיום בגבעת שמואל והמרכז</p>
 </header>
 
 <nav>
-    <a onclick="showModal('cartModal')" style="color: #e67e22;">🛒 הסל שלי (<span id="cart-count">0</span>)</a>
-    <a onclick="openReviewsModal()" style="color: #f2a900;">⭐ ביקורות</a>
-    <a onclick="openOrderHistoryModal()" style="color: #0077b6;">📋 ההזמנות שלי</a>
-    <a onclick="showModal('contactModal')">📍 איסוף וקשר</a>
+    <a onclick="showModal('cartModal')" style="color: #e67e22;">🛒 <span data-i18n="navCart">הסל שלי</span> (<span id="cart-count">0</span>)</a>
+    <a onclick="openReviewsModal()" style="color: #f2a900;">⭐ <span data-i18n="navReviews">ביקורות</span></a>
+    <a onclick="openOrderHistoryModal()" style="color: #0077b6;">📋 <span data-i18n="navOrders">ההזמנות שלי</span></a>
+    <a onclick="showModal('contactModal')">📍 <span data-i18n="navContact">איסוף וקשר</span></a>
+    <a id="lang-toggle-btn" onclick="toggleLanguage()" style="color: #6c5ce7;">🌐 English</a>
 </nav>
 
 <div class="container">
     <div class="about-section">
-        <p>
+        <p data-i18n-html="aboutText">
             טסים לחופשת סקי בקרוב? ב-<strong>skirent-il</strong> תמצאו ציוד וביגוד סקי ברמה הגבוהה ביותר ולכל המשפחה. אנו מציעים חבילות "קומפלט" משתלמות או השכרה של פריטים בודדים. מודדים, אוספים בקלות מגבעת שמואל ויוצאים לחופשה בראש שקט ומוגן מהקור!
         </p>
     </div>
 
     <div class="bundle-banner">
-        <h2>⛷️ מבצע "קומפלט" שבועי משתלם</h2>
-        <p>מעיל + מכנס + קסדה + גוגלס + כפפות</p>
-        <div style="font-size: 1.6rem; font-weight: bold; margin: 10px 0;">₪350 לשבוע בלבד</div>
-        <button onclick="openBundleWizard()" style="background:white; color:var(--bundle); border:none; padding:12px 25px; border-radius:25px; font-weight:bold; font-size:1.05rem; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.15);">הרכב חבילת קומפלט בהתאמה אישית ✅</button>
+        <h2 data-i18n="bundleTitle">⛷️ מבצע "קומפלט" שבועי משתלם</h2>
+        <p data-i18n="bundleDesc">מעיל + מכנס + קסדה + גוגלס + כפפות</p>
+        <div data-i18n="bundlePrice" style="font-size: 1.6rem; font-weight: bold; margin: 10px 0;">₪350 לשבוע בלבד</div>
+        <button data-i18n="bundleBtn" onclick="openBundleWizard()" style="background:white; color:var(--bundle); border:none; padding:12px 25px; border-radius:25px; font-weight:bold; font-size:1.05rem; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.15);">הרכב חבילת קומפלט בהתאמה אישית ✅</button>
     </div>
 
     <div class="tools-section">
         <div style="display:flex; justify-content:center; align-items: center; gap:15px; flex-wrap:wrap; margin-bottom:15px;">
-            <div><label for="start-date"><b>מתאריך:</b></label> <input type="date" id="start-date" onchange="validateDates()"></div>
-            <div><label for="end-date"><b>עד תאריך:</b></label> <input type="date" id="end-date" onchange="validateDates()"></div>
+            <div><label for="start-date"><b data-i18n="fromDate">מתאריך:</b></label> <input type="date" id="start-date" onchange="validateDates()"></div>
+            <div><label for="end-date"><b data-i18n="toDate">עד תאריך:</b></label> <input type="date" id="end-date" onchange="validateDates()"></div>
         </div>
-        <div id="duration-info" style="font-weight:bold; color:var(--primary); margin-bottom:10px;">נא לבחור תאריכים</div>
-        <div id="availability-loading" style="font-size:0.85rem; color:#888; margin-bottom:10px;">🔄 טוען נתוני זמינות עדכניים...</div>
-        <div id="cloud-status" class="cloud-status">⚠️ לא ניתן כרגע לטעון את נתוני הזמינות מהענן. ייתכן שחלק מהמידע על מוצרים תפוסים לא יוצג. נסו לרענן את הדף, ואם הבעיה נמשכת - צרו איתנו קשר.</div>
+        <div id="duration-info" data-i18n="pleaseSelectDates" style="font-weight:bold; color:var(--primary); margin-bottom:10px;">נא לבחור תאריכים</div>
+        <div id="availability-loading" data-i18n="loadingAvailability" style="font-size:0.85rem; color:#888; margin-bottom:10px;">🔄 טוען נתוני זמינות עדכניים...</div>
+        <div id="cloud-status" class="cloud-status" data-i18n="cloudError">⚠️ לא ניתן כרגע לטעון את נתוני הזמינות מהענן. ייתכן שחלק מהמידע על מוצרים תפוסים לא יוצג. נסו לרענן את הדף, ואם הבעיה נמשכת - צרו איתנו קשר.</div>
 
         <div style="border-top: 1px solid #ddd; padding-top: 15px;">
             <div class="filter-group">
-                <button class="cat-btn active" onclick="filterGender('all', this)">הכל</button>
-                <button class="cat-btn" onclick="filterGender('גברים', this)">גברים 🧔</button>
-                <button class="cat-btn" onclick="filterGender('נשים', this)">נשים 👩</button>
-                <button class="cat-btn" onclick="filterGender('ילדים', this)">ילדים 🧒</button>
+                <button class="cat-btn active" data-i18n="filterAll" onclick="filterGender('all', this)">הכל</button>
+                <button class="cat-btn" data-i18n="filterMen" onclick="filterGender('גברים', this)">גברים 🧔</button>
+                <button class="cat-btn" data-i18n="filterWomen" onclick="filterGender('נשים', this)">נשים 👩</button>
+                <button class="cat-btn" data-i18n="filterKids" onclick="filterGender('ילדים', this)">ילדים 🧒</button>
             </div>
 
             <div class="filter-group">
-                <button class="cat-btn active" onclick="filterCategory('all', this)">הצג את כל הקטגוריות</button>
-                <button class="cat-btn" onclick="filterCategory('מעיל', this)">🧥 מעילים</button>
-                <button class="cat-btn" onclick="filterCategory('מכנס', this)">👖 מכנסיים</button>
-                <button class="cat-btn" onclick="filterCategory('קסדה', this)">🪖 קסדות</button>
-                <button class="cat-btn" onclick="filterCategory('כפפות', this)">🧤 כפפות</button>
-                <button class="cat-btn" onclick="filterCategory('גוגלס', this)">🥽 גוגלס</button>
+                <button class="cat-btn active" data-i18n="filterAllCat" onclick="filterCategory('all', this)">הצג את כל הקטגוריות</button>
+                <button class="cat-btn" data-i18n="filterCoat" onclick="filterCategory('מעיל', this)">🧥 מעילים</button>
+                <button class="cat-btn" data-i18n="filterPants" onclick="filterCategory('מכנס', this)">👖 מכנסיים</button>
+                <button class="cat-btn" data-i18n="filterHelmet" onclick="filterCategory('קסדה', this)">🪖 קסדות</button>
+                <button class="cat-btn" data-i18n="filterGloves" onclick="filterCategory('כפפות', this)">🧤 כפפות</button>
+                <button class="cat-btn" data-i18n="filterGoggles" onclick="filterCategory('גוגלס', this)">🥽 גוגלס</button>
             </div>
         </div>
     </div>
 
     <!-- בלוקים של קטגוריות -->
     <div id="block-מעיל" class="category-block">
-        <div class="category-title">🧥 מעילי סקי</div>
+        <div class="category-title" id="title-מעיל">🧥 מעילי סקי</div>
         <div class="grid" id="grid-מעיל"></div>
     </div>
     <div id="block-מכנס" class="category-block">
-        <div class="category-title">👖 מכנסי סקי וסנובורד</div>
+        <div class="category-title" id="title-מכנס">👖 מכנסי סקי וסנובורד</div>
         <div class="grid" id="grid-מכנס"></div>
     </div>
     <div id="block-קסדה" class="category-block">
-        <div class="category-title">🪖 קסדות מגן</div>
+        <div class="category-title" id="title-קסדה">🪖 קסדות מגן</div>
         <div class="grid" id="grid-קסדה"></div>
     </div>
     <div id="block-כפפות" class="category-block">
-        <div class="category-title">🧤 כפפות תרמיות אטומות</div>
+        <div class="category-title" id="title-כפפות">🧤 כפפות תרמיות אטומות</div>
         <div class="grid" id="grid-כפפות"></div>
     </div>
     <div id="block-גוגלס" class="category-block">
-        <div class="category-title">🥽 משקפת גוגלס (Goggles)</div>
+        <div class="category-title" id="title-גוגלס">🥽 משקפת גוגלס (Goggles)</div>
         <div class="grid" id="grid-גוגלס"></div>
     </div>
 
     <div class="faq-section">
-        <h2>שאלות נפוצות על השכרת ציוד סקי</h2>
+        <h2 data-i18n="faqTitle">שאלות נפוצות על השכרת ציוד סקי</h2>
         <div class="faq-item">
-            <h4>איך עובד חישוב תקופת ההשכרה לחופשה?</h4>
-            <p>המחירים שלנו מותאמים מראש לחופשות סקי סטנדרטיות (שבוע שלם). המערכת מחשבת אוטומטית שבועות השכרה בהתאם לתאריכים שתבחרו, כך שיש לכם מספיק זמן לאסוף את הציוד בנחת לפני הטיסה ולהחזיר אותו אחרי הנחיתה.</p>
+            <h4 data-i18n="faqQ1">איך עובד חישוב תקופת ההשכרה לחופשה?</h4>
+            <p data-i18n="faqA1">המחירים שלנו מותאמים מראש לחופשות סקי סטנדרטיות (שבוע שלם). המערכת מחשבת אוטומטית שבועות השכרה בהתאם לתאריכים שתבחרו, כך שיש לכם מספיק זמן לאסוף את הציוד בנחת לפני הטיסה ולהחזיר אותו אחרי הנחיתה.</p>
         </div>
         <div class="faq-item">
-            <h4>איך אדע איזו מידת ביגוד לבחור?</h4>
-            <p>פיתחנו עבורכם "מחשבון התאמת מידה חכם" הזמין בלחיצה מכל כרטיסיית פריט או באשף החבילות. בנוסף, בעת האיסוף אצלנו בגבעת שמואל תוכלו למדוד את הביגוד ולוודא התאמה מלאה ונוחות מקסימלית.</p>
+            <h4 data-i18n="faqQ2">איך אדע איזו מידת ביגוד לבחור?</h4>
+            <p data-i18n="faqA2">פיתחנו עבורכם "מחשבון התאמת מידה חכם" הזמין בלחיצה מכל כרטיסיית פריט או באשף החבילות. בנוסף, בעת האיסוף אצלנו בגבעת שמואל תוכלו למדוד את הביגוד ולוודא התאמה מלאה ונוחות מקסימלית.</p>
         </div>
         <div class="faq-item">
-            <h4>מה היתרון של חבילת ה"קומפלט"?</h4>
-            <p>חבילת הקומפלט סוגרת לכם את כל הפינות במחיר מוזל ומשתלם במיוחד (350 ש"ח לשבוע) וכוללת את חמשת פריטי החובה: מעיל, מכנס, קסדה תקנית, כפפות אטומות ומשקפת גוגלס.</p>
+            <h4 data-i18n="faqQ3">מה היתרון של חבילת ה"קומפלט"?</h4>
+            <p data-i18n="faqA3">חבילת הקומפלט סוגרת לכם את כל הפינות במחיר מוזל ומשתלם במיוחד (350 ש"ח לשבוע) וכוללת את חמשת פריטי החובה: מעיל, מכנס, קסדה תקנית, כפפות אטומות ומשקפת גוגלס.</p>
         </div>
     </div>
 
     <div class="policy-section">
-        <h2>מדיניות ביטולים והחזרים</h2>
+        <h2 data-i18n="policyTitle">מדיניות ביטולים והחזרים</h2>
         <ul>
-            <li>ביטול הזמנה עד 72 שעות לפני מועד האיסוף - החזר מלא.</li>
-            <li>ביטול בין 72-24 שעות לפני האיסוף - חיוב של 25% מסך ההזמנה.</li>
-            <li>ביטול פחות מ-24 שעות לפני האיסוף, או אי-הגעה - החיוב יהיה מלא.</li>
-            <li>במקרה של נזק לציוד מעבר לבלאי סביר, יחול חיוב נוסף בהתאם להערכת הנזק.</li>
-            <li>לשינויים במידות או בפריטים ניתן לפנות אלינו בוואטסאפ בכל שלב לפני האיסוף, בכפוף לזמינות.</li>
+            <li data-i18n="policy1">ביטול הזמנה עד 72 שעות לפני מועד האיסוף - החזר מלא.</li>
+            <li data-i18n="policy2">ביטול בין 72-24 שעות לפני האיסוף - חיוב של 25% מסך ההזמנה.</li>
+            <li data-i18n="policy3">ביטול פחות מ-24 שעות לפני האיסוף, או אי-הגעה - החיוב יהיה מלא.</li>
+            <li data-i18n="policy4">במקרה של נזק לציוד מעבר לבלאי סביר, יחול חיוב נוסף בהתאם להערכת הנזק.</li>
+            <li data-i18n="policy5">לשינויים במידות או בפריטים ניתן לפנות אלינו בוואטסאפ בכל שלב לפני האיסוף, בכפוף לזמינות.</li>
         </ul>
     </div>
 </div>
 
 <div style="text-align: center; margin: 40px 0 20px 0;">
-    <button onclick="openAdminModal()" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid white; padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 0.85rem;">⚙️ פאנל ניהול מלאי</button>
+    <button data-i18n="adminPanelBtn" onclick="openAdminModal()" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid white; padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 0.85rem;">⚙️ פאנל ניהול מלאי</button>
 </div>
 
 <div class="overlay" id="overlay" onclick="closePopups()"></div>
@@ -364,21 +365,21 @@
 <div class="modal" id="cartModal">
     <div class="modal-header">
         <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
-        <h3>הסל שלי</h3>
+        <h3 data-i18n="cartTitle">הסל שלי</h3>
     </div>
     <div class="modal-body">
         <div id="cart-list"></div>
         <div id="checkout-area" style="display:none; margin-top:20px; text-align: center;">
             <hr>
             <div style="margin:15px auto; text-align: center;">
-                <label for="cust-name"><b>שם מלא להזמנה:</b></label><br>
-                <input type="text" id="cust-name" placeholder="הכנס שם מלא" style="width:90%; padding:10px; margin-top:5px; box-sizing: border-box; text-align: center;">
+                <label for="cust-name"><b data-i18n="fullNameLabel">שם מלא להזמנה:</b></label><br>
+                <input type="text" id="cust-name" data-i18n-placeholder="fullNamePlaceholder" placeholder="הכנס שם מלא" style="width:90%; padding:10px; margin-top:5px; box-sizing: border-box; text-align: center;">
             </div>
             <div style="padding:15px; background:#f0fdf4; border-radius:10px; text-align:center; border: 1px solid #dcfce7; width: 90%; margin: 0 auto; box-sizing: border-box;">
-                סה"כ לתשלום: <span style="font-size:1.4rem; font-weight:bold; color:var(--success);">₪<span id="final-price">0</span></span>
+                <span data-i18n="totalToPay">סה"כ לתשלום:</span> <span style="font-size:1.4rem; font-weight:bold; color:var(--success);">₪<span id="final-price">0</span></span>
             </div>
             
-            <p style="font-size:0.85rem; text-align:center; margin-top:15px; color:#555; font-weight:bold;">לחצו על האפליקציה המועדפת לתשלום ושריון ההזמנה:</p>
+            <p data-i18n="payMethodsHint" style="font-size:0.85rem; text-align:center; margin-top:15px; color:#555; font-weight:bold;">לחצו על האפליקציה המועדפת לתשלום ושריון ההזמנה:</p>
             <div class="pay-methods">
                 <button id="pay-btn-bit" onclick="processPaymentAndOrder('bit')" class="pay-btn btn-bit">📱 bit</button>
                 <button id="pay-btn-paybox" onclick="processPaymentAndOrder('paybox')" class="pay-btn btn-paybox">💜 PayBox</button>
@@ -392,19 +393,19 @@
 <div class="modal" id="paymentInstructionsModal" style="max-width: 480px; z-index: 3500;">
     <div class="modal-header">
         <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePaymentInstructionsModal()">×</span>
-        <h3>💳 הוראות תשלום</h3>
+        <h3 data-i18n="paymentInstructionsTitle">💳 הוראות תשלום</h3>
     </div>
     <div class="modal-body" id="paymentInstructionsBody" style="text-align:center;">
     </div>
     <div style="padding: 0 20px 20px 20px; text-align:center;">
-        <button class="btn-select" style="background:#666; width:100%;" onclick="closePaymentInstructionsModal()">הבנתי, סגור חלון זה</button>
+        <button data-i18n="gotItBtn" class="btn-select" style="background:#666; width:100%;" onclick="closePaymentInstructionsModal()">הבנתי, סגור חלון זה</button>
     </div>
 </div>
 
 <div class="modal" id="bundleWizard">
     <div class="modal-header">
         <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
-        <h3>בחירת חבילת קומפלט</h3>
+        <h3 data-i18n="bundleWizardTitle">בחירת חבילת קומפלט</h3>
     </div>
     <div class="modal-body" id="bundle-wizard-body"></div>
     <div style="padding: 15px; text-align: center;">
@@ -415,77 +416,77 @@
 <div class="modal" id="sizeGuideModal" style="z-index: 2500;">
     <div class="modal-header">
         <span style="position:absolute; left:15px; cursor:pointer;" onclick="closeSizeGuide()">×</span>
-        <h3>📏 מחשבון התאמת מידה חכם</h3>
+        <h3 data-i18n="sizeGuideTitle">📏 מחשבון התאמת מידה חכם</h3>
     </div>
     <div class="modal-body">
-        <p style="font-size: 0.9rem; color: #555; text-align: center;">הזינו את הנתונים שלכם והמערכת תחשב אוטומטית את המידה האידיאלית עבורכם לביגוד סקי נוח וחופשי.</p>
+        <p data-i18n="sizeGuideDesc" style="font-size: 0.9rem; color: #555; text-align: center;">הזינו את הנתונים שלכם והמערכת תחשב אוטומטית את המידה האידיאלית עבורכם לביגוד סקי נוח וחופשי.</p>
         
         <div class="calc-box">
             <div style="margin-bottom: 12px;">
-                <label style="display:block; margin-bottom:5px;"><b>עבור מי הביגוד?</b></label>
+                <label style="display:block; margin-bottom:5px;"><b data-i18n="sizeGuideFor">עבור מי הביגוד?</b></label>
                 <select id="calc-gender" style="width: 100%;">
-                    <option value="גברים">גבר 🧔</option>
-                    <option value="נשים">אישה 👩</option>
-                    <option value="ילדים">ילד/ה 🧒</option>
+                    <option value="גברים" data-i18n="sizeGuideMan">גבר 🧔</option>
+                    <option value="נשים" data-i18n="sizeGuideWoman">אישה 👩</option>
+                    <option value="ילדים" data-i18n="sizeGuideKid">ילד/ה 🧒</option>
                 </select>
             </div>
             <div style="display: flex; gap: 10px; margin-bottom: 12px;">
                 <div style="flex:1;">
-                    <label style="display:block; margin-bottom:5px;"><b>גובה (בס"מ):</b></label>
+                    <label style="display:block; margin-bottom:5px;"><b data-i18n="heightLabel">גובה (בס"מ):</b></label>
                     <input type="number" id="calc-height" placeholder="למשל: 175" style="width: 85%;">
                 </div>
                 <div style="flex:1;">
-                    <label style="display:block; margin-bottom:5px;"><b>משקל (בק"ג):</b></label>
+                    <label style="display:block; margin-bottom:5px;"><b data-i18n="weightLabel">משקל (בק"ג):</b></label>
                     <input type="number" id="calc-weight" placeholder="למשל: 78" style="width: 85%;">
                 </div>
             </div>
-            <button onclick="calculateSkiSize()" class="btn-select" style="width:100%; background:var(--primary); margin-top:5px;">חשב מידה מתאימה 🚀</button>
+            <button data-i18n="calcBtn" onclick="calculateSkiSize()" class="btn-select" style="width:100%; background:var(--primary); margin-top:5px;">חשב מידה מתאימה 🚀</button>
             
             <div id="calc-result-box" class="calc-result"></div>
         </div>
 
-        <h4 style="color:var(--primary); margin-top:20px; margin-bottom:5px;">💡 טיפ חשוב לנוחות בשלג:</h4>
-        <p style="font-size:0.85rem; line-height:1.4; color:#666; margin-top:0;">
+        <h4 data-i18n="tipTitle" style="color:var(--primary); margin-top:20px; margin-bottom:5px;">💡 טיפ חשוב לנוחות בשלג:</h4>
+        <p data-i18n="tipText" style="font-size:0.85rem; line-height:1.4; color:#666; margin-top:0;">
             המחשבון שלנו לוקח בחשבון שאתם לובשים ביגוד תרמי או סווטשירט מתחת למעיל. בגדי סקי צריכים להיות מעט משוחררים כדי לאפשר תנועה חופשית בזמן הגלישה.
         </p>
-        <button class="btn-select" style="width:100%; margin-top:10px; background:#666;" onclick="closeSizeGuide()">סגור מחשבון</button>
+        <button data-i18n="closeCalcBtn" class="btn-select" style="width:100%; margin-top:10px; background:#666;" onclick="closeSizeGuide()">סגור מחשבון</button>
     </div>
 </div>
 
 <div class="modal" id="reviewsModal" style="max-width: 550px;">
     <div class="modal-header">
         <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
-        <h3>⭐ ביקורות לקוחות</h3>
+        <h3 data-i18n="reviewsTitle">⭐ ביקורות לקוחות</h3>
     </div>
     <div class="modal-body">
         <div id="reviews-summary" class="review-summary" style="display:none;"></div>
 
         <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:12px;">
             <select id="reviews-star-filter" onchange="renderReviewsPublic()" style="margin:0;">
-                <option value="all">כל הדירוגים</option>
-                <option value="5">5 כוכבים</option>
-                <option value="4">4 כוכבים</option>
-                <option value="3">3 כוכבים</option>
-                <option value="2">2 כוכבים</option>
-                <option value="1">כוכב אחד</option>
+                <option value="all" data-i18n="filterAllRatings">כל הדירוגים</option>
+                <option value="5" data-i18n="stars5">5 כוכבים</option>
+                <option value="4" data-i18n="stars4">4 כוכבים</option>
+                <option value="3" data-i18n="stars3">3 כוכבים</option>
+                <option value="2" data-i18n="stars2">2 כוכבים</option>
+                <option value="1" data-i18n="stars1">כוכב אחד</option>
             </select>
             <select id="reviews-sort" onchange="renderReviewsPublic()" style="margin:0;">
-                <option value="newest">החדשות ביותר</option>
-                <option value="highest">דירוג גבוה קודם</option>
-                <option value="lowest">דירוג נמוך קודם</option>
+                <option value="newest" data-i18n="sortNewest">החדשות ביותר</option>
+                <option value="highest" data-i18n="sortHighest">דירוג גבוה קודם</option>
+                <option value="lowest" data-i18n="sortLowest">דירוג נמוך קודם</option>
             </select>
         </div>
 
         <div id="reviews-list"></div>
 
         <hr>
-        <h4 style="color:var(--primary); text-align:center;">כתבו ביקורת משלכם</h4>
+        <h4 data-i18n="writeReviewTitle" style="color:var(--primary); text-align:center;">כתבו ביקורת משלכם</h4>
         <div style="text-align:center;">
-            <label><b>שם:</b></label><br>
-            <input type="text" id="review-name" placeholder="השם שלך" style="width:85%; text-align:center;">
+            <label><b data-i18n="yourNameLabel">שם:</b></label><br>
+            <input type="text" id="review-name" data-i18n-placeholder="yourNamePlaceholder" placeholder="השם שלך" style="width:85%; text-align:center;">
         </div>
         <div style="text-align:center;">
-            <label><b>דירוג:</b></label>
+            <label><b data-i18n="ratingLabel">דירוג:</b></label>
             <div class="star-rating" id="review-star-input">
                 <span class="star" data-value="1">★</span>
                 <span class="star" data-value="2">★</span>
@@ -495,20 +496,20 @@
             </div>
         </div>
         <div style="text-align:center;">
-            <label><b>תגובה (אופציונלי):</b></label><br>
-            <textarea id="review-text" rows="3" placeholder="ספרו לנו על החוויה שלכם..." style="width:85%; padding:10px; border-radius:8px; border:1px solid #ccc; font-family:inherit; font-size:1rem; resize:vertical;"></textarea>
+            <label><b data-i18n="reviewTextLabel">תגובה (אופציונלי):</b></label><br>
+            <textarea id="review-text" rows="3" data-i18n-placeholder="reviewTextPlaceholder" placeholder="ספרו לנו על החוויה שלכם..." style="width:85%; padding:10px; border-radius:8px; border:1px solid #ccc; font-family:inherit; font-size:1rem; resize:vertical;"></textarea>
         </div>
-        <button id="review-submit-btn" class="btn-select" style="background:var(--success); margin-top:15px;" onclick="submitReview()">שלח ביקורת</button>
+        <button id="review-submit-btn" data-i18n="submitReviewBtn" class="btn-select" style="background:var(--success); margin-top:15px;" onclick="submitReview()">שלח ביקורת</button>
     </div>
 </div>
 
 <div class="modal" id="orderHistoryModal" style="max-width: 550px;">
     <div class="modal-header">
         <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
-        <h3>📋 ההזמנות שלי</h3>
+        <h3 data-i18n="orderHistoryTitle">📋 ההזמנות שלי</h3>
     </div>
     <div class="modal-body">
-        <p style="font-size:0.85rem; color:#777; text-align:center; margin-top:0;">ההזמנות מוצגות רק בדפדפן הזה, על סמך פעולות תשלום קודמות שביצעת באתר.</p>
+        <p data-i18n="orderHistoryHint" style="font-size:0.85rem; color:#777; text-align:center; margin-top:0;">ההזמנות מוצגות רק בדפדפן הזה, על סמך פעולות תשלום קודמות שביצעת באתר.</p>
         <div id="order-history-list"></div>
     </div>
 </div>
@@ -516,60 +517,295 @@
 <div class="modal" id="contactModal">
     <div class="modal-header">
         <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
-        <h3>פרטי איסוף וקשר</h3>
+        <h3 data-i18n="contactTitle">פרטי איסוף וקשר</h3>
     </div>
     <div class="modal-body" style="text-align:center; display:flex; flex-direction:column; align-items:center;">
-        <p><strong>🏠 כתובת:</strong> יהודה הלוי 58, גבעת שמואל</p>
-        <p><strong>📞 טלפון:</strong> 054-9943477</p>
-        <button class="btn-select" style="background:#4285F4;" onclick="window.open('https://maps.google.com/?q=יהודה+הלוי+58+גבעת+שמואל')">📍 ניווט ליעד</button>
-        <a href="https://wa.me/972549943477" target="_blank" class="wa-btn">💬 שלח לנו הודעה בוואטסאפ</a>
-        <button class="btn-select" style="background:#666;" onclick="closePopups()">סגור</button>
+        <p><strong data-i18n="addressLabel">🏠 כתובת:</strong> יהודה הלוי 58, גבעת שמואל</p>
+        <p><strong data-i18n="phoneLabel">📞 טלפון:</strong> 054-9943477</p>
+        <button data-i18n="navigateBtn" class="btn-select" style="background:#4285F4;" onclick="window.open('https://maps.google.com/?q=יהודה+הלוי+58+גבעת+שמואל')">📍 ניווט ליעד</button>
+        <a href="https://wa.me/972549943477" target="_blank" class="wa-btn" data-i18n="whatsappBtn">💬 שלח לנו הודעה בוואטסאפ</a>
+        <button data-i18n="closeBtn" class="btn-select" style="background:#666;" onclick="closePopups()">סגור</button>
     </div>
 </div>
 
 <div class="modal" id="adminLoginModal" style="z-index: 2600;">
     <div class="modal-header">
         <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
-        <h3>🔐 כניסת מנהל</h3>
+        <h3 data-i18n="adminLoginTitle">🔐 כניסת מנהל</h3>
     </div>
     <div class="modal-body" style="text-align:center;">
-        <p style="font-size:0.9rem; color:#555;">נא להזין סיסמת מנהל לניהול המלאי:</p>
-        <input type="password" id="admin-login-input" placeholder="סיסמה" style="width:80%; text-align:center; font-size:1.1rem;" onkeydown="if(event.key==='Enter') submitAdminLogin();">
+        <p data-i18n="adminLoginDesc" style="font-size:0.9rem; color:#555;">נא להזין סיסמת מנהל לניהול המלאי:</p>
+        <input type="password" id="admin-login-input" data-i18n-placeholder="adminLoginPlaceholder" placeholder="סיסמה" style="width:80%; text-align:center; font-size:1.1rem;" onkeydown="if(event.key==='Enter') submitAdminLogin();">
         <div id="admin-login-error" style="color:var(--danger); font-size:0.9rem; margin-top:8px; display:none;">סיסמה שגויה, נסה שוב.</div>
-        <button id="admin-login-submit" class="btn-select" style="background:var(--primary); margin-top:15px;" onclick="submitAdminLogin()">כניסה</button>
+        <button id="admin-login-submit" data-i18n="adminLoginBtn" class="btn-select" style="background:var(--primary); margin-top:15px;" onclick="submitAdminLogin()">כניסה</button>
     </div>
 </div>
 
 <div class="modal" id="adminModal">
     <div class="modal-header">
         <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
-        <h3>🛠️ פאנל ניהול חסימות מלאי</h3>
+        <h3 data-i18n="adminManageTitle">🛠️ פאנל ניהול חסימות מלאי</h3>
     </div>
     <div class="modal-body">
         <div style="margin-bottom: 15px; text-align: center;">
-            <label for="admin-prod-select"><b>בחר מוצר לחסימה:</b></label><br>
+            <label for="admin-prod-select"><b data-i18n="chooseProductToBlock">בחר מוצר לחסימה:</b></label><br>
             <select id="admin-prod-select" style="width: 100%;"></select>
         </div>
         <div style="margin-bottom: 15px; text-align: center;">
-            <label for="admin-size-select"><b>בחר מידה:</b></label><br>
+            <label for="admin-size-select"><b data-i18n="chooseSizeLabel">בחר מידה:</b></label><br>
             <select id="admin-size-select" style="width: 100%;"></select>
         </div>
         <div style="display: flex; gap: 10px; margin-bottom: 15px; justify-content: center;">
-            <div><label for="admin-start">מאיזה תאריך:</label><input type="date" id="admin-start"></div>
-            <div><label for="admin-end">עד תאריך:</label><input type="date" id="admin-end"></div>
+            <div><label for="admin-start" data-i18n="fromDateAdmin">מאיזה תאריך:</label><input type="date" id="admin-start"></div>
+            <div><label for="admin-end" data-i18n="toDate">עד תאריך:</label><input type="date" id="admin-end"></div>
         </div>
-        <button id="admin-submit-btn" onclick="submitBlock()" style="width:100%; background:var(--danger); color:white; padding:10px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin: 0 auto;">🔒 חסום מוצר זה</button>
+        <button id="admin-submit-btn" data-i18n="blockThisProductBtn" onclick="submitBlock()" style="width:100%; background:var(--danger); color:white; padding:10px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin: 0 auto;">🔒 חסום מוצר זה</button>
         <hr>
-        <h4>רשימת חסימות פעילות בענן:</h4>
+        <h4 data-i18n="activeBlocksTitle">רשימת חסימות פעילות בענן:</h4>
         <div id="admin-blocks-list" style="max-height: 200px; overflow-y:auto; font-size:0.9rem; text-align: right;"></div>
         <hr>
-        <h4>⭐ ניהול ביקורות:</h4>
+        <h4 data-i18n="manageReviewsTitle">⭐ ניהול ביקורות:</h4>
         <div id="admin-reviews-list" style="max-height: 260px; overflow-y:auto; font-size:0.9rem;"></div>
     </div>
 </div>
 
 <script>
     let currentImageIndex = {};
+
+    // ==================== מערכת רב-לשונית (עברית / English) ====================
+
+    let currentLang = localStorage.getItem('skiLang') || 'he';
+
+    const catNames = {
+        he: { 'מעיל': 'מעיל', 'מכנס': 'מכנס', 'קסדה': 'קסדה', 'כפפות': 'כפפות', 'גוגלס': 'גוגלס' },
+        en: { 'מעיל': 'Coat', 'מכנס': 'Pants', 'קסדה': 'Helmet', 'כפפות': 'Gloves', 'גוגלס': 'Goggles' }
+    };
+    const genderNames = {
+        he: { 'גברים': 'גברים', 'נשים': 'נשים', 'ילדים': 'ילדים' },
+        en: { 'גברים': "Men's", 'נשים': "Women's", 'ילדים': "Kids'" }
+    };
+    const catNamesPlural = {
+        he: { 'מעיל': 'מעילי סקי', 'מכנס': 'מכנסי סקי וסנובורד', 'קסדה': 'קסדות מגן', 'כפפות': 'כפפות תרמיות אטומות', 'גוגלס': 'משקפת גוגלס (Goggles)' },
+        en: { 'מעיל': 'Ski Jackets', 'מכנס': 'Ski & Snowboard Pants', 'קסדה': 'Helmets', 'כפפות': 'Thermal Gloves', 'גוגלס': 'Goggles' }
+    };
+    const catIcons = { 'מעיל': '🧥', 'מכנס': '👖', 'קסדה': '🪖', 'כפפות': '🧤', 'גוגלס': '🥽' };
+
+    function translateProductName(p) {
+        if (currentLang === 'he') return p.name;
+        // ממיר "מעיל גברים 1" ל-"Men's Coat 1" באנגלית, על סמך המבנה הקבוע של השם
+        const num = (p.name.match(/\d+$/) || [''])[0];
+        return `${genderNames.en[p.gender] || p.gender} ${catNames.en[p.cat] || p.cat} ${num}`.trim();
+    }
+
+    const I18N = {
+        he: {
+            headerTitle: 'skirent-il', headerSubtitle: 'השכרת ביגוד וציוד סקי פרימיום בגבעת שמואל והמרכז',
+            navCart: 'הסל שלי', navReviews: 'ביקורות', navOrders: 'ההזמנות שלי', navContact: 'איסוף וקשר',
+            aboutText: 'טסים לחופשת סקי בקרוב? ב-<strong>skirent-il</strong> תמצאו ציוד וביגוד סקי ברמה הגבוהה ביותר ולכל המשפחה. אנו מציעים חבילות "קומפלט" משתלמות או השכרה של פריטים בודדים. מודדים, אוספים בקלות מגבעת שמואל ויוצאים לחופשה בראש שקט ומוגן מהקור!',
+            bundleTitle: '⛷️ מבצע "קומפלט" שבועי משתלם', bundleDesc: 'מעיל + מכנס + קסדה + גוגלס + כפפות',
+            bundlePrice: '₪350 לשבוע בלבד', bundleBtn: 'הרכב חבילת קומפלט בהתאמה אישית ✅',
+            fromDate: 'מתאריך:', toDate: 'עד תאריך:', pleaseSelectDates: 'נא לבחור תאריכים',
+            loadingAvailability: '🔄 טוען נתוני זמינות עדכניים...',
+            cloudError: '⚠️ לא ניתן כרגע לטעון את נתוני הזמינות מהענן. ייתכן שחלק מהמידע על מוצרים תפוסים לא יוצג. נסו לרענן את הדף, ואם הבעיה נמשכת - צרו איתנו קשר.',
+            filterAll: 'הכל', filterMen: 'גברים 🧔', filterWomen: 'נשים 👩', filterKids: 'ילדים 🧒',
+            filterAllCat: 'הצג את כל הקטגוריות', filterCoat: '🧥 מעילים', filterPants: '👖 מכנסיים',
+            filterHelmet: '🪖 קסדות', filterGloves: '🧤 כפפות', filterGoggles: '🥽 גוגלס',
+            sizeLabel: 'מידה:', sizeGuideLink: 'מידות?', perWeek: 'לשבוע',
+            addToCart: 'הוסף לסל', inCartLabel: '✅ במידה זו בסל', sizeTaken: (s) => `❌ מידה ${s} תפוסה`,
+            faqTitle: 'שאלות נפוצות על השכרת ציוד סקי',
+            faqQ1: 'איך עובד חישוב תקופת ההשכרה לחופשה?',
+            faqA1: 'המחירים שלנו מותאמים מראש לחופשות סקי סטנדרטיות (שבוע שלם). המערכת מחשבת אוטומטית שבועות השכרה בהתאם לתאריכים שתבחרו, כך שיש לכם מספיק זמן לאסוף את הציוד בנחת לפני הטיסה ולהחזיר אותו אחרי הנחיתה.',
+            faqQ2: 'איך אדע איזו מידת ביגוד לבחור?',
+            faqA2: 'פיתחנו עבורכם "מחשבון התאמת מידה חכם" הזמין בלחיצה מכל כרטיסיית פריט או באשף החבילות. בנוסף, בעת האיסוף אצלנו בגבעת שמואל תוכלו למדוד את הביגוד ולוודא התאמה מלאה ונוחות מקסימלית.',
+            faqQ3: 'מה היתרון של חבילת ה"קומפלט"?',
+            faqA3: 'חבילת הקומפלט סוגרת לכם את כל הפינות במחיר מוזל ומשתלם במיוחד (350 ש"ח לשבוע) וכוללת את חמשת פריטי החובה: מעיל, מכנס, קסדה תקנית, כפפות אטומות ומשקפת גוגלס.',
+            policyTitle: 'מדיניות ביטולים והחזרים',
+            policy1: 'ביטול הזמנה עד 72 שעות לפני מועד האיסוף - החזר מלא.',
+            policy2: 'ביטול בין 72-24 שעות לפני האיסוף - חיוב של 25% מסך ההזמנה.',
+            policy3: 'ביטול פחות מ-24 שעות לפני האיסוף, או אי-הגעה - החיוב יהיה מלא.',
+            policy4: 'במקרה של נזק לציוד מעבר לבלאי סביר, יחול חיוב נוסף בהתאם להערכת הנזק.',
+            policy5: 'לשינויים במידות או בפריטים ניתן לפנות אלינו בוואטסאפ בכל שלב לפני האיסוף, בכפוף לזמינות.',
+            adminPanelBtn: '⚙️ פאנל ניהול מלאי',
+            cartTitle: 'הסל שלי', cartEmpty: 'הסל שלך ריק כרגע...', fullNameLabel: 'שם מלא להזמנה:',
+            fullNamePlaceholder: 'הכנס שם מלא', totalToPay: 'סה"כ לתשלום:', payMethodsHint: 'לחצו על האפליקציה המועדפת לתשלום ושריון ההזמנה:',
+            bundleWizardTitle: 'בחירת חבילת קומפלט', bundleWizardFor: 'עבור מי החבילה?', smartCalcLink: '📏 מחשבון מידות חכם',
+            bundleConfirmBtn: 'אישור והוספה לסל',
+            sizeGuideTitle: '📏 מחשבון התאמת מידה חכם', sizeGuideDesc: 'הזינו את הנתונים שלכם והמערכת תחשב אוטומטית את המידה האידיאלית עבורכם לביגוד סקי נוח וחופשי.',
+            sizeGuideFor: 'עבור מי הביגוד?', sizeGuideMan: 'גבר 🧔', sizeGuideWoman: 'אישה 👩', sizeGuideKid: 'ילד/ה 🧒',
+            heightLabel: 'גובה (בס"מ):', weightLabel: 'משקל (בק"ג):', calcBtn: 'חשב מידה מתאימה 🚀',
+            recommendedSize: 'המידה המומלצת עבורך:', tipTitle: '💡 טיפ חשוב לנוחות בשלג:',
+            tipText: 'המחשבון שלנו לוקח בחשבון שאתם לובשים ביגוד תרמי או סווטשירט מתחת למעיל. בגדי סקי צריכים להיות מעט משוחררים כדי לאפשר תנועה חופשית בזמן הגלישה.',
+            closeCalcBtn: 'סגור מחשבון',
+            contactTitle: 'פרטי איסוף וקשר', addressLabel: '🏠 כתובת:', phoneLabel: '📞 טלפון:',
+            navigateBtn: '📍 ניווט ליעד', whatsappBtn: '💬 שלח לנו הודעה בוואטסאפ', closeBtn: 'סגור',
+            reviewsTitle: '⭐ ביקורות לקוחות', filterAllRatings: 'כל הדירוגים', stars5: '5 כוכבים', stars4: '4 כוכבים',
+            stars3: '3 כוכבים', stars2: '2 כוכבים', stars1: 'כוכב אחד', sortNewest: 'החדשות ביותר',
+            sortHighest: 'דירוג גבוה קודם', sortLowest: 'דירוג נמוך קודם', writeReviewTitle: 'כתבו ביקורת משלכם',
+            yourNameLabel: 'שם:', yourNamePlaceholder: 'השם שלך', ratingLabel: 'דירוג:',
+            reviewTextLabel: 'תגובה (אופציונלי):', reviewTextPlaceholder: 'ספרו לנו על החוויה שלכם...',
+            submitReviewBtn: 'שלח ביקורת', noReviewsYet: 'עדיין אין ביקורות - היו הראשונים לכתוב!',
+            basedOn: (n) => `מבוסס על ${n} ביקורות`, noReviewsMatchFilter: 'אין ביקורות התואמות את הסינון שנבחר.',
+            orderHistoryTitle: '📋 ההזמנות שלי', orderHistoryHint: 'ההזמנות מוצגות רק בדפדפן הזה, על סמך פעולות תשלום קודמות שביצעת באתר.',
+            noOrdersYet: 'עדיין לא ביצעת הזמנות דרך האתר הזה.', rentalDatesLabel: 'תאריכי השכרה:',
+            totalLabel: 'סה"כ:', reorderBtn: 'הזמן שוב', removeFromHistoryBtn: 'מחק מההיסטוריה',
+            paymentInstructionsTitle: '💳 הוראות תשלום', gotItBtn: 'הבנתי, סגור חלון זה',
+            adminLoginTitle: '🔐 כניסת מנהל', adminLoginDesc: 'נא להזין סיסמת מנהל לניהול המלאי:',
+            adminLoginPlaceholder: 'סיסמה', adminLoginBtn: 'כניסה',
+            cloudLoadErrorToast: 'לא הצלחנו לטעון את נתוני הזמינות מהענן. חלק מהמידע על תפוסה עלול להיות לא מעודכן.',
+            actionSuccessToast: 'הפעולה בוצעה בהצלחה!', adminWrongPasswordToast: 'סיסמת מנהל שגויה. נסה להיכנס לפאנל הניהול שוב.',
+            serverUpdateErrorToast: 'תקלה בעדכון השרת. נסה שוב בעוד רגע.', networkSaveErrorToast: 'תקלה ברשת בשמירה לענן. נסה שוב בעוד רגע.',
+            bundleItemBlockedToast: 'אחד הפריטים תפוס בתאריכים שבחרת. אנא שנה מוצר או מידה.', bundleAddedToast: 'החבילה נוספה לסל!',
+            invalidHeightWeightToast: 'אנא הזינו ערכי גובה ומשקל תקינים.', nameRequiredForOrderToast: 'נא להזין שם מלא להזמנה לפני התשלום',
+            datesRequiredToast: 'נא לבחור תאריכי השכרה בראש העמוד', blockDatesRequiredToast: 'יש לבחור תאריכים לחסימה',
+            blockEndBeforeStartToast: 'תאריך הסיום לא יכול להיות לפני תאריך ההתחלה', reviewNameRequiredToast: 'נא להזין שם.',
+            adminPasswordRequiredText: 'נא להזין סיסמה.', confirmReleaseBlockText: 'האם לשחרר חסימה זו ולהחזיר את המוצר למלאי לכולם?', adminManageTitle: '🛠️ פאנל ניהול חסימות מלאי', chooseProductToBlock: 'בחר מוצר לחסימה:', chooseSizeLabel: 'בחר מידה:', fromDateAdmin: 'מאיזה תאריך:',
+            reviewStarsRequiredToast: 'נא לבחור דירוג בכוכבים.', reviewThanksToast: 'תודה על הביקורת!',
+            reviewSendErrorToast: 'תקלה בשליחת הביקורת. נסה שוב.', networkErrorToast: 'שגיאת רשת. נסה שוב.',
+            reviewDeletedToast: 'הביקורת נמחקה.', reviewRestoredToast: 'הביקורת שוחזרה.',
+            reviewUpdateErrorToast: 'תקלה בעדכון הביקורת.', oldOrderDatesToast: 'תאריכי ההזמנה הקודמת כבר עברו - נא לבחור תאריכים חדשים.',
+            reorderAddedToast: 'הפריטים מההזמנה הקודמת נוספו לסל. בדוק זמינות במידות ותאריכים.',
+            passwordCopiedText: '✅ מספר הטלפון הועתק!', manualTransferText: '📋 יש להעביר ידנית',
+            transferToAppText: (appName, price) => `עברו לאפליקציית <b>${appName}</b> והעבירו <b style="color:var(--success);">₪${price}</b> למספר שהועתק.`,
+            manualTransferInstructionText: (appName, price) => `היכנסו לאפליקציית <b>${appName}</b> והעבירו <b style="color:var(--success);">₪${price}</b> למספר שמופיע למעלה.`,
+            afterTransferText: 'לאחר ההעברה, חזרו לכאן ולחצו על כפתור הוואטסאפ הירוק כדי לשלוח לנו את פרטי ההזמנה.',
+            emptyItemsText: 'אין פרטי פריטים', wrongPasswordInlineText: 'סיסמה שגויה, נסה שוב.', checkingText: 'בודק...',
+            savingText: 'שומר...', sendingText: 'שולח...', blockThisProductBtn: '🔒 חסום מוצר זה',
+            activeBlocksTitle: 'רשימת חסימות פעילות בענן:', manageReviewsTitle: '⭐ ניהול ביקורות:',
+            noBlocksYetText: 'אין מוצרים חסומים כרגע.', releaseBtn: 'שחרר', datesLabel: 'תאריכים:',
+            noReviewsAdminYetText: 'עדיין אין ביקורות.', deletedTagText: '(נמחקה)', restoreBtn: 'שחזר', deleteBtn: 'מחק',
+            wizardBlockText: (name, size) => `❌ תפוס! ${name} (${size}) חסום בתאריכים אלו`,
+            postPaymentTitle: 'שלב אחרון לסיום! 🎉',
+            postPaymentHint: 'אם ביצעתם את ההעברה באפליקציה, לחצו כעת על הכפתור כדי לשלוח אלינו את הפירוט האוטומטי ולשריין את המלאי:',
+            postPaymentSendBtn: 'לחצו כאן לשליחת ההודעה', postPaymentBackBtn: '⬅️ טעיתי / רוצה לשנות אמצעי תשלום',
+        },
+        en: {
+            headerTitle: 'skirent-il', headerSubtitle: 'Premium ski gear & clothing rental in Givat Shmuel and central Israel',
+            navCart: 'My Cart', navReviews: 'Reviews', navOrders: 'My Orders', navContact: 'Pickup & Contact',
+            aboutText: 'Flying out for a ski trip soon? At <strong>skirent-il</strong> you\'ll find top-quality ski gear and clothing for the whole family. We offer great-value "complete" bundles or individual item rentals. Try things on, pick up easily in Givat Shmuel, and head off on vacation warm and worry-free!',
+            bundleTitle: '⛷️ Weekly "Complete" Bundle Deal', bundleDesc: 'Jacket + Pants + Helmet + Goggles + Gloves',
+            bundlePrice: '₪350 per week only', bundleBtn: 'Build Your Custom Complete Bundle ✅',
+            fromDate: 'From date:', toDate: 'To date:', pleaseSelectDates: 'Please select dates',
+            loadingAvailability: '🔄 Loading current availability...',
+            cloudError: "⚠️ We couldn't load availability data from the cloud right now. Some blocked-item info may not display. Try refreshing the page, and if the issue persists, contact us.",
+            filterAll: 'All', filterMen: 'Men 🧔', filterWomen: 'Women 👩', filterKids: 'Kids 🧒',
+            filterAllCat: 'Show All Categories', filterCoat: '🧥 Jackets', filterPants: '👖 Pants',
+            filterHelmet: '🪖 Helmets', filterGloves: '🧤 Gloves', filterGoggles: '🥽 Goggles',
+            sizeLabel: 'Size:', sizeGuideLink: 'Sizes?', perWeek: '/week',
+            addToCart: 'Add to Cart', inCartLabel: '✅ This size is in cart', sizeTaken: (s) => `❌ Size ${s} unavailable`,
+            faqTitle: 'Frequently Asked Questions',
+            faqQ1: 'How is the rental period calculated?',
+            faqA1: "Our prices are pre-set for standard ski vacations (a full week). The system automatically calculates rental weeks based on the dates you choose, giving you plenty of time to pick up the gear comfortably before your flight and return it after landing.",
+            faqQ2: 'How do I know which clothing size to choose?',
+            faqA2: 'We built a "Smart Size Calculator" available with one click from any item card or the bundle wizard. Also, when you pick up your gear in Givat Shmuel, you can try it on to ensure a perfect, comfortable fit.',
+            faqQ3: 'What\'s the benefit of the "Complete" bundle?',
+            faqA3: 'The complete bundle covers everything you need at a great discounted price (₪350/week) and includes all five essential items: jacket, pants, certified helmet, sealed gloves, and goggles.',
+            policyTitle: 'Cancellation & Refund Policy',
+            policy1: 'Cancel up to 72 hours before pickup - full refund.',
+            policy2: 'Cancel 24-72 hours before pickup - 25% of order total charged.',
+            policy3: 'Cancel less than 24 hours before pickup, or no-show - full charge applies.',
+            policy4: 'In case of damage beyond reasonable wear, an additional charge will apply based on damage assessment.',
+            policy5: 'For size or item changes, contact us on WhatsApp any time before pickup, subject to availability.',
+            adminPanelBtn: '⚙️ Inventory Admin Panel',
+            cartTitle: 'My Cart', cartEmpty: 'Your cart is currently empty...', fullNameLabel: 'Full name for order:',
+            fullNamePlaceholder: 'Enter your full name', totalToPay: 'Total to pay:', payMethodsHint: 'Tap your preferred payment app to pay and reserve your order:',
+            bundleWizardTitle: 'Build a Complete Bundle', bundleWizardFor: 'Who is the bundle for?', smartCalcLink: '📏 Smart Size Calculator',
+            bundleConfirmBtn: 'Confirm & Add to Cart',
+            sizeGuideTitle: '📏 Smart Size Calculator', sizeGuideDesc: 'Enter your details and the system will automatically calculate the ideal size for comfortable, free-moving ski clothing.',
+            sizeGuideFor: 'Who is the clothing for?', sizeGuideMan: 'Man 🧔', sizeGuideWoman: 'Woman 👩', sizeGuideKid: 'Kid 🧒',
+            heightLabel: 'Height (cm):', weightLabel: 'Weight (kg):', calcBtn: 'Calculate Size 🚀',
+            recommendedSize: 'Your recommended size:', tipTitle: '💡 Snow Comfort Tip:',
+            tipText: 'Our calculator assumes you\'ll wear thermal clothing or a sweatshirt underneath the jacket. Ski clothes should fit a bit loose to allow free movement while riding.',
+            closeCalcBtn: 'Close Calculator',
+            contactTitle: 'Pickup & Contact Info', addressLabel: '🏠 Address:', phoneLabel: '📞 Phone:',
+            navigateBtn: '📍 Navigate There', whatsappBtn: '💬 Message Us on WhatsApp', closeBtn: 'Close',
+            reviewsTitle: '⭐ Customer Reviews', filterAllRatings: 'All Ratings', stars5: '5 Stars', stars4: '4 Stars',
+            stars3: '3 Stars', stars2: '2 Stars', stars1: '1 Star', sortNewest: 'Newest First',
+            sortHighest: 'Highest Rated First', sortLowest: 'Lowest Rated First', writeReviewTitle: 'Write Your Own Review',
+            yourNameLabel: 'Name:', yourNamePlaceholder: 'Your name', ratingLabel: 'Rating:',
+            reviewTextLabel: 'Comment (optional):', reviewTextPlaceholder: 'Tell us about your experience...',
+            submitReviewBtn: 'Submit Review', noReviewsYet: 'No reviews yet - be the first to write one!',
+            basedOn: (n) => `Based on ${n} reviews`, noReviewsMatchFilter: 'No reviews match the selected filter.',
+            orderHistoryTitle: '📋 My Orders', orderHistoryHint: 'Orders are shown only in this browser, based on previous checkout actions you made on the site.',
+            noOrdersYet: "You haven't placed any orders through this site yet.", rentalDatesLabel: 'Rental dates:',
+            totalLabel: 'Total:', reorderBtn: 'Order Again', removeFromHistoryBtn: 'Remove from History',
+            paymentInstructionsTitle: '💳 Payment Instructions', gotItBtn: 'Got it, close this window',
+            adminLoginTitle: '🔐 Admin Login', adminLoginDesc: 'Please enter the admin password to manage inventory:',
+            adminLoginPlaceholder: 'Password', adminLoginBtn: 'Login',
+            cloudLoadErrorToast: "We couldn't load availability data from the cloud. Some occupancy info may be outdated.",
+            actionSuccessToast: 'Done successfully!', adminWrongPasswordToast: 'Incorrect admin password. Please try logging into the admin panel again.',
+            serverUpdateErrorToast: 'There was a problem updating the server. Please try again shortly.', networkSaveErrorToast: 'Network error while saving to the cloud. Please try again shortly.',
+            bundleItemBlockedToast: 'One of the items is unavailable for the dates you chose. Please change the product or size.', bundleAddedToast: 'Bundle added to cart!',
+            invalidHeightWeightToast: 'Please enter valid height and weight values.', nameRequiredForOrderToast: 'Please enter your full name before paying',
+            datesRequiredToast: 'Please select rental dates at the top of the page', blockDatesRequiredToast: 'Please select dates to block',
+            blockEndBeforeStartToast: 'End date cannot be before start date', reviewNameRequiredToast: 'Please enter your name.',
+            adminPasswordRequiredText: 'Please enter a password.', confirmReleaseBlockText: 'Release this block and make the product available to everyone again?', adminManageTitle: '🛠️ Inventory Blocking Admin Panel', chooseProductToBlock: 'Choose a product to block:', chooseSizeLabel: 'Choose a size:', fromDateAdmin: 'From date:',
+            reviewStarsRequiredToast: 'Please select a star rating.', reviewThanksToast: 'Thanks for your review!',
+            reviewSendErrorToast: 'There was a problem sending your review. Please try again.', networkErrorToast: 'Network error. Please try again.',
+            reviewDeletedToast: 'The review was deleted.', reviewRestoredToast: 'The review was restored.',
+            reviewUpdateErrorToast: 'There was a problem updating the review.', oldOrderDatesToast: 'The previous order dates have already passed - please choose new dates.',
+            reorderAddedToast: 'Items from the previous order were added to the cart. Please check size and date availability.',
+            passwordCopiedText: '✅ Phone number copied!', manualTransferText: '📋 Manual transfer required',
+            transferToAppText: (appName, price) => `Go to the <b>${appName}</b> app and transfer <b style="color:var(--success);">₪${price}</b> to the copied number.`,
+            manualTransferInstructionText: (appName, price) => `Open the <b>${appName}</b> app and transfer <b style="color:var(--success);">₪${price}</b> to the number shown above.`,
+            afterTransferText: "After transferring, come back here and tap the green WhatsApp button to send us your order details.",
+            emptyItemsText: 'No item details', wrongPasswordInlineText: 'Incorrect password, please try again.', checkingText: 'Checking...',
+            savingText: 'Saving...', sendingText: 'Sending...', blockThisProductBtn: '🔒 Block This Product',
+            activeBlocksTitle: 'Currently active blocks in the cloud:', manageReviewsTitle: '⭐ Manage Reviews:',
+            noBlocksYetText: 'No products are currently blocked.', releaseBtn: 'Release', datesLabel: 'Dates:',
+            noReviewsAdminYetText: 'No reviews yet.', deletedTagText: '(deleted)', restoreBtn: 'Restore', deleteBtn: 'Delete',
+            wizardBlockText: (name, size) => `❌ Unavailable! ${name} (${size}) is blocked for these dates`,
+            postPaymentTitle: 'Final step! 🎉',
+            postPaymentHint: "If you've completed the transfer in the app, tap the button now to send us the automatic order details and reserve your gear:",
+            postPaymentSendBtn: 'Tap Here to Send the Message', postPaymentBackBtn: '⬅️ Made a mistake / want to change payment method',
+        }
+    };
+
+    function t(key, ...args) {
+        const entry = (I18N[currentLang] && I18N[currentLang][key] !== undefined) ? I18N[currentLang][key] : I18N.he[key];
+        return typeof entry === 'function' ? entry(...args) : entry;
+    }
+
+    function applyStaticTranslations() {
+        document.documentElement.lang = currentLang === 'he' ? 'he' : 'en';
+        document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (I18N.he[key] !== undefined) el.textContent = t(key);
+        });
+        document.querySelectorAll('[data-i18n-html]').forEach(el => {
+            const key = el.getAttribute('data-i18n-html');
+            if (I18N.he[key] !== undefined) el.innerHTML = t(key);
+        });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            if (I18N.he[key] !== undefined) el.placeholder = t(key);
+        });
+
+        cats.forEach(c => {
+            const titleEl = document.getElementById(`title-${c}`);
+            if (titleEl) titleEl.textContent = `${catIcons[c]} ${catNamesPlural[currentLang][c]}`;
+        });
+
+        const langBtn = document.getElementById('lang-toggle-btn');
+        if (langBtn) langBtn.textContent = currentLang === 'he' ? '🌐 English' : '🌐 עברית';
+    }
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('skiLang', lang);
+        applyStaticTranslations();
+        render();
+        updateUI();
+        renderReviewsPublic();
+        renderAdminReviews();
+        renderAdminList();
+        renderOrderHistory();
+    }
+
+    function toggleLanguage() {
+        setLanguage(currentLang === 'he' ? 'en' : 'he');
+    }
     let touchStartX = 0;
     let touchEndX = 0;
 
@@ -649,7 +885,7 @@
             cloudLoadFailed = true;
             const statusEl = document.getElementById('cloud-status');
             if (statusEl) statusEl.style.display = 'block';
-            showToast("לא הצלחנו לטעון את נתוני הזמינות מהענן. חלק מהמידע על תפוסה עלול להיות לא מעודכן.", "error", 6000);
+            showToast(t('cloudLoadErrorToast'), "error", 6000);
         } finally {
             const loadingEl = document.getElementById('availability-loading');
             if (loadingEl) loadingEl.style.display = 'none';
@@ -658,7 +894,7 @@
 
     async function saveBlockedDatesToCloud(newBlocksArray) {
         const submitBtn = document.getElementById('admin-submit-btn');
-        if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = "שומר..."; }
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = t("savingText"); }
         try {
             const res = await fetch(API_BASE, {
                 method: 'PUT',
@@ -673,18 +909,18 @@
                 render();
                 updateUI();
                 renderAdminList();
-                showToast("הפעולה בוצעה בהצלחה!", "success");
+                showToast(t('actionSuccessToast'), "success");
             } else if (res.status === 401) {
                 isAdminAuthenticated = false;
                 adminPassword = "";
-                showToast("סיסמת מנהל שגויה. נסה להיכנס לפאנל הניהול שוב.", "error");
+                showToast(t('adminWrongPasswordToast'), "error");
             } else {
-                showToast("תקלה בעדכון השרת. נסה שוב בעוד רגע.", "error");
+                showToast(t('serverUpdateErrorToast'), "error");
             }
         } catch (e) {
-            showToast("תקלה ברשת בשמירה לענן. נסה שוב בעוד רגע.", "error");
+            showToast(t('networkSaveErrorToast'), "error");
         } finally {
-            if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = "🔒 חסום מוצר זה"; }
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = t("blockThisProductBtn"); }
         }
     }
 
@@ -777,7 +1013,7 @@
 
         if (blockData) {
             if (cardEl) cardEl.classList.add('size-blocked');
-            btnEl.innerText = `❌ מידה ${selectedSize} תפוסה בתאריכים אלו`;
+            btnEl.innerText = t('sizeTaken', selectedSize);
             btnEl.className = "btn-select disabled-btn";
             btnEl.disabled = true;
         } else {
@@ -785,10 +1021,10 @@
             btnEl.disabled = false;
             const isThisSizeInCart = cartItems.some(i => i.id === id && i.size === selectedSize);
             if (isThisSizeInCart) {
-                btnEl.innerText = "✅ במידה זו בסל ההזמנות";
+                btnEl.innerText = t('inCartLabel');
                 btnEl.className = "btn-select in-cart";
             } else {
-                btnEl.innerText = "הוסף לסל";
+                btnEl.innerText = t('addToCart');
                 btnEl.className = "btn-select";
             }
         }
@@ -820,31 +1056,31 @@
                 <div style="position:relative; width:100%; height:100%;">
                     <img id="img-${p.id}" 
                         src="${p.images[0]}" 
-                        alt="${p.name}"
+                        alt="${translateProductName(p)}"
                         onclick="openLightbox('${p.images[0]}')"
                         ontouchstart="handleTouchStart(event)"
                         ontouchend="handleTouchEnd(event, '${p.id}')">
                     <button onclick="prevImage('${p.id}')" class="image-nav-btn" style="left:5px;">‹</button>
                     <button onclick="nextImage('${p.id}')" class="image-nav-btn" style="right:5px;">›</button>
                 </div>
-            ` : `<img src="${p.image}" alt="${p.name}" onclick="openLightbox('${p.image}')" title="לחץ להגדלה">`;
+            ` : `<img src="${p.image}" alt="${translateProductName(p)}" onclick="openLightbox('${p.image}')" title="לחץ להגדלה">`;
 
             targetGrid.innerHTML += `
                 <div class="card ${blockData ? 'size-blocked' : ''}" id="card-${p.id}">
                     <div class="img-container">
                         ${imageHTML}
                     </div>
-                    <h3>${p.name}</h3>
+                    <h3>${translateProductName(p)}</h3>
                     <div style="display:flex; justify-content:center; align-items:center; gap:8px; margin: 5px 0;">
-                        <span style="font-size:0.9rem; font-weight:bold;">מידה:</span>
+                        <span style="font-size:0.9rem; font-weight:bold;">${t('sizeLabel')}</span>
                         <select id="size-${p.id}" style="width:45%; margin:0;" onchange="onSizeChange('${p.id}')">
                             ${sizes[p.cat].map(s => `<option value="${s}">${s}</option>`).join('')}
                         </select>
-                        <span class="size-link" onclick="showSizeGuide('${p.gender}')">מידות?</span>
+                        <span class="size-link" onclick="showSizeGuide('${p.gender}')">${t('sizeGuideLink')}</span>
                     </div>
-                    <div style="color:var(--success); font-weight:bold; margin:8px 0;">₪${p.price} לשבוע</div>
+                    <div style="color:var(--success); font-weight:bold; margin:8px 0;">₪${p.price} ${t('perWeek')}</div>
                     <button id="btn-${p.id}" ${blockData ? 'disabled' : ''} class="btn-select ${blockData ? 'disabled-btn' : (isInCart ? 'in-cart' : '')}" onclick="toggleCartItem('${p.id}')">
-                        ${blockData ? `❌ מידה ${defaultSize} תפוסה` : (isInCart ? '✅ במידה זו בסל' : 'הוסף לסל')}
+                        ${blockData ? t('sizeTaken', defaultSize) : (isInCart ? t('inCartLabel') : t('addToCart'))}
                     </button>
                 </div>`;
         });
@@ -873,11 +1109,11 @@
         const body = document.getElementById('bundle-wizard-body');
         body.innerHTML = `
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <label><b>עבור מי החבילה?</b></label>
-                <span class="size-link" style="font-size:0.95rem;" onclick="showSizeGuide()">📏 מחשבון מידות חכם</span>
+                <label><b>${t('bundleWizardFor')}</b></label>
+                <span class="size-link" style="font-size:0.95rem;" onclick="showSizeGuide()">${t('smartCalcLink')}</span>
             </div>
             <select id="bundle-gen" style="width:100%; margin-bottom:10px;" onchange="updateWizardOptions()">
-                ${genders.map(g => `<option value="${g}">${g}</option>`).join('')}
+                ${genders.map(g => `<option value="${g}">${genderNames[currentLang][g] || g}</option>`).join('')}
             </select>
             <hr>
             <div id="wizard-items" style="text-align: right;"></div>`;
@@ -889,10 +1125,10 @@
         const g = document.getElementById('bundle-gen').value;
         document.getElementById('wizard-items').innerHTML = cats.map(c => `
             <div style="margin-top:12px; background:#f9f9f9; padding:10px; border-radius:8px; border:1px solid #eee;">
-                <label style="display:block; margin-bottom:5px;"><b>${c}:</b></label>
+                <label style="display:block; margin-bottom:5px;"><b>${catIcons[c]} ${catNames[currentLang][c] || c}:</b></label>
                 <div style="display:flex; gap:10px;">
                     <select id="wb-${c}" style="flex:2; margin:0;" onchange="checkWizardSelectionValidity()">
-                        ${products.filter(p => p.cat === c && p.gender === g).map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
+                        ${products.filter(p => p.cat === c && p.gender === g).map(p => `<option value="${p.id}">${translateProductName(p)}</option>`).join('')}
                     </select>
                     <select id="wbs-${c}" style="flex:1; margin:0;" onchange="checkWizardSelectionValidity()">
                         ${sizes[c].map(s => `<option value="${s}">${s}</option>`).join('')}
@@ -922,7 +1158,7 @@
                 if(blockData) {
                     const foundProd = products.find(p => p.id === pId);
                     blockedItemInfo = { 
-                        name: foundProd ? foundProd.name : c, 
+                        name: foundProd ? translateProductName(foundProd) : (catNames[currentLang][c] || c), 
                         size: size
                     };
                     break; 
@@ -931,11 +1167,13 @@
         }
 
         if(blockedItemInfo) {
-            submitBtn.innerText = `❌ תפוס! ${blockedItemInfo.name} (${blockedItemInfo.size}) חסום בתאריכים אלו`;
+            submitBtn.innerText = currentLang === 'he'
+                ? `❌ תפוס! ${blockedItemInfo.name} (${blockedItemInfo.size}) חסום בתאריכים אלו`
+                : `❌ Unavailable! ${blockedItemInfo.name} (${blockedItemInfo.size}) is blocked for these dates`;
             submitBtn.className = "btn-select disabled-btn";
             submitBtn.disabled = true;
         } else {
-            submitBtn.innerText = "אישור והוספת החבילה לסל";
+            submitBtn.innerText = t('bundleConfirmBtn');
             submitBtn.className = "btn-select";
             submitBtn.style.background = "var(--success)";
             submitBtn.disabled = false;
@@ -955,13 +1193,13 @@
         });
 
         if (anyBlocked) {
-            showToast("אחד הפריטים תפוס בתאריכים שבחרת. אנא שנה מוצר או מידה.", "error");
+            showToast(t('bundleItemBlockedToast'), "error");
             return;
         }
 
         cartBundles.push(bundle);
         updateUI(); closePopups();
-        showToast("החבילה נוספה לסל!", "success");
+        showToast(t('bundleAddedToast'), "success");
     }
 
     function showSizeGuide(optionalGender) {
@@ -985,7 +1223,7 @@
         const resultBox = document.getElementById('calc-result-box');
 
         if(!height || !weight || height <= 0 || weight <= 0) {
-            showToast("אנא הזינו ערכי גובה ומשקל תקינים.", "error");
+            showToast(t('invalidHeightWeightToast'), "error");
             return;
         }
 
@@ -1023,7 +1261,7 @@
         const sizeOrder = { 'S': 1, 'M': 2, 'L': 3, 'XL': 4 };
         let finalSize = sizeOrder[sizeByHeight] >= sizeOrder[sizeByWeight] ? sizeByHeight : sizeByWeight;
 
-        resultBox.innerHTML = `המידה המומלצת עבורך: <span style="font-size:1.6rem; color:var(--primary); font-weight:900;">${finalSize}</span>`;
+        resultBox.innerHTML = `${t('recommendedSize')} <span style="font-size:1.6rem; color:var(--primary); font-weight:900;">${finalSize}</span>`;
         resultBox.style.display = "block";
     }
 
@@ -1039,9 +1277,9 @@
         if (s && e && e >= s) {
             const diffDays = Math.ceil(Math.abs(new Date(e) - new Date(s)) / (1000 * 60 * 60 * 24));
             weeks = Math.max(1, Math.ceil(diffDays / 7));
-            document.getElementById('duration-info').innerText = `תקופת חישוב: ${weeks} שבועות`;
+            document.getElementById('duration-info').innerText = currentLang === 'he' ? `תקופת חישוב: ${weeks} שבועות` : `Calculated period: ${weeks} week${weeks > 1 ? 's' : ''}`;
         } else {
-            document.getElementById('duration-info').innerText = "נא לבחור תאריכים";
+            document.getElementById('duration-info').innerText = t('pleaseSelectDates');
         }
 
         const listContainer = document.getElementById('cart-list');
@@ -1050,20 +1288,25 @@
         let htmlContent = '';
 
         if(cartItems.length === 0 && cartBundles.length === 0) {
-            htmlContent = '<p style="text-align:center; padding:20px; color:#666;">הסל שלך ריק כרגע...</p>';
+            htmlContent = `<p style="text-align:center; padding:20px; color:#666;">${t('cartEmpty')}</p>`;
             if (checkoutArea) checkoutArea.style.display = 'none';
         } else {
             if (checkoutArea) checkoutArea.style.display = 'block';
             cartBundles.forEach((b, idx) => {
                 total += 350 * weeks;
+                const translatedGender = genderNames[currentLang][b.gender] || b.gender;
+                const bundleLabel = currentLang === 'he' ? `🎁 חבילת קומפלט - ${translatedGender}` : `🎁 Complete Bundle - ${translatedGender}`;
                 htmlContent += `
                     <div class="cart-bundle-item">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <b>🎁 חבילת קומפלט - ${b.gender}</b>
+                            <b>${bundleLabel}</b>
                             <span class="remove-btn" onclick="removeBundle(${idx})">×</span>
                         </div>
                         <div style="font-size:0.85rem; color:#555; margin-top:5px; line-height:1.4;">
-                            ${b.items.map(item => `${item.name} (${item.size})`).join(' • ')}
+                            ${b.items.map(item => {
+                                const prod = products.find(p => p.id === item.id);
+                                return `${prod ? translateProductName(prod) : item.name} (${item.size})`;
+                            }).join(' • ')}
                         </div>
                     </div>`;
             });
@@ -1075,8 +1318,8 @@
                     htmlContent += `
                         <div class="cart-item">
                             <div>
-                                <div style="font-weight:bold;">${productData.name}</div>
-                                <div style="font-size:0.8rem; color:#666;">מידה: ${item.size}</div>
+                                <div style="font-weight:bold;">${translateProductName(productData)}</div>
+                                <div style="font-size:0.8rem; color:#666;">${t('sizeLabel')} ${item.size}</div>
                             </div>
                             <span class="remove-btn" onclick="removeSpecificItem('${item.id}', '${item.size}')">×</span>
                         </div>`;
@@ -1096,8 +1339,8 @@
         const eInput = document.getElementById('end-date');
         const finalPrice = document.getElementById('final-price').innerText;
 
-        if(!nameInput.value.trim()) { showToast("נא להזין שם מלא להזמנה לפני התשלום", "error"); return; }
-        if(!sInput.value || !eInput.value) { showToast("נא לבחור תאריכי השכרה בראש העמוד", "error"); return; }
+        if(!nameInput.value.trim()) { showToast(t('nameRequiredForOrderToast'), "error"); return; }
+        if(!sInput.value || !eInput.value) { showToast(t('datesRequiredToast'), "error"); return; }
 
         let msg = `שלום, אני מעוניין להזמין ציוד סקי (משולם ב-${method === 'bit' ? 'bit' : 'PayBox'} בסך ₪${finalPrice}):\n`;
         msg += `שם הלקוח: ${nameInput.value}\n`;
@@ -1148,15 +1391,15 @@
         const bodyEl = document.getElementById('paymentInstructionsBody');
         if (bodyEl) {
             bodyEl.innerHTML = wasCopied ? `
-                <p style="font-size:1.4rem; margin:0 0 15px 0;">✅ מספר הטלפון הועתק!</p>
+                <p style="font-size:1.4rem; margin:0 0 15px 0;">${t('passwordCopiedText')}</p>
                 <div style="font-size:1.6rem; font-weight:bold; color:var(--primary); background:#f0f4ff; padding:10px; border-radius:10px; margin-bottom:15px; direction:ltr;">${MERCHANT_PHONE}</div>
-                <p style="font-size:1.15rem; line-height:1.6;">עברו לאפליקציית <b>${appName}</b> והעבירו <b style="color:var(--success);">₪${finalPrice}</b> למספר שהועתק.</p>
-                <p style="font-size:1rem; color:#666; margin-top:15px;">לאחר ההעברה, חזרו לכאן ולחצו על כפתור הוואטסאפ הירוק כדי לשלוח לנו את פרטי ההזמנה.</p>
+                <p style="font-size:1.15rem; line-height:1.6;">${t('transferToAppText', appName, finalPrice)}</p>
+                <p style="font-size:1rem; color:#666; margin-top:15px;">${t('afterTransferText')}</p>
             ` : `
-                <p style="font-size:1.3rem; margin:0 0 15px 0;">📋 יש להעביר ידנית</p>
+                <p style="font-size:1.3rem; margin:0 0 15px 0;">${t('manualTransferText')}</p>
                 <div style="font-size:1.6rem; font-weight:bold; color:var(--primary); background:#f0f4ff; padding:10px; border-radius:10px; margin-bottom:15px; direction:ltr;">${MERCHANT_PHONE}</div>
-                <p style="font-size:1.15rem; line-height:1.6;">היכנסו לאפליקציית <b>${appName}</b> והעבירו <b style="color:var(--success);">₪${finalPrice}</b> למספר שמופיע למעלה.</p>
-                <p style="font-size:1rem; color:#666; margin-top:15px;">לאחר ההעברה, חזרו לכאן ולחצו על כפתור הוואטסאפ הירוק כדי לשלוח לנו את פרטי ההזמנה.</p>
+                <p style="font-size:1.15rem; line-height:1.6;">${t('manualTransferInstructionText', appName, finalPrice)}</p>
+                <p style="font-size:1rem; color:#666; margin-top:15px;">${t('afterTransferText')}</p>
             `;
         }
         showModal('paymentInstructionsModal');
@@ -1167,10 +1410,10 @@
         if (container) {
             container.innerHTML = `
                 <div style="padding:15px; background:#fff3cd; border:2px dashed #ffc107; border-radius:10px; text-align:center; margin:15px auto; width: 90%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center;">
-                    <h3 style="color:#856404; margin:0 auto 5px auto; text-align: center;">שלב אחרון לסיום! 🎉</h3>
-                    <p style="font-size:0.92rem; margin: 0 auto 12px auto; text-align: center;">אם ביצעתם את ההעברה באפליקציה, לחצו כעת על הכפתור כדי לשלוח אלינו את הפירוט האוטומטי ולשריין את המלאי:</p>
-                    <a href="${whatsappUrl}" target="_blank" class="wa-btn" style="font-size:1.1rem; padding:12px; background-color:#25d366; width: 90%; margin: 5px auto;">לחצו כאן לשליחת ההודעה</a>
-                    <button onclick="cancelPostPaymentView()" class="back-btn">⬅️ טעיתי / רוצה לשנות אמצעי תשלום</button>
+                    <h3 style="color:#856404; margin:0 auto 5px auto; text-align: center;">${t('postPaymentTitle')}</h3>
+                    <p style="font-size:0.92rem; margin: 0 auto 12px auto; text-align: center;">${t('postPaymentHint')}</p>
+                    <a href="${whatsappUrl}" target="_blank" class="wa-btn" style="font-size:1.1rem; padding:12px; background-color:#25d366; width: 90%; margin: 5px auto;">${t('postPaymentSendBtn')}</a>
+                    <button onclick="cancelPostPaymentView()" class="back-btn">${t('postPaymentBackBtn')}</button>
                 </div>
             `;
         }
@@ -1212,11 +1455,11 @@
         const pass = input ? input.value : "";
 
         if (!pass) {
-            if (errorEl) { errorEl.innerText = "נא להזין סיסמה."; errorEl.style.display = "block"; }
+            if (errorEl) { errorEl.innerText = t('adminPasswordRequiredText'); errorEl.style.display = "block"; }
             return;
         }
 
-        if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = "בודק..."; }
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = t('checkingText'); }
         if (errorEl) errorEl.style.display = "none";
 
         try {
@@ -1225,7 +1468,7 @@
                 headers: { "X-Admin-Password": pass }
             });
             if (!res.ok) {
-                if (errorEl) { errorEl.innerText = "סיסמה שגויה, נסה שוב."; errorEl.style.display = "block"; }
+                if (errorEl) { errorEl.innerText = t('wrongPasswordInlineText'); errorEl.style.display = "block"; }
                 if (input) { input.value = ""; input.focus(); }
                 return;
             }
@@ -1234,16 +1477,16 @@
             closePopups();
             populateAndShowAdminPanel();
         } catch (e) {
-            if (errorEl) { errorEl.innerText = "שגיאת רשת, נסה שוב."; errorEl.style.display = "block"; }
+            if (errorEl) { errorEl.innerText = t('networkErrorToast'); errorEl.style.display = "block"; }
         } finally {
-            if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = "כניסה"; }
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = t('adminLoginBtn'); }
         }
     }
 
     function populateAndShowAdminPanel() {
         
         const pSelect = document.getElementById('admin-prod-select');
-        pSelect.innerHTML = products.map(p => `<option value="${p.id}">${p.name} (${p.gender})</option>`).join('');
+        pSelect.innerHTML = products.map(p => `<option value="${p.id}">${translateProductName(p)} (${genderNames[currentLang][p.gender] || p.gender})</option>`).join('');
         
         pSelect.onchange = () => {
             const prod = products.find(p => p.id === pSelect.value);
@@ -1262,8 +1505,8 @@
         const end = document.getElementById('admin-end').value;
         const prodName = products.find(p => p.id === pId).name;
 
-        if (!start || !end) { showToast("יש לבחור תאריכים לחסימה", "error"); return; }
-        if (end < start) { showToast("תאריך הסיום לא יכול להיות לפני תאריך ההתחלה", "error"); return; }
+        if (!start || !end) { showToast(t('blockDatesRequiredToast'), "error"); return; }
+        if (end < start) { showToast(t('blockEndBeforeStartToast'), "error"); return; }
 
         // רענון נתונים טרי מהענן לפני שמירה, כדי להקטין סיכוי להתנגשות עם עדכון של מנהל אחר
         try {
@@ -1283,7 +1526,7 @@
     }
 
     function removeBlock(id) {
-        if (confirm("האם לשחרר חסימה זו ולהחזיר את המוצר למלאי לכולם?")) {
+        if (confirm(t('confirmReleaseBlockText'))) {
             const updatedBlocks = blockedDatesFromServer.filter(b => b.id !== id);
             saveBlockedDatesToCloud(updatedBlocks);
         }
@@ -1295,18 +1538,20 @@
         list.innerHTML = "";
         
         if(blockedDatesFromServer.length === 0) {
-            list.innerHTML = "<p style='color:#666;'>אין מוצרים חסומים כרגע.</p>";
+            list.innerHTML = `<p style='color:#666;'>${t('noBlocksYetText')}</p>`;
             return;
         }
 
         blockedDatesFromServer.forEach(b => {
+            const prod = products.find(p => p.id === b.productId);
+            const displayName = prod ? translateProductName(prod) : b.productName;
             list.innerHTML += `
                 <div style="background:#f8d7da; padding: 8px; margin-bottom:5px; border-radius:5px; display:flex; justify-content:space-between; align-items:center;">
                     <div>
-                        <b>${b.productName} (${b.size})</b><br>
-                        תאריכים: ${b.startDate} עד ${b.endDate}
+                        <b>${displayName} (${b.size})</b><br>
+                        ${t('datesLabel')} ${b.startDate} - ${b.endDate}
                     </div>
-                    <button onclick="removeBlock(${b.id})" style="background:var(--danger); color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">שחרר</button>
+                    <button onclick="removeBlock(${b.id})" style="background:var(--danger); color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">${t('releaseBtn')}</button>
                 </div>`;
         });
     }
@@ -1359,7 +1604,7 @@
 
         // הממוצע הכללי תמיד מחושב מכל הביקורות, בלי קשר לסינון התצוגה
         if (allVisible.length === 0) {
-            listEl.innerHTML = "<p style='text-align:center; color:#666;'>עדיין אין ביקורות - היו הראשונים לכתוב!</p>";
+            listEl.innerHTML = `<p style='text-align:center; color:#666;'>${t('noReviewsYet')}</p>`;
             if (summaryEl) summaryEl.style.display = 'none';
             return;
         }
@@ -1370,7 +1615,7 @@
             summaryEl.innerHTML = `
                 <div class="avg-num">${avg.toFixed(1)}</div>
                 <div class="star-display">${starsToDisplay(Math.round(avg))}</div>
-                <div style="font-size:0.85rem; color:#777; margin-top:4px;">מבוסס על ${allVisible.length} ביקורות</div>
+                <div style="font-size:0.85rem; color:#777; margin-top:4px;">${t('basedOn', allVisible.length)}</div>
             `;
         }
 
@@ -1390,13 +1635,13 @@
         }
 
         if (filteredReviews.length === 0) {
-            listEl.innerHTML = "<p style='text-align:center; color:#666;'>אין ביקורות התואמות את הסינון שנבחר.</p>";
+            listEl.innerHTML = `<p style='text-align:center; color:#666;'>${t('noReviewsMatchFilter')}</p>`;
         } else {
             listEl.innerHTML = filteredReviews.map(r => `
                 <div class="review-card">
                     <div class="review-header">
                         <span class="review-name">${r.name}</span>
-                        <span class="review-date">${new Date(r.date).toLocaleDateString('he-IL')}</span>
+                        <span class="review-date">${new Date(r.date).toLocaleDateString(currentLang === 'he' ? 'he-IL' : 'en-US')}</span>
                     </div>
                     <div class="star-display">${starsToDisplay(r.stars)}</div>
                     ${r.text ? `<div class="review-text">${r.text}</div>` : ''}
@@ -1410,10 +1655,10 @@
         const text = document.getElementById('review-text').value.trim();
         const submitBtn = document.getElementById('review-submit-btn');
 
-        if (!name) { showToast("נא להזין שם.", "error"); return; }
-        if (!selectedReviewStars) { showToast("נא לבחור דירוג בכוכבים.", "error"); return; }
+        if (!name) { showToast(t('reviewNameRequiredToast'), "error"); return; }
+        if (!selectedReviewStars) { showToast(t('reviewStarsRequiredToast'), "error"); return; }
 
-        if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = "שולח..."; }
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = t("sendingText"); }
         try {
             const res = await fetch(API_BASE, {
                 method: 'PUT',
@@ -1429,14 +1674,14 @@
                 highlightStars(0);
                 renderReviewsPublic();
                 renderAdminReviews();
-                showToast("תודה על הביקורת!", "success");
+                showToast(t('reviewThanksToast'), "success");
             } else {
-                showToast("תקלה בשליחת הביקורת. נסה שוב.", "error");
+                showToast(t('reviewSendErrorToast'), "error");
             }
         } catch (e) {
-            showToast("שגיאת רשת. נסה שוב.", "error");
+            showToast(t('networkErrorToast'), "error");
         } finally {
-            if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = "שלח ביקורת"; }
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = t("submitReviewBtn"); }
         }
     }
 
@@ -1446,7 +1691,7 @@
         list.innerHTML = "";
 
         if (reviewsFromServer.length === 0) {
-            list.innerHTML = "<p style='color:#666;'>עדיין אין ביקורות.</p>";
+            list.innerHTML = `<p style='color:#666;'>${t('noReviewsAdminYetText')}</p>`;
             return;
         }
 
@@ -1457,11 +1702,11 @@
                     <div class="arow">
                         <div>
                             <b>${r.name}</b> - <span class="star-display" style="font-size:0.9rem;">${starsToDisplay(r.stars)}</span>
-                            ${r.deleted ? '<span style="color:var(--danger); font-size:0.8rem;"> (נמחקה)</span>' : ''}
+                            ${r.deleted ? `<span style="color:var(--danger); font-size:0.8rem;"> ${t('deletedTagText')}</span>` : ''}
                         </div>
                         ${r.deleted
-                            ? `<button class="a-btn restore" onclick="setReviewStatus(${r.id}, false)">שחזר</button>`
-                            : `<button class="a-btn delete" onclick="setReviewStatus(${r.id}, true)">מחק</button>`}
+                            ? `<button class="a-btn restore" onclick="setReviewStatus(${r.id}, false)">${t('restoreBtn')}</button>`
+                            : `<button class="a-btn delete" onclick="setReviewStatus(${r.id}, true)">${t('deleteBtn')}</button>`}
                     </div>
                     ${r.text ? `<div class="review-text" style="margin-top:6px;">${r.text}</div>` : ''}
                 </div>`;
@@ -1483,16 +1728,16 @@
                 if (r) r.deleted = deleted;
                 renderAdminReviews();
                 renderReviewsPublic();
-                showToast(deleted ? "הביקורת נמחקה." : "הביקורת שוחזרה.", "success");
+                showToast(deleted ? t('reviewDeletedToast') : t('reviewRestoredToast'), "success");
             } else if (res.status === 401) {
                 isAdminAuthenticated = false;
                 adminPassword = "";
-                showToast("סיסמת מנהל שגויה. נסה להיכנס לפאנל הניהול שוב.", "error");
+                showToast(t('adminWrongPasswordToast'), "error");
             } else {
-                showToast("תקלה בעדכון הביקורת.", "error");
+                showToast(t('reviewUpdateErrorToast'), "error");
             }
         } catch (e) {
-            showToast("שגיאת רשת. נסה שוב.", "error");
+            showToast(t('networkErrorToast'), "error");
         }
     }
 
@@ -1536,16 +1781,16 @@
         const history = getOrderHistory();
 
         if (history.length === 0) {
-            listEl.innerHTML = "<p style='text-align:center; color:#666;'>עדיין לא ביצעת הזמנות דרך האתר הזה.</p>";
+            listEl.innerHTML = `<p style='text-align:center; color:#666;'>${t('noOrdersYet')}</p>`;
             return;
         }
 
         listEl.innerHTML = history.map(o => {
             const itemsText = [
-                ...o.bundles.map(b => `🎁 חבילת קומפלט - ${b.gender}`),
+                ...o.bundles.map(b => currentLang === 'he' ? `🎁 חבילת קומפלט - ${genderNames[currentLang][b.gender] || b.gender}` : `🎁 Complete Bundle - ${genderNames[currentLang][b.gender] || b.gender}`),
                 ...o.items.map(i => {
                     const p = products.find(x => x.id === i.id);
-                    return p ? `${p.name} (${i.size})` : null;
+                    return p ? `${translateProductName(p)} (${i.size})` : null;
                 }).filter(Boolean)
             ].join(' • ');
 
@@ -1553,14 +1798,14 @@
                 <div class="order-card">
                     <div class="order-header">
                         <b>${o.customerName}</b>
-                        <span class="order-date">${new Date(o.date).toLocaleDateString('he-IL')}</span>
+                        <span class="order-date">${new Date(o.date).toLocaleDateString(currentLang === 'he' ? 'he-IL' : 'en-US')}</span>
                     </div>
-                    <div style="font-size:0.85rem; color:#666;">תאריכי השכרה: ${o.startDate} עד ${o.endDate}</div>
-                    <div class="order-items">${itemsText || 'אין פרטי פריטים'}</div>
-                    <div class="order-total">סה"כ: ₪${o.totalPrice}</div>
+                    <div style="font-size:0.85rem; color:#666;">${t('rentalDatesLabel')} ${o.startDate} - ${o.endDate}</div>
+                    <div class="order-items">${itemsText || t('emptyItemsText')}</div>
+                    <div class="order-total">${t('totalLabel')} ₪${o.totalPrice}</div>
                     <div class="order-actions">
-                        <button style="background:var(--primary); color:white;" onclick="reorderFromHistory(${o.id})">הזמן שוב</button>
-                        <button style="background:#eee; color:#555;" onclick="removeOrderFromHistory(${o.id})">מחק מההיסטוריה</button>
+                        <button style="background:var(--primary); color:white;" onclick="reorderFromHistory(${o.id})">${t('reorderBtn')}</button>
+                        <button style="background:#eee; color:#555;" onclick="removeOrderFromHistory(${o.id})">${t('removeFromHistoryBtn')}</button>
                     </div>
                 </div>`;
         }).join('');
@@ -1583,7 +1828,7 @@
             localStorage.setItem('skiStartDate', order.startDate);
             localStorage.setItem('skiEndDate', order.endDate);
         } else {
-            showToast("תאריכי ההזמנה הקודמת כבר עברו - נא לבחור תאריכים חדשים.", "info", 5000);
+            showToast(t('oldOrderDatesToast'), "info", 5000);
         }
 
         checkCartValidity();
@@ -1591,7 +1836,7 @@
         render();
         closePopups();
         showModal('cartModal');
-        showToast("הפריטים מההזמנה הקודמת נוספו לסל. בדוק זמינות במידות ותאריכים.", "success", 5000);
+        showToast(t('reorderAddedToast'), "success", 5000);
     }
 
     function removeOrderFromHistory(orderId) {
@@ -1632,6 +1877,7 @@
         if (diff > 0) { nextImage(id); } else { prevImage(id); }
     }
 
+    applyStaticTranslations();
     render(); updateUI();
 
     // רישום Service Worker - נדרש כדי שכפתור התקנת האפליקציה יופיע (בעיקר באנדרואיד/כרום)
