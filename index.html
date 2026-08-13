@@ -856,6 +856,13 @@
         if (helmet) helmet.image = realHelmetImages[g];
     });
 
+    // תמונות אמיתיות לגוגלס (דגם ראשון, גברים ונשים)
+    const realGogglesImages = { 'גברים': 'images/goggles-men-1.png', 'נשים': 'images/goggles-women-1.png' };
+    Object.keys(realGogglesImages).forEach(g => {
+        const goggles = products.find(p => p.id === `גוגלס-${g}-1`);
+        if (goggles) goggles.image = realGogglesImages[g];
+    });
+
     let cartItems = JSON.parse(localStorage.getItem('skiCartItems')) || [];
     let cartBundles = JSON.parse(localStorage.getItem('skiCartBundles')) || [];
     let blockedDatesFromServer = []; 
