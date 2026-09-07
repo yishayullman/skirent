@@ -869,6 +869,11 @@
     if (gogglesKids1) gogglesKids1.image = 'images/goggles-kids-1.png';
     const gogglesMen2 = products.find(p => p.id === 'גוגלס-גברים-2');
     if (gogglesMen2) gogglesMen2.image = 'images/goggles-men-2.png';
+    const gogglesWomen2 = products.find(p => p.id === 'גוגלס-נשים-2');
+    if (gogglesWomen2) gogglesWomen2.image = 'images/goggles-women-2.png';
+
+    // דגם שלישי של גוגלס גברים - נוסף במפורש כי יש תמונה אמיתית שלישית
+    products.push({ id: 'גוגלס-גברים-3', name: 'גוגלס גברים 3', cat: 'גוגלס', gender: 'גברים', price: prices['גוגלס'], image: 'images/goggles-men-3.png' });
 
     // תמונה אמיתית למכנס ילדים (דגם ראשון) - אותה תמונה כמו מעיל ילדים 1, כי הם נמכרים בנפרד
     const pantsKids1 = products.find(p => p.id === 'מכנס-ילדים-1');
