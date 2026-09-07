@@ -864,6 +864,12 @@
         if (goggles) goggles.image = realGogglesImages[g];
     });
 
+    // תמונות אמיתיות נוספות לגוגלס - ילדים (דגם 1) וגברים (דגם 2)
+    const gogglesKids1 = products.find(p => p.id === 'גוגלס-ילדים-1');
+    if (gogglesKids1) gogglesKids1.image = 'images/goggles-kids-1.png';
+    const gogglesMen2 = products.find(p => p.id === 'גוגלס-גברים-2');
+    if (gogglesMen2) gogglesMen2.image = 'images/goggles-men-2.png';
+
     // תמונה אמיתית למכנס ילדים (דגם ראשון) - אותה תמונה כמו מעיל ילדים 1, כי הם נמכרים בנפרד
     const pantsKids1 = products.find(p => p.id === 'מכנס-ילדים-1');
     if (pantsKids1) pantsKids1.image = 'images/set-kids-1.png';
