@@ -886,6 +886,10 @@
     const pantsKids1 = products.find(p => p.id === 'מכנס-ילדים-1');
     if (pantsKids1) pantsKids1.image = 'images/set-kids-1.png';
 
+    // מכנס גברים 1 - החלטתי לשייך אותו לגברים לפי הגזרה הפשוטה והשחורה
+    const pantsMen1 = products.find(p => p.id === 'מכנס-גברים-1');
+    if (pantsMen1) pantsMen1.image = 'images/pants-men-1.png';
+
     let cartItems = JSON.parse(localStorage.getItem('skiCartItems')) || [];
     let cartBundles = JSON.parse(localStorage.getItem('skiCartBundles')) || [];
     let blockedDatesFromServer = []; 
