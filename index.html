@@ -875,6 +875,13 @@
     // דגם שלישי של גוגלס גברים - נוסף במפורש כי יש תמונה אמיתית שלישית
     products.push({ id: 'גוגלס-גברים-3', name: 'גוגלס גברים 3', cat: 'גוגלס', gender: 'גברים', price: prices['גוגלס'], image: 'images/goggles-men-3.png' });
 
+    // תמונות אמיתיות לכפפות (דגם ראשון בכל מגדר)
+    const realGlovesImages = { 'גברים': 'images/gloves-men-1.png', 'נשים': 'images/gloves-women-1.png' };
+    Object.keys(realGlovesImages).forEach(g => {
+        const gloves = products.find(p => p.id === `כפפות-${g}-1`);
+        if (gloves) gloves.image = realGlovesImages[g];
+    });
+
     // תמונה אמיתית למכנס ילדים (דגם ראשון) - אותה תמונה כמו מעיל ילדים 1, כי הם נמכרים בנפרד
     const pantsKids1 = products.find(p => p.id === 'מכנס-ילדים-1');
     if (pantsKids1) pantsKids1.image = 'images/set-kids-1.png';
