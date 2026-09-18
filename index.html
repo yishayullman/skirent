@@ -264,11 +264,21 @@
     </div>
 
     <div class="bundle-banner">
-        <h2 data-i18n="bundleTitle">⛷️ מבצע "קומפלט" שבועי משתלם</h2>
-        <p data-i18n="bundleDesc">מעיל + מכנס + קסדה + גוגלס + כפפות</p>
-        <div data-i18n="bundlePrice" style="font-size: 1.6rem; font-weight: bold; margin: 10px 0;">₪350 לשבוע בלבד</div>
-        <button data-i18n="bundleBtn" onclick="openBundleWizard()" style="background:white; color:var(--bundle); border:none; padding:12px 25px; border-radius:25px; font-weight:bold; font-size:1.05rem; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.15);">הרכב חבילת קומפלט בהתאמה אישית ✅</button>
+        <h2 data-i18n="bundleTitle">⛷️ מבצעי חבילות שבועיים משתלמים</h2>
+        <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center; margin-top:15px;">
+            <div style="background:rgba(255,255,255,0.15); border-radius:12px; padding:15px; flex:1; min-width:220px; max-width:280px;">
+                <p data-i18n="bundleDuoDesc" style="margin:0 0 8px 0; font-weight:bold;">מעיל + מכנס</p>
+                <div data-i18n="bundleDuoPrice" style="font-size: 1.4rem; font-weight: bold; margin: 5px 0;">₪200 לשבוע</div>
+                <button data-i18n="bundleDuoBtn" onclick="openBundleWizard('duo')" style="background:white; color:var(--bundle); border:none; padding:10px 20px; border-radius:25px; font-weight:bold; font-size:0.95rem; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.15); margin-top:8px;">הרכב חבילה זו ✅</button>
+            </div>
+            <div style="background:rgba(255,255,255,0.15); border-radius:12px; padding:15px; flex:1; min-width:220px; max-width:280px;">
+                <p data-i18n="bundleDesc" style="margin:0 0 8px 0; font-weight:bold;">מעיל + מכנס + קסדה + גוגלס + כפפות</p>
+                <div data-i18n="bundlePrice" style="font-size: 1.4rem; font-weight: bold; margin: 5px 0;">₪300 לשבוע</div>
+                <button data-i18n="bundleBtn" onclick="openBundleWizard('full')" style="background:white; color:var(--bundle); border:none; padding:10px 20px; border-radius:25px; font-weight:bold; font-size:0.95rem; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.15); margin-top:8px;">הרכב חבילת קומפלט ✅</button>
+            </div>
+        </div>
     </div>
+
 
     <div class="tools-section">
         <div style="display:flex; justify-content:center; align-items: center; gap:15px; flex-wrap:wrap; margin-bottom:15px;">
@@ -332,7 +342,7 @@
         </div>
         <div class="faq-item">
             <h4 data-i18n="faqQ3">מה היתרון של חבילת ה"קומפלט"?</h4>
-            <p data-i18n="faqA3">חבילת הקומפלט סוגרת לכם את כל הפינות במחיר מוזל ומשתלם במיוחד (350 ש"ח לשבוע) וכוללת את חמשת פריטי החובה: מעיל, מכנס, קסדה תקנית, כפפות אטומות ומשקפת גוגלס.</p>
+            <p data-i18n="faqA3">חבילת הקומפלט סוגרת לכם את כל הפינות במחיר מוזל ומשתלם במיוחד (300 ש"ח לשבוע) וכוללת את חמשת פריטי החובה: מעיל, מכנס, קסדה תקנית, כפפות אטומות ומשקפת גוגלס.</p>
         </div>
     </div>
 
@@ -405,7 +415,7 @@
 <div class="modal" id="bundleWizard">
     <div class="modal-header">
         <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
-        <h3 data-i18n="bundleWizardTitle">בחירת חבילת קומפלט</h3>
+        <h3 data-i18n="bundleWizardTitle">בחירת חבילה</h3>
     </div>
     <div class="modal-body" id="bundle-wizard-body"></div>
     <div style="padding: 15px; text-align: center;">
@@ -602,8 +612,9 @@
             headerTitle: 'skirent-il', headerSubtitle: 'השכרת ביגוד וציוד סקי פרימיום בגבעת שמואל והמרכז',
             navCart: 'הסל שלי', navReviews: 'ביקורות', navOrders: 'ההזמנות שלי', navContact: 'איסוף וקשר',
             aboutText: 'טסים לחופשת סקי בקרוב? ב-<strong>skirent-il</strong> תמצאו ציוד וביגוד סקי ברמה הגבוהה ביותר ולכל המשפחה. אנו מציעים חבילות "קומפלט" משתלמות או השכרה של פריטים בודדים. מודדים, אוספים בקלות מגבעת שמואל ויוצאים לחופשה בראש שקט ומוגן מהקור!',
-            bundleTitle: '⛷️ מבצע "קומפלט" שבועי משתלם', bundleDesc: 'מעיל + מכנס + קסדה + גוגלס + כפפות',
-            bundlePrice: '₪350 לשבוע בלבד', bundleBtn: 'הרכב חבילת קומפלט בהתאמה אישית ✅',
+            bundleTitle: '⛷️ מבצעי חבילות שבועיים משתלמים', bundleDesc: 'מעיל + מכנס + קסדה + גוגלס + כפפות',
+            bundlePrice: '₪300 לשבוע', bundleBtn: 'הרכב חבילת קומפלט ✅',
+            bundleDuoDesc: 'מעיל + מכנס', bundleDuoPrice: '₪200 לשבוע', bundleDuoBtn: 'הרכב חבילה זו ✅',
             fromDate: 'מתאריך:', toDate: 'עד תאריך:', pleaseSelectDates: 'נא לבחור תאריכים',
             loadingAvailability: '🔄 טוען נתוני זמינות עדכניים...',
             cloudError: '⚠️ לא ניתן כרגע לטעון את נתוני הזמינות מהענן. ייתכן שחלק מהמידע על מוצרים תפוסים לא יוצג. נסו לרענן את הדף, ואם הבעיה נמשכת - צרו איתנו קשר.',
@@ -618,7 +629,7 @@
             faqQ2: 'איך אדע איזו מידת ביגוד לבחור?',
             faqA2: 'פיתחנו עבורכם "מחשבון התאמת מידה חכם" הזמין בלחיצה מכל כרטיסיית פריט או באשף החבילות. בנוסף, בעת האיסוף אצלנו בגבעת שמואל תוכלו למדוד את הביגוד ולוודא התאמה מלאה ונוחות מקסימלית.',
             faqQ3: 'מה היתרון של חבילת ה"קומפלט"?',
-            faqA3: 'חבילת הקומפלט סוגרת לכם את כל הפינות במחיר מוזל ומשתלם במיוחד (350 ש"ח לשבוע) וכוללת את חמשת פריטי החובה: מעיל, מכנס, קסדה תקנית, כפפות אטומות ומשקפת גוגלס.',
+            faqA3: 'חבילת הקומפלט סוגרת לכם את כל הפינות במחיר מוזל ומשתלם במיוחד (300 ש"ח לשבוע) וכוללת את חמשת פריטי החובה: מעיל, מכנס, קסדה תקנית, כפפות אטומות ומשקפת גוגלס.',
             policyTitle: 'מדיניות ביטולים והחזרים',
             policy1: 'ביטול הזמנה עד 72 שעות לפני מועד האיסוף - החזר מלא.',
             policy2: 'ביטול בין 72-24 שעות לפני האיסוף - חיוב של 25% מסך ההזמנה.',
@@ -628,7 +639,7 @@
             adminPanelBtn: '⚙️ פאנל ניהול מלאי',
             cartTitle: 'הסל שלי', cartEmpty: 'הסל שלך ריק כרגע...', fullNameLabel: 'שם מלא להזמנה:',
             fullNamePlaceholder: 'הכנס שם מלא', totalToPay: 'סה"כ לתשלום:', payMethodsHint: 'לחצו על האפליקציה המועדפת לתשלום ושריון ההזמנה:',
-            bundleWizardTitle: 'בחירת חבילת קומפלט', bundleWizardFor: 'עבור מי החבילה?', smartCalcLink: '📏 מחשבון מידות חכם',
+            bundleWizardTitle: 'בחירת חבילה', bundleWizardFor: 'עבור מי החבילה?', smartCalcLink: '📏 מחשבון מידות חכם',
             bundleConfirmBtn: 'אישור והוספה לסל',
             sizeGuideTitle: '📏 מחשבון התאמת מידה חכם', sizeGuideDesc: 'הזינו את הנתונים שלכם והמערכת תחשב אוטומטית את המידה האידיאלית עבורכם לביגוד סקי נוח וחופשי.',
             sizeGuideFor: 'עבור מי הביגוד?', sizeGuideMan: 'גבר 🧔', sizeGuideWoman: 'אישה 👩', sizeGuideKid: 'ילד/ה 🧒',
@@ -682,8 +693,9 @@
             headerTitle: 'skirent-il', headerSubtitle: 'Premium ski gear & clothing rental in Givat Shmuel and central Israel',
             navCart: 'My Cart', navReviews: 'Reviews', navOrders: 'My Orders', navContact: 'Pickup & Contact',
             aboutText: 'Flying out for a ski trip soon? At <strong>skirent-il</strong> you\'ll find top-quality ski gear and clothing for the whole family. We offer great-value "complete" bundles or individual item rentals. Try things on, pick up easily in Givat Shmuel, and head off on vacation warm and worry-free!',
-            bundleTitle: '⛷️ Weekly "Complete" Bundle Deal', bundleDesc: 'Jacket + Pants + Helmet + Goggles + Gloves',
-            bundlePrice: '₪350 per week only', bundleBtn: 'Build Your Custom Complete Bundle ✅',
+            bundleTitle: '⛷️ Great Weekly Bundle Deals', bundleDesc: 'Jacket + Pants + Helmet + Goggles + Gloves',
+            bundlePrice: '₪300 per week', bundleBtn: 'Build Complete Bundle ✅',
+            bundleDuoDesc: 'Jacket + Pants', bundleDuoPrice: '₪200 per week', bundleDuoBtn: 'Build This Bundle ✅',
             fromDate: 'From date:', toDate: 'To date:', pleaseSelectDates: 'Please select dates',
             loadingAvailability: '🔄 Loading current availability...',
             cloudError: "⚠️ We couldn't load availability data from the cloud right now. Some blocked-item info may not display. Try refreshing the page, and if the issue persists, contact us.",
@@ -698,7 +710,7 @@
             faqQ2: 'How do I know which clothing size to choose?',
             faqA2: 'We built a "Smart Size Calculator" available with one click from any item card or the bundle wizard. Also, when you pick up your gear in Givat Shmuel, you can try it on to ensure a perfect, comfortable fit.',
             faqQ3: 'What\'s the benefit of the "Complete" bundle?',
-            faqA3: 'The complete bundle covers everything you need at a great discounted price (₪350/week) and includes all five essential items: jacket, pants, certified helmet, sealed gloves, and goggles.',
+            faqA3: 'The complete bundle covers everything you need at a great discounted price (₪300/week) and includes all five essential items: jacket, pants, certified helmet, sealed gloves, and goggles.',
             policyTitle: 'Cancellation & Refund Policy',
             policy1: 'Cancel up to 72 hours before pickup - full refund.',
             policy2: 'Cancel 24-72 hours before pickup - 25% of order total charged.',
@@ -708,7 +720,7 @@
             adminPanelBtn: '⚙️ Inventory Admin Panel',
             cartTitle: 'My Cart', cartEmpty: 'Your cart is currently empty...', fullNameLabel: 'Full name for order:',
             fullNamePlaceholder: 'Enter your full name', totalToPay: 'Total to pay:', payMethodsHint: 'Tap your preferred payment app to pay and reserve your order:',
-            bundleWizardTitle: 'Build a Complete Bundle', bundleWizardFor: 'Who is the bundle for?', smartCalcLink: '📏 Smart Size Calculator',
+            bundleWizardTitle: 'Build a Bundle', bundleWizardFor: 'Who is the bundle for?', smartCalcLink: '📏 Smart Size Calculator',
             bundleConfirmBtn: 'Confirm & Add to Cart',
             sizeGuideTitle: '📏 Smart Size Calculator', sizeGuideDesc: 'Enter your details and the system will automatically calculate the ideal size for comfortable, free-moving ski clothing.',
             sizeGuideFor: 'Who is the clothing for?', sizeGuideMan: 'Man 🧔', sizeGuideWoman: 'Woman 👩', sizeGuideKid: 'Kid 🧒',
@@ -822,7 +834,14 @@
     const prices = { 'מעיל': 150, 'מכנס': 120, 'קסדה': 50, 'כפפות': 30, 'גוגלס': 40 };
     const sizes = { 'מעיל': ['S', 'M', 'L', 'XL'], 'מכנס': ['S', 'M', 'L', 'XL'], 'קסדה': ['S', 'M', 'L'], 'כפפות': ['S', 'M', 'L'], 'גוגלס': ['OS'] };
 
-    const products = [
+    // סוגי חבילות: חבילה קטנה (מעיל+מכנס) וחבילת קומפלט מלאה (כל 5 הפריטים)
+    const bundleTypes = {
+        duo: { id: 'duo', cats: ['מעיל', 'מכנס'], price: 200, labelHe: 'חבילת מעיל + מכנס', labelEn: 'Jacket + Pants Bundle' },
+        full: { id: 'full', cats: ['מעיל', 'מכנס', 'קסדה', 'כפפות', 'גוגלס'], price: 300, labelHe: 'חבילת קומפלט (הכל)', labelEn: 'Complete Bundle (Everything)' }
+    };
+    let selectedBundleType = 'full';
+
+    let products = [
         { id: 'coat-men-1', name: 'מעיל גברים 1', cat: 'מעיל', gender: 'גברים', price: 150, image: 'images/coat-men-1.jpg' },
         { id: 'coat-men-2', name: 'מעיל גברים 2', cat: 'מעיל', gender: 'גברים', price: 150, image: 'images/coat-men-2.png' },
         { id: 'coat-men-3', name: 'מעיל גברים 3', cat: 'מעיל', gender: 'גברים', price: 150, image: 'images/coat-men-3.png' },
@@ -885,6 +904,13 @@
     // תמונה אמיתית למכנס ילדים (דגם ראשון) - אותה תמונה כמו מעיל ילדים 1, כי הם נמכרים בנפרד
     const pantsKids1 = products.find(p => p.id === 'מכנס-ילדים-1');
     if (pantsKids1) pantsKids1.image = 'images/set-kids-1.png';
+
+    // מכנס גברים 1 - החלטתי לשייך אותו לגברים לפי הגזרה הפשוטה והשחורה
+    const pantsMen1 = products.find(p => p.id === 'מכנס-גברים-1');
+    if (pantsMen1) pantsMen1.image = 'images/pants-men-1.png';
+
+    // מסירים לגמרי מהקטלוג כל מוצר שעדיין אין לו תמונה אמיתית (רק placeholder)
+    products = products.filter(p => !p.image.includes('placehold.jp'));
 
     let cartItems = JSON.parse(localStorage.getItem('skiCartItems')) || [];
     let cartBundles = JSON.parse(localStorage.getItem('skiCartBundles')) || [];
@@ -1145,9 +1171,14 @@
         onSizeChange(id);
     }
 
-    function openBundleWizard() {
+    function openBundleWizard(typeId) {
+        selectedBundleType = typeId || 'full';
         const body = document.getElementById('bundle-wizard-body');
         body.innerHTML = `
+            <div style="display:flex; gap:8px; justify-content:center; margin-bottom:15px;">
+                <button type="button" id="bt-duo" class="cat-btn" onclick="selectBundleType('duo')" style="flex:1;">${bundleTypes.duo['labelHe']} - ₪${bundleTypes.duo.price}</button>
+                <button type="button" id="bt-full" class="cat-btn" onclick="selectBundleType('full')" style="flex:1;">${bundleTypes.full['labelHe']} - ₪${bundleTypes.full.price}</button>
+            </div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                 <label><b>${t('bundleWizardFor')}</b></label>
                 <span class="size-link" style="font-size:0.95rem;" onclick="showSizeGuide()">${t('smartCalcLink')}</span>
@@ -1157,13 +1188,28 @@
             </select>
             <hr>
             <div id="wizard-items" style="text-align: right;"></div>`;
+        updateBundleTypeButtons();
         updateWizardOptions();
         showModal('bundleWizard');
     }
 
+    function selectBundleType(typeId) {
+        selectedBundleType = typeId;
+        updateBundleTypeButtons();
+        updateWizardOptions();
+    }
+
+    function updateBundleTypeButtons() {
+        const duoBtn = document.getElementById('bt-duo');
+        const fullBtn = document.getElementById('bt-full');
+        if (duoBtn) duoBtn.classList.toggle('active', selectedBundleType === 'duo');
+        if (fullBtn) fullBtn.classList.toggle('active', selectedBundleType === 'full');
+    }
+
     function updateWizardOptions() {
         const g = document.getElementById('bundle-gen').value;
-        document.getElementById('wizard-items').innerHTML = cats.map(c => `
+        const activeCats = bundleTypes[selectedBundleType].cats;
+        document.getElementById('wizard-items').innerHTML = activeCats.map(c => `
             <div style="margin-top:12px; background:#f9f9f9; padding:10px; border-radius:8px; border:1px solid #eee;">
                 <label style="display:block; margin-bottom:5px;"><b>${catIcons[c]} ${catNames[currentLang][c] || c}:</b></label>
                 <div style="display:flex; gap:10px;">
@@ -1184,10 +1230,11 @@
         const submitBtn = document.getElementById('bundle-submit-btn');
         if(!submitBtn) return;
 
+        const activeCats = bundleTypes[selectedBundleType].cats;
         let blockedItemInfo = null;
 
-        for(let i = 0; i < cats.length; i++) {
-            const c = cats[i];
+        for(let i = 0; i < activeCats.length; i++) {
+            const c = activeCats[i];
             const pIdEl = document.getElementById(`wb-${c}`);
             const sizeEl = document.getElementById(`wbs-${c}`);
             
@@ -1221,10 +1268,11 @@
     }
 
     function saveBundleToCart() {
-        const bundle = { gender: document.getElementById('bundle-gen').value, items: [] };
+        const activeCats = bundleTypes[selectedBundleType].cats;
+        const bundle = { typeId: selectedBundleType, gender: document.getElementById('bundle-gen').value, items: [] };
         let anyBlocked = false;
         
-        cats.forEach(c => {
+        activeCats.forEach(c => {
             const pId = document.getElementById(`wb-${c}`).value;
             const size = document.getElementById(`wbs-${c}`).value;
             if (isProductBlocked(pId, size)) anyBlocked = true;
@@ -1333,9 +1381,11 @@
         } else {
             if (checkoutArea) checkoutArea.style.display = 'block';
             cartBundles.forEach((b, idx) => {
-                total += 350 * weeks;
+                const bType = bundleTypes[b.typeId] || bundleTypes.full;
+                total += bType.price * weeks;
                 const translatedGender = genderNames[currentLang][b.gender] || b.gender;
-                const bundleLabel = currentLang === 'he' ? `🎁 חבילת קומפלט - ${translatedGender}` : `🎁 Complete Bundle - ${translatedGender}`;
+                const bundleLabelText = currentLang === 'he' ? bType.labelHe : bType.labelEn;
+                const bundleLabel = `🎁 ${bundleLabelText} - ${translatedGender}`;
                 htmlContent += `
                     <div class="cart-bundle-item">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -1387,9 +1437,10 @@
         msg += `תאריכים: ${sInput.value} עד ${eInput.value}\n\n`;
         
         if(cartBundles.length > 0) {
-            msg += `--- חבילות קומפלט ---\n`;
+            msg += `--- חבילות ---\n`;
             cartBundles.forEach((b, i) => {
-                msg += `🎁 חבילה ${i+1} (${b.gender}):\n${b.items.map(it => `  - ${it.name} (מידה: ${it.size})`).join('\n')}\n`;
+                const bType = bundleTypes[b.typeId] || bundleTypes.full;
+                msg += `🎁 ${bType.labelHe} (${b.gender}):\n${b.items.map(it => `  - ${it.name} (מידה: ${it.size})`).join('\n')}\n`;
             });
             msg += `\n`;
         }
@@ -1827,7 +1878,11 @@
 
         listEl.innerHTML = history.map(o => {
             const itemsText = [
-                ...o.bundles.map(b => currentLang === 'he' ? `🎁 חבילת קומפלט - ${genderNames[currentLang][b.gender] || b.gender}` : `🎁 Complete Bundle - ${genderNames[currentLang][b.gender] || b.gender}`),
+                ...o.bundles.map(b => {
+                    const bType = bundleTypes[b.typeId] || bundleTypes.full;
+                    const label = currentLang === 'he' ? bType.labelHe : bType.labelEn;
+                    return `🎁 ${label} - ${genderNames[currentLang][b.gender] || b.gender}`;
+                }),
                 ...o.items.map(i => {
                     const p = products.find(x => x.id === i.id);
                     return p ? `${translateProductName(p)} (${i.size})` : null;
