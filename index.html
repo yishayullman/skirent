@@ -240,12 +240,21 @@
         .order-card .order-actions { display: flex; gap: 8px; margin-top: 8px; }
         .order-card .order-actions button { flex: 1; border: none; border-radius: 6px; padding: 8px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
     </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<header>
-    <h1 data-i18n="headerTitle">skirent-il</h1>
-    <p data-i18n="headerSubtitle">השכרת ביגוד וציוד סקי פרימיום בגבעת שמואל והמרכז</p>
+<header class="site-hero">
+    <div class="hero-content">
+        <div class="hero-badge">❄️ ציוד סקי איכותי • איסוף מהיר • הזמנה נוחה</div>
+        <h1 data-i18n="headerTitle">skirent-il</h1>
+        <p data-i18n="headerSubtitle">השכרת ביגוד וציוד סקי פרימיום בגבעת שמואל והמרכז</p>
+        <div class="hero-trust">
+            <span>✓ מחירים ברורים</span>
+            <span>✓ התאמת מידה</span>
+            <span>✓ איסוף בגבעת שמואל</span>
+        </div>
+    </div>
 </header>
 
 <nav>
@@ -908,6 +917,10 @@
     // מכנס גברים 1 - החלטתי לשייך אותו לגברים לפי הגזרה הפשוטה והשחורה
     const pantsMen1 = products.find(p => p.id === 'מכנס-גברים-1');
     if (pantsMen1) pantsMen1.image = 'images/pants-men-1.png';
+
+    // מכנס נשים 1 - תמונת מוצר נקייה ומקצועית
+    const pantsWomen1 = products.find(p => p.id === 'מכנס-נשים-1');
+    if (pantsWomen1) pantsWomen1.image = 'images/pants-women-1.png';
 
     // מסירים לגמרי מהקטלוג כל מוצר שעדיין אין לו תמונה אמיתית (רק placeholder)
     products = products.filter(p => !p.image.includes('placehold.jp'));
