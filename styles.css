@@ -1,0 +1,607 @@
+/* =========================================================
+   skirent-il — Professional storefront layer
+   Keeps the existing JavaScript/functionality and upgrades the UI.
+   ========================================================= */
+:root {
+  --pro-navy: #071a3d;
+  --pro-blue: #0b4ea2;
+  --pro-blue-2: #1769d2;
+  --pro-ice: #eef6ff;
+  --pro-text: #10233f;
+  --pro-muted: #667085;
+  --pro-border: #e5ebf3;
+  --pro-green: #16a34a;
+  --pro-shadow: 0 18px 45px rgba(8, 31, 66, .12);
+  --pro-radius: 20px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  color: var(--pro-text);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(65, 153, 255, .16), transparent 28%),
+    radial-gradient(circle at 90% 12%, rgba(255,255,255,.95), transparent 30%),
+    linear-gradient(180deg, #dfeeff 0%, #f7fbff 34%, #eef4fa 100%);
+  min-height: 100vh;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,255,255,.12), transparent 35%);
+  z-index: -1;
+}
+
+.site-hero {
+  position: relative;
+  min-height: 390px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 72px 20px 55px;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(5,20,49,.90) 0%, rgba(5,20,49,.70) 40%, rgba(5,20,49,.28) 75%, rgba(5,20,49,.58) 100%),
+    url('https://images.unsplash.com/photo-1551524559-8af4e6624178?auto=format&fit=crop&w=2200&q=85') center/cover;
+  box-shadow: 0 10px 35px rgba(3, 21, 52, .22);
+}
+
+.site-hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 70px;
+  background: linear-gradient(180deg, transparent, rgba(239,246,255,.95));
+}
+
+.hero-content {
+  width: min(100%, 1050px);
+  position: relative;
+  z-index: 1;
+  color: white;
+  text-align: right;
+  direction: rtl;
+}
+
+.hero-badge {
+  display: inline-flex;
+  padding: 9px 16px;
+  border: 1px solid rgba(255,255,255,.30);
+  background: rgba(255,255,255,.12);
+  backdrop-filter: blur(10px);
+  border-radius: 999px;
+  font-size: .9rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+.site-hero h1 {
+  margin: 0 0 8px;
+  font-size: clamp(3rem, 7vw, 5.6rem);
+  line-height: .95;
+  letter-spacing: -2px;
+  text-shadow: 0 8px 30px rgba(0,0,0,.30);
+}
+
+.site-hero p {
+  margin: 0;
+  max-width: 720px;
+  font-size: clamp(1.1rem, 2vw, 1.45rem);
+  line-height: 1.65;
+  color: rgba(255,255,255,.94);
+}
+
+.hero-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 25px;
+}
+.hero-trust span {
+  padding: 9px 13px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.18);
+  font-size: .9rem;
+  font-weight: 700;
+}
+
+nav {
+  background: rgba(255,255,255,.94) !important;
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(12,43,83,.08);
+  padding: 12px 18px !important;
+  gap: 8px !important;
+  box-shadow: 0 8px 25px rgba(15,45,80,.10) !important;
+}
+nav a {
+  padding: 10px 14px;
+  border-radius: 12px;
+  color: var(--pro-text) !important;
+  transition: .2s ease;
+}
+nav a:hover {
+  background: var(--pro-ice);
+  color: var(--pro-blue) !important;
+  transform: translateY(-1px);
+}
+
+.container { max-width: 1180px; padding: 30px 18px 50px; }
+.about-section,
+.tools-section,
+.faq-section,
+.policy-section {
+  background: rgba(255,255,255,.92) !important;
+  border: 1px solid rgba(16,35,63,.07);
+  border-radius: var(--pro-radius) !important;
+  box-shadow: var(--pro-shadow) !important;
+}
+.about-section {
+  padding: 26px 30px !important;
+  margin-top: 4px;
+}
+.about-section p { color: var(--pro-muted) !important; font-size: 1.05rem !important; }
+
+.bundle-banner {
+  position: relative;
+  overflow: hidden;
+  border: 0 !important;
+  border-radius: 24px !important;
+  background: linear-gradient(135deg, #0a2f70, #1769d2) !important;
+  box-shadow: 0 20px 45px rgba(11,78,162,.25) !important;
+}
+.bundle-banner::before {
+  content: "";
+  position: absolute;
+  width: 260px; height: 260px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.08);
+  top: -130px; left: -80px;
+}
+.bundle-banner > * { position: relative; z-index: 1; }
+
+.tools-section { padding: 22px !important; }
+.tools-section input,
+.tools-section select,
+.modal input,
+.modal select,
+.modal textarea {
+  border: 1px solid #d8e0eb !important;
+  background: #fff;
+  transition: .2s ease;
+}
+.tools-section input:focus,
+.tools-section select:focus,
+.modal input:focus,
+.modal select:focus,
+.modal textarea:focus {
+  outline: none;
+  border-color: var(--pro-blue-2) !important;
+  box-shadow: 0 0 0 4px rgba(23,105,210,.10);
+}
+
+.cat-btn {
+  border-color: #d8e2ef !important;
+  color: var(--pro-text) !important;
+  background: white !important;
+  box-shadow: 0 4px 12px rgba(15,45,80,.06) !important;
+  min-height: 42px;
+}
+.cat-btn:hover,
+.cat-btn.active {
+  background: var(--pro-blue) !important;
+  border-color: var(--pro-blue) !important;
+  color: white !important;
+  box-shadow: 0 8px 18px rgba(11,78,162,.20) !important;
+}
+
+.category-title {
+  margin: 44px 2px 18px !important;
+  color: var(--pro-text) !important;
+  text-shadow: none !important;
+  font-size: 1.65rem !important;
+  font-weight: 800;
+  border-bottom: 0 !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.category-title::after {
+  content: "";
+  height: 3px;
+  flex: 1;
+  background: linear-gradient(90deg, rgba(23,105,210,.25), transparent);
+  border-radius: 99px;
+}
+
+.grid {
+  grid-template-columns: repeat(auto-fill, minmax(245px, 1fr)) !important;
+  gap: 18px !important;
+}
+.card {
+  border: 1px solid var(--pro-border);
+  border-radius: 18px !important;
+  box-shadow: 0 12px 30px rgba(11,33,66,.09) !important;
+  overflow: hidden;
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 40px rgba(11,33,66,.14) !important;
+  border-color: #c8daf1;
+}
+.img-container {
+  height: 285px !important;
+  background: linear-gradient(180deg, #fbfdff, #f1f6fb) !important;
+  border-bottom: 1px solid #edf1f6;
+}
+.card img { padding: 18px !important; }
+.card h3 { color: var(--pro-text); font-size: 1.05rem; }
+.card .size-link { color: var(--pro-blue) !important; }
+.btn-select {
+  background: linear-gradient(135deg, #0a3e89, #1769d2) !important;
+  border-radius: 11px !important;
+  box-shadow: 0 8px 18px rgba(11,78,162,.16);
+  min-height: 44px;
+  transition: .2s ease;
+}
+.btn-select:hover { transform: translateY(-1px); filter: brightness(1.04); }
+.btn-select.in-cart { background: linear-gradient(135deg,#138a42,#16a34a) !important; }
+
+.faq-section, .policy-section { padding: 30px !important; }
+.faq-section h2, .policy-section h2 { color: var(--pro-text) !important; }
+.faq-item { padding: 17px 0 !important; }
+.faq-item h4 { color: #1b3557 !important; }
+.faq-item p, .policy-section li { color: var(--pro-muted) !important; }
+
+.modal {
+  border: 1px solid rgba(10,45,90,.10);
+  box-shadow: 0 28px 80px rgba(0,20,50,.30) !important;
+  overflow: hidden;
+}
+.modal-header {
+  background: linear-gradient(135deg,#09295f,#1769d2) !important;
+  padding: 18px !important;
+}
+
+.wa-btn {
+  background: linear-gradient(135deg,#16a34a,#25d366) !important;
+  box-shadow: 0 8px 18px rgba(37,211,102,.18);
+}
+
+.toast { border-radius: 13px !important; }
+
+@media (max-width: 700px) {
+  .site-hero { min-height: 340px; padding: 55px 18px 45px; background-position: 63% center; }
+  .site-hero h1 { font-size: 3.3rem; }
+  .hero-content { text-align: center; }
+  .hero-badge { font-size: .78rem; }
+  .hero-trust { justify-content: center; }
+  .hero-trust span { font-size: .78rem; }
+  nav { justify-content: flex-start !important; overflow-x: auto; white-space: nowrap; }
+  nav a { flex: 0 0 auto; font-size: .9rem; }
+  .container { padding: 18px 12px 40px; }
+  .about-section { padding: 20px !important; }
+  .bundle-banner { padding: 20px !important; }
+  .tools-section { padding: 15px !important; }
+  .grid { grid-template-columns: repeat(2, minmax(0,1fr)) !important; gap: 12px !important; }
+  .img-container { height: 210px !important; }
+  .card h3 { font-size: .92rem; }
+  .btn-select { width: 90% !important; padding: 10px 8px !important; font-size: .9rem; }
+}
+
+@media (max-width: 430px) {
+  .grid { grid-template-columns: 1fr !important; }
+  .img-container { height: 280px !important; }
+  .site-hero h1 { font-size: 2.8rem; }
+}
+
+/* =========================================================
+   SKIRENT PREMIUM — mountain / ski visual upgrade
+   ========================================================= */
+body {
+  position: relative;
+  background: #edf4fb;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(236,246,255,.90) 0%, rgba(246,250,254,.95) 42%, rgba(232,241,250,.97) 100%),
+    url('images/ski-mountains.jpg') center top / cover no-repeat;
+  opacity: .98;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 42vh;
+  z-index: -3;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(7,26,61,.07));
+}
+
+.site-hero {
+  min-height: 500px;
+  padding: 105px 24px 78px;
+  background:
+    linear-gradient(90deg, rgba(3,18,43,.88) 0%, rgba(4,27,61,.68) 36%, rgba(4,27,61,.24) 68%, rgba(4,20,48,.55) 100%),
+    url('images/ski-mountains.jpg') center 38% / cover no-repeat;
+  box-shadow: 0 18px 55px rgba(4,22,52,.28);
+}
+
+.site-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 78% 25%, rgba(255,255,255,.18), transparent 25%);
+  pointer-events: none;
+}
+
+.site-hero::after {
+  height: 115px;
+  background: linear-gradient(180deg, transparent 0%, rgba(237,244,251,.76) 68%, #edf4fb 100%);
+}
+
+.hero-content {
+  width: min(100%, 1160px);
+  text-align: right;
+}
+
+.hero-badge {
+  background: rgba(255,255,255,.13);
+  border: 1px solid rgba(255,255,255,.30);
+  box-shadow: 0 10px 30px rgba(0,0,0,.12);
+  backdrop-filter: blur(14px);
+}
+
+.site-hero h1 {
+  font-size: clamp(3.6rem, 8vw, 6.8rem);
+  font-weight: 900;
+  letter-spacing: -3px;
+  margin-bottom: 14px;
+}
+
+.site-hero p {
+  font-weight: 500;
+  text-shadow: 0 3px 15px rgba(0,0,0,.24);
+}
+
+.hero-trust span {
+  background: rgba(255,255,255,.12);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.10);
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  max-width: 1180px;
+  margin: -26px auto 0;
+  border: 1px solid rgba(255,255,255,.80) !important;
+  border-radius: 18px !important;
+  background: rgba(255,255,255,.88) !important;
+  box-shadow: 0 18px 45px rgba(6,35,72,.16) !important;
+}
+
+.container {
+  max-width: 1240px;
+  padding-top: 28px;
+}
+
+.about-section {
+  position: relative;
+  overflow: hidden;
+  margin-top: 8px;
+  padding: 28px 34px !important;
+  background: rgba(255,255,255,.78) !important;
+  backdrop-filter: blur(16px);
+}
+
+.about-section::before {
+  content: "❄";
+  position: absolute;
+  left: 24px;
+  top: 10px;
+  font-size: 5rem;
+  line-height: 1;
+  color: rgba(23,105,210,.07);
+  transform: rotate(-12deg);
+}
+
+.about-section p {
+  position: relative;
+  z-index: 1;
+  max-width: 980px;
+  margin: 0 auto !important;
+  text-align: center;
+  line-height: 1.9 !important;
+}
+
+.bundle-banner {
+  margin-top: 22px;
+  padding: 30px !important;
+  background:
+    linear-gradient(135deg, rgba(5,28,66,.96), rgba(11,78,162,.94)),
+    url('images/ski-mountains.jpg') center/cover !important;
+  border: 1px solid rgba(255,255,255,.16) !important;
+}
+
+.bundle-banner h2 {
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  margin-bottom: 20px;
+}
+
+.tools-section {
+  margin-top: 22px;
+  background: rgba(255,255,255,.86) !important;
+  backdrop-filter: blur(16px);
+  border-radius: 24px !important;
+  padding: 26px !important;
+}
+
+.tools-section > div:first-child {
+  background: linear-gradient(135deg, #f8fbff, #eef5fc);
+  border: 1px solid #dce7f3;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.filter-group {
+  gap: 10px !important;
+  margin-top: 12px;
+}
+
+.cat-btn {
+  min-width: 105px;
+  font-weight: 800 !important;
+  border-radius: 999px !important;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease !important;
+}
+
+.cat-btn:hover { transform: translateY(-2px); }
+
+.category-block {
+  margin-top: 38px;
+}
+
+.category-title {
+  padding: 0 4px 12px;
+  border-bottom: 1px solid rgba(13,55,105,.10) !important;
+}
+
+.grid {
+  align-items: stretch;
+}
+
+.card {
+  background: rgba(255,255,255,.96);
+  position: relative;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 18px;
+  right: 18px;
+  height: 3px;
+  border-radius: 0 0 10px 10px;
+  background: linear-gradient(90deg, #0b4ea2, #6cb6ff);
+  opacity: .9;
+}
+
+.img-container {
+  height: 300px !important;
+}
+
+.card img {
+  transition: transform .35s ease;
+}
+
+.card:hover img {
+  transform: scale(1.035);
+}
+
+.faq-section, .policy-section {
+  background: rgba(255,255,255,.86) !important;
+  backdrop-filter: blur(14px);
+}
+
+.policy-section {
+  margin-bottom: 34px !important;
+}
+
+/* Make the admin control intentionally quiet, like a real storefront. */
+#adminPanelBtn {
+  opacity: .65;
+}
+
+@media (max-width: 700px) {
+  .site-hero {
+    min-height: 430px;
+    padding: 82px 18px 65px;
+    background-position: 40% center;
+  }
+
+  .site-hero h1 {
+    font-size: 3.45rem;
+    letter-spacing: -2px;
+  }
+
+  nav {
+    margin: -18px 10px 0;
+    border-radius: 15px !important;
+    overflow-x: auto;
+    justify-content: flex-start;
+    white-space: nowrap;
+  }
+
+  .about-section { padding: 23px 19px !important; }
+  .bundle-banner { padding: 22px 16px !important; }
+  .tools-section { padding: 18px !important; }
+}
+
+/* =========================================================
+   MOBILE NAV — show every menu item without horizontal scrolling
+   ========================================================= */
+@media (max-width: 700px) {
+  nav {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    align-items: stretch;
+    justify-content: stretch !important;
+    overflow: hidden !important;
+    white-space: normal !important;
+    gap: 2px !important;
+    padding: 7px 5px !important;
+    margin-left: 6px !important;
+    margin-right: 6px !important;
+  }
+
+  nav a {
+    min-width: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex: none !important;
+    padding: 8px 2px !important;
+    border-radius: 10px;
+    font-size: clamp(.62rem, 2.35vw, .76rem) !important;
+    line-height: 1.15 !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+  }
+
+  nav a span {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  nav {
+    padding: 6px 3px !important;
+    gap: 1px !important;
+  }
+
+  nav a {
+    font-size: .59rem !important;
+    padding: 7px 1px !important;
+  }
+}
