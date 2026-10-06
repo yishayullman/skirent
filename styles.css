@@ -299,3 +299,258 @@ nav a:hover {
   .img-container { height: 280px !important; }
   .site-hero h1 { font-size: 2.8rem; }
 }
+
+/* =========================================================
+   SKIRENT PREMIUM — mountain / ski visual upgrade
+   ========================================================= */
+body {
+  position: relative;
+  background: #edf4fb;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(236,246,255,.90) 0%, rgba(246,250,254,.95) 42%, rgba(232,241,250,.97) 100%),
+    url('images/ski-mountains.jpg') center top / cover no-repeat;
+  opacity: .98;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 42vh;
+  z-index: -3;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(7,26,61,.07));
+}
+
+.site-hero {
+  min-height: 500px;
+  padding: 105px 24px 78px;
+  background:
+    linear-gradient(90deg, rgba(3,18,43,.88) 0%, rgba(4,27,61,.68) 36%, rgba(4,27,61,.24) 68%, rgba(4,20,48,.55) 100%),
+    url('images/ski-mountains.jpg') center 38% / cover no-repeat;
+  box-shadow: 0 18px 55px rgba(4,22,52,.28);
+}
+
+.site-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 78% 25%, rgba(255,255,255,.18), transparent 25%);
+  pointer-events: none;
+}
+
+.site-hero::after {
+  height: 115px;
+  background: linear-gradient(180deg, transparent 0%, rgba(237,244,251,.76) 68%, #edf4fb 100%);
+}
+
+.hero-content {
+  width: min(100%, 1160px);
+  text-align: right;
+}
+
+.hero-badge {
+  background: rgba(255,255,255,.13);
+  border: 1px solid rgba(255,255,255,.30);
+  box-shadow: 0 10px 30px rgba(0,0,0,.12);
+  backdrop-filter: blur(14px);
+}
+
+.site-hero h1 {
+  font-size: clamp(3.6rem, 8vw, 6.8rem);
+  font-weight: 900;
+  letter-spacing: -3px;
+  margin-bottom: 14px;
+}
+
+.site-hero p {
+  font-weight: 500;
+  text-shadow: 0 3px 15px rgba(0,0,0,.24);
+}
+
+.hero-trust span {
+  background: rgba(255,255,255,.12);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.10);
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  max-width: 1180px;
+  margin: -26px auto 0;
+  border: 1px solid rgba(255,255,255,.80) !important;
+  border-radius: 18px !important;
+  background: rgba(255,255,255,.88) !important;
+  box-shadow: 0 18px 45px rgba(6,35,72,.16) !important;
+}
+
+.container {
+  max-width: 1240px;
+  padding-top: 28px;
+}
+
+.about-section {
+  position: relative;
+  overflow: hidden;
+  margin-top: 8px;
+  padding: 28px 34px !important;
+  background: rgba(255,255,255,.78) !important;
+  backdrop-filter: blur(16px);
+}
+
+.about-section::before {
+  content: "❄";
+  position: absolute;
+  left: 24px;
+  top: 10px;
+  font-size: 5rem;
+  line-height: 1;
+  color: rgba(23,105,210,.07);
+  transform: rotate(-12deg);
+}
+
+.about-section p {
+  position: relative;
+  z-index: 1;
+  max-width: 980px;
+  margin: 0 auto !important;
+  text-align: center;
+  line-height: 1.9 !important;
+}
+
+.bundle-banner {
+  margin-top: 22px;
+  padding: 30px !important;
+  background:
+    linear-gradient(135deg, rgba(5,28,66,.96), rgba(11,78,162,.94)),
+    url('images/ski-mountains.jpg') center/cover !important;
+  border: 1px solid rgba(255,255,255,.16) !important;
+}
+
+.bundle-banner h2 {
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  margin-bottom: 20px;
+}
+
+.tools-section {
+  margin-top: 22px;
+  background: rgba(255,255,255,.86) !important;
+  backdrop-filter: blur(16px);
+  border-radius: 24px !important;
+  padding: 26px !important;
+}
+
+.tools-section > div:first-child {
+  background: linear-gradient(135deg, #f8fbff, #eef5fc);
+  border: 1px solid #dce7f3;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.filter-group {
+  gap: 10px !important;
+  margin-top: 12px;
+}
+
+.cat-btn {
+  min-width: 105px;
+  font-weight: 800 !important;
+  border-radius: 999px !important;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease !important;
+}
+
+.cat-btn:hover { transform: translateY(-2px); }
+
+.category-block {
+  margin-top: 38px;
+}
+
+.category-title {
+  padding: 0 4px 12px;
+  border-bottom: 1px solid rgba(13,55,105,.10) !important;
+}
+
+.grid {
+  align-items: stretch;
+}
+
+.card {
+  background: rgba(255,255,255,.96);
+  position: relative;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 18px;
+  right: 18px;
+  height: 3px;
+  border-radius: 0 0 10px 10px;
+  background: linear-gradient(90deg, #0b4ea2, #6cb6ff);
+  opacity: .9;
+}
+
+.img-container {
+  height: 300px !important;
+}
+
+.card img {
+  transition: transform .35s ease;
+}
+
+.card:hover img {
+  transform: scale(1.035);
+}
+
+.faq-section, .policy-section {
+  background: rgba(255,255,255,.86) !important;
+  backdrop-filter: blur(14px);
+}
+
+.policy-section {
+  margin-bottom: 34px !important;
+}
+
+/* Make the admin control intentionally quiet, like a real storefront. */
+#adminPanelBtn {
+  opacity: .65;
+}
+
+@media (max-width: 700px) {
+  .site-hero {
+    min-height: 430px;
+    padding: 82px 18px 65px;
+    background-position: 40% center;
+  }
+
+  .site-hero h1 {
+    font-size: 3.45rem;
+    letter-spacing: -2px;
+  }
+
+  nav {
+    margin: -18px 10px 0;
+    border-radius: 15px !important;
+    overflow-x: auto;
+    justify-content: flex-start;
+    white-space: nowrap;
+  }
+
+  .about-section { padding: 23px 19px !important; }
+  .bundle-banner { padding: 22px 16px !important; }
+  .tools-section { padding: 18px !important; }
+}
