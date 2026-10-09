@@ -105,7 +105,7 @@ nav {
   box-shadow: var(--shadow) !important;
 }
 nav a {
-  display: flex; align-items: center; gap: 6px;
+  display: block; text-align: center;
   padding: 11px 16px; border-radius: 14px;
   color: var(--ink) !important;
   font-weight: 700; font-size: .96rem;
@@ -353,8 +353,8 @@ body > div[style*="margin: 40px"] { padding-bottom: 20px; }
     gap: 3px !important; padding: 6px !important; margin-top: -34px !important;
   }
   nav a {
-    flex-direction: column; justify-content: center; text-align: center;
-    padding: 8px 2px; gap: 2px;
+    display: block; text-align: center;
+    padding: 10px 2px;
     font-size: clamp(.6rem, 2.4vw, .75rem); line-height: 1.15;
     white-space: normal; overflow-wrap: anywhere;
   }
