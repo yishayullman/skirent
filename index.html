@@ -10,366 +10,310 @@
       gtag('config', 'G-K3LP80T8MM');
     </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>skirent-il | השכרת ציוד סקי וסנובורד בגבעת שמואל</title>
     <meta name="description" content="השכרת ציוד סקי וסנובורד בגבעת שמואל - מעילים, מכנסיים, קסדות, כפפות וגוגלס להשכרה. חבילות קומפלט משתלמות, איסוף קל והתאמת מידה חכמה לחופשת הסקי שלכם.">
     <meta property="og:title" content="skirent-il | השכרת ציוד סקי וסנובורד בגבעת שמואל">
     <meta property="og:description" content="חבילות קומפלט משתלמות להשכרת ציוד סקי - מעיל, מכנס, קסדה, כפפות וגוגלס. איסוף קל בגבעת שמואל.">
     <meta property="og:type" content="website">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1a2a6c">
+    <meta name="theme-color" content="#0b1a2e">
     <link rel="icon" type="image/png" sizes="192x192" href="images/icon-192.png">
     <link rel="apple-touch-icon" href="images/icon-192.png">
-    <style>
-        :root {
-            --primary: #1a2a6c;
-            --secondary: #0077b6;
-            --accent: #f2a900;
-            --white: #ffffff;
-            --gray: #f4f4f4;
-            --success: #27ae60;
-            --danger: #e74c3c;
-            --whatsapp: #25d366;
-            --bundle: #6c5ce7;
-            --bit: #00c2cb;
-            --paybox: #4a148c;
-        }
-
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0; padding: 0;
-            /* הוחלפה תמונת הרקע לתמונת סקי מובהקת */
-            background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), 
-                        url('https://images.unsplash.com/photo-1551524559-8af4e6624178?auto=format&fit=crop&w=1920&q=80');
-            background-attachment: fixed;
-            background-size: cover;
-            background-position: center;
-            color: #333;
-        }
-
-        /* בדפדפנים ניידים (בעיקר ספארי באייפון) background-attachment: fixed
-           לא נתמך היטב וגורם לרקע להיעלם - לכן במסכים קטנים משתמשים בגלילה רגילה */
-        @media (max-width: 900px) {
-            body {
-                background-attachment: scroll;
-            }
-        }
-
-        header { text-align: center; color: white; padding: 40px 20px; text-shadow: 2px 2px 10px rgba(0,0,0,0.6); }
-        header h1 { margin-bottom: 5px; font-size: 2.8rem; }
-        header p { font-size: 1.2rem; margin-top: 5px; }
-
-        nav {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px; display: flex; justify-content: center; gap: 25px;
-            position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        nav a { text-decoration: none; color: var(--primary); font-weight: bold; cursor: pointer; }
-
-        .container { max-width: 1100px; margin: auto; padding: 20px; }
-
-        .about-section {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 20px 25px;
-            margin-bottom: 25px;
-            text-align: center;
-            line-height: 1.6;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .about-section p { margin: 0; font-size: 1.1rem; color: #444; }
-
-        .bundle-banner {
-            background: linear-gradient(135deg, var(--bundle), #a29bfe);
-            color: white; border-radius: 15px; padding: 25px;
-            text-align: center; margin-bottom: 30px; box-shadow: 0 8px 20px rgba(108, 92, 231, 0.3);
-            border: 2px solid rgba(255,255,255,0.4);
-        }
-
-        .tools-section {
-            background: rgba(255, 255, 255, 0.92); border-radius: 15px; padding: 20px; margin-bottom: 30px; text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .filter-group { margin: 15px 0; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-        
-        .cat-btn {
-            padding: 8px 22px; border-radius: 25px; border: 2px solid var(--primary);
-            background: white; color: var(--primary); cursor: pointer; font-weight: bold; 
-            font-size: 1rem; transition: all 0.2s ease-in-out;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-        }
-        .cat-btn:hover, .cat-btn.active { background: var(--primary); color: white; transform: translateY(-2px); }
-
-        .category-block { display: block; }
-        .category-title {
-            color: white; text-align: right; margin: 35px 10px 15px 10px;
-            font-size: 1.8rem; text-shadow: 1px 1px 5px rgba(0,0,0,0.6);
-            border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 5px;
-        }
-
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; justify-content: center; margin-bottom: 20px; }
-        
-        .card {
-            background: white; border-radius: 15px; overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2); text-align: center;
-            padding-bottom: 20px; position: relative;
-            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-            transition: transform 0.2s;
-        }
-        .card h3 { width: 90%; margin: 15px auto 5px auto; font-size: 1.2rem; }
-        .card.size-blocked { opacity: 0.65; filter: grayscale(0.6); }
-        
-        .img-container { width: 100%; height: 280px; overflow: hidden; position: relative; background: #f8f9fa; }
-        .card img { width: 100%; height: 100%; object-fit: contain; padding: 10px; box-sizing: border-box; cursor: pointer; transition: transform 0.3s; }
-        .card img:hover { transform: scale(1.03); }
-
-        .image-nav-btn {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5); color: white; border: none;
-            padding: 10px 15px; cursor: pointer; font-size: 1.5rem; border-radius: 5px; z-index: 10;
-        }
-        .image-nav-btn:hover { background: rgba(0, 0, 0, 0.8); }
-
-        .btn-select {
-            background: var(--primary); color: white; border: none;
-            padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 85%; 
-            margin: 10px auto !important; display: flex !important; justify-content: center; align-items: center; text-align: center; box-sizing: border-box;
-        }
-        .btn-select.in-cart { background: var(--success); }
-        .btn-select.disabled-btn { background: #7f8c8d; cursor: not-allowed; }
-
-        .faq-section {
-            background: rgba(255, 255, 255, 0.95); border-radius: 15px; padding: 30px; margin-top: 40px; box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-        .faq-section h2 { color: var(--primary); text-align: center; margin-bottom: 25px; font-size: 1.8rem; }
-        .faq-item { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-        .faq-item:last-child { border-bottom: none; padding-bottom: 0; }
-        .faq-item h4 { margin: 0 0 8px 0; font-size: 1.15rem; color: #222; font-weight: 600; }
-        .faq-item p { margin: 0; font-size: 1rem; color: #555; line-height: 1.5; }
-
-        .policy-section {
-            background: rgba(255, 255, 255, 0.95); border-radius: 15px; padding: 30px; margin-top: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-        .policy-section h2 { color: var(--primary); text-align: center; margin-bottom: 20px; font-size: 1.6rem; }
-        .policy-section ul { line-height: 1.8; color: #444; padding-right: 20px; margin: 0; }
-        .policy-section li { margin-bottom: 8px; }
-
-        .toast {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
-            background: #333; color: white; padding: 14px 22px; border-radius: 10px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3); z-index: 5000; font-size: 0.95rem;
-            opacity: 0; transition: opacity 0.3s ease, transform 0.3s ease; text-align: center; max-width: 90%;
-        }
-        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-        .toast.error { background: var(--danger); }
-        .toast.success { background: var(--success); }
-
-        .modal {
-            display: none; position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%); background: white; 
-            border-radius: 20px; z-index: 2000; width: 95%; max-width: 500px; box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-        }
-        .modal-header { background: var(--primary); color: white; padding: 15px; text-align: center; border-radius: 20px 20px 0 0; position: relative; }
-        .modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; text-align: center; }
-        
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1500; }
-        input, select { padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin: 5px auto; font-family: inherit; font-size: 1rem; display: inline-block; }
-
-        .cart-item { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 12px; border-bottom: 1px solid #eee; background: #fff; margin-bottom: 5px; border-radius: 8px; text-align: right;
-        }
-        .cart-bundle-item { 
-            background: #f0f4ff; border: 1px dashed var(--bundle); 
-            padding: 15px; border-radius: 10px; margin-bottom: 12px; text-align: right;
-        }
-        .remove-btn { color: var(--danger); cursor: pointer; font-weight: bold; font-size: 1.2rem; }
-        
-        .wa-btn {
-            background: var(--whatsapp); color: white; padding: 12px; border-radius: 10px; border: none; font-weight: bold;
-            cursor: pointer; width: 85%; max-width: 320px; text-decoration: none; display: flex; justify-content: center; align-items: center; margin: 15px auto; text-align: center; box-sizing: border-box;
-        }
-
-        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 3000; justify-content: center; align-items: center; }
-        .lightbox img { max-width: 90%; max-height: 85vh; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .lightbox-close { position: absolute; top: 20px; left: 20px; color: white; font-size: 2.5rem; cursor: pointer; font-weight: bold; user-select: none; }
-
-        .pay-methods { display: flex; gap: 10px; margin-top: 15px; justify-content: center; width: 100%; }
-        .pay-btn { flex: 1; max-width: 180px; padding: 12px; border-radius: 10px; border: none; font-weight: bold; color: white; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
-        .pay-btn:hover { filter: brightness(0.9); }
-        .pay-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-        .btn-bit { background-color: var(--bit); color: #1a1a1a; }
-        .btn-paybox { background-color: var(--paybox); }
-        
-        .back-btn { background: none; border: none; color: #7f8c8d; text-decoration: underline; cursor: pointer; font-size: 0.85rem; margin: 10px auto 0 auto; font-weight: bold; display: block; }
-        .size-link { color: var(--secondary); font-size: 0.85rem; font-weight: bold; text-decoration: underline; cursor: pointer; display: inline-block; margin-top: 5px; }
-        
-        .calc-box { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px; padding: 15px; margin-top: 10px; text-align: center; }
-        .calc-result { font-size: 1.3rem; font-weight: bold; color: var(--success); margin-top: 15px; display: none; background: #e8f5e9; padding: 10px; border-radius: 8px; border: 1px dashed var(--success); }
-
-        .cloud-status { font-size: 0.85rem; margin-top: 8px; color: #b45309; display: none; }
-
-        .star-rating { display: flex; flex-direction: row-reverse; justify-content: center; gap: 4px; font-size: 2rem; margin: 10px 0; direction: ltr; }
-        .star-rating .star { cursor: pointer; color: #ddd; transition: color 0.15s; }
-        .star-rating .star.filled { color: #f2a900; }
-        .star-display { color: #f2a900; font-size: 1.1rem; letter-spacing: 2px; direction: ltr; display: inline-block; }
-        .star-display .empty { color: #ddd; }
-
-        .review-card { background: #f9f9f9; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; text-align: right; border: 1px solid #eee; }
-        .review-card .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-        .review-card .review-name { font-weight: bold; color: var(--primary); }
-        .review-card .review-date { font-size: 0.75rem; color: #999; }
-        .review-card .review-text { font-size: 0.95rem; color: #444; margin-top: 6px; line-height: 1.4; }
-        .review-summary { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
-        .review-summary .avg-num { font-size: 2.2rem; font-weight: bold; color: var(--primary); }
-
-        .admin-review-item { background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; text-align: right; }
-        .admin-review-item.is-deleted { opacity: 0.55; background: #fdf0f0; }
-        .admin-review-item .arow { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-        .admin-review-item .a-btn { border: none; border-radius: 6px; padding: 5px 12px; font-size: 0.85rem; cursor: pointer; color: white; font-weight: bold; }
-        .admin-review-item .a-btn.delete { background: var(--danger); }
-        .admin-review-item .a-btn.restore { background: var(--success); }
-
-        .order-card { background: #f9f9f9; border: 1px solid #eee; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; text-align: right; }
-        .order-card .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-        .order-card .order-date { font-size: 0.8rem; color: #999; }
-        .order-card .order-total { color: var(--success); font-weight: bold; }
-        .order-card .order-items { font-size: 0.85rem; color: #555; line-height: 1.5; margin: 6px 0; }
-        .order-card .order-actions { display: flex; gap: 8px; margin-top: 8px; }
-        .order-card .order-actions button { flex: 1; border: none; border-radius: 6px; padding: 8px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=Rubik:wght@500;600;700;800;900&display=swap">
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body id="top">
 
-<header class="site-hero">
-    <div class="hero-content">
-        <div class="hero-badge">❄️ ציוד סקי איכותי • איסוף מהיר • הזמנה נוחה</div>
-        <h1 data-i18n="headerTitle">skirent-il</h1>
-        <p data-i18n="headerSubtitle">השכרת ביגוד וציוד סקי פרימיום בגבעת שמואל והמרכז</p>
-        <div class="hero-trust">
-            <span>✓ מחירים ברורים</span>
-            <span>✓ התאמת מידה</span>
-            <span>✓ איסוף בגבעת שמואל</span>
-        </div>
+<!-- ================= TOP BAR ================= -->
+<header class="topbar" id="topbar">
+    <div class="topbar-inner">
+        <a class="brand" href="#top" aria-label="skirent-il">
+            <span class="brand-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 2v20M4.9 6.5l14.2 11M19.1 6.5 4.9 17.5M9.5 3.5 12 6l2.5-2.5M9.5 20.5 12 18l2.5 2.5"/></svg>
+            </span>
+            <span class="brand-name" data-i18n="headerTitle">skirent-il</span>
+        </a>
+
+        <nav class="main-nav" aria-label="ניווט ראשי">
+            <a class="nav-link" onclick="openReviewsModal()">
+                <svg class="nav-ic" viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z"/></svg>
+                <span class="nav-tx" data-i18n="navReviews">ביקורות</span>
+            </a>
+            <a class="nav-link" onclick="openOrderHistoryModal()">
+                <svg class="nav-ic" viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"/></svg>
+                <span class="nav-tx" data-i18n="navOrders">ההזמנות שלי</span>
+            </a>
+            <a class="nav-link" onclick="showModal('contactModal')">
+                <svg class="nav-ic" viewBox="0 0 24 24"><path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                <span class="nav-tx" data-i18n="navContact">איסוף וקשר</span>
+            </a>
+            <a class="nav-link" id="lang-toggle-btn" onclick="toggleLanguage()">
+                <svg class="nav-ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>
+                <span class="nav-tx">English</span>
+            </a>
+            <a class="nav-link nav-cart" onclick="showModal('cartModal')">
+                <svg class="nav-ic" viewBox="0 0 24 24"><path d="M5 7h14l-1.2 12.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9zM9 7V6a3 3 0 0 1 6 0v1"/></svg>
+                <span class="nav-tx" data-i18n="navCart">הסל שלי</span>
+                <span class="cart-badge" id="cart-count">0</span>
+            </a>
+        </nav>
     </div>
 </header>
 
-<nav>
-    <a onclick="showModal('cartModal')" style="color: #e67e22;">🛒 <span data-i18n="navCart">הסל שלי</span> (<span id="cart-count">0</span>)</a>
-    <a onclick="openReviewsModal()" style="color: #f2a900;">⭐ <span data-i18n="navReviews">ביקורות</span></a>
-    <a onclick="openOrderHistoryModal()" style="color: #0077b6;">📋 <span data-i18n="navOrders">ההזמנות שלי</span></a>
-    <a onclick="showModal('contactModal')">📍 <span data-i18n="navContact">איסוף וקשר</span></a>
-    <a id="lang-toggle-btn" onclick="toggleLanguage()" style="color: #6c5ce7;">🌐 English</a>
-</nav>
+<!-- ================= HERO ================= -->
+<section class="hero site-hero">
+    <div class="hero-snow" aria-hidden="true"></div>
+    <div class="hero-inner">
+        <div class="hero-copy">
+            <span class="hero-eyebrow" data-i18n="heroEyebrow">עונת הסקי כבר כאן</span>
+            <h1 data-i18n="heroTitle">כל ציוד הסקי למשפחה. בלי לקנות.</h1>
+            <p class="hero-sub" data-i18n="headerSubtitle">השכרת ביגוד וציוד סקי פרימיום בגבעת שמואל והמרכז</p>
+            <div class="hero-actions">
+                <a class="btn btn-accent btn-lg" href="#bundles" data-i18n="heroCtaBundles">לחבילות המשתלמות</a>
+                <a class="btn btn-glass btn-lg" href="#booking" data-i18n="heroCtaShop">בחירת תאריכים וציוד</a>
+            </div>
+            <ul class="hero-trust">
+                <li data-i18n="trust1">מחירים ברורים</li>
+                <li data-i18n="trust2">התאמת מידה</li>
+                <li data-i18n="trust3">איסוף בגבעת שמואל</li>
+            </ul>
+        </div>
 
-<div class="container">
-    <div class="about-section">
+        <aside class="hero-card" aria-label="חבילת קומפלט">
+            <div class="hero-card-top">
+                <span class="hero-card-tag" data-i18n="bestValue">הכי משתלם</span>
+                <span class="hero-card-name" data-i18n="bundleFullName">חבילת קומפלט</span>
+            </div>
+            <div class="hero-card-price" data-i18n="bundlePrice">₪300 לשבוע</div>
+            <ul class="check-list light">
+                <li data-i18n="incCoat">מעיל סקי</li>
+                <li data-i18n="incPants">מכנס סקי</li>
+                <li data-i18n="incHelmet">קסדה תקנית</li>
+                <li data-i18n="incGloves">כפפות אטומות</li>
+                <li data-i18n="incGoggles">משקפת גוגלס</li>
+            </ul>
+            <button class="btn btn-light btn-block" data-i18n="bundleBtn" onclick="openBundleWizard('full')">הרכב חבילת קומפלט</button>
+        </aside>
+    </div>
+</section>
+
+<main class="container">
+
+    <!-- ================= FEATURES ================= -->
+    <section class="features" aria-label="למה אנחנו">
+        <div class="feature">
+            <span class="feature-ic">🎿</span>
+            <div><h3 data-i18n="feat1Title">ציוד ברמה הגבוהה ביותר</h3><p data-i18n="feat1Text">ביגוד וציוד סקי איכותי לכל המשפחה – גברים, נשים וילדים.</p></div>
+        </div>
+        <div class="feature">
+            <span class="feature-ic">📏</span>
+            <div><h3 data-i18n="feat2Title">מידה מדויקת</h3><p data-i18n="feat2Text">מחשבון מידות חכם באתר + מדידה בזמן האיסוף.</p></div>
+        </div>
+        <div class="feature">
+            <span class="feature-ic">📍</span>
+            <div><h3 data-i18n="feat3Title">איסוף קל ומהיר</h3><p data-i18n="feat3Text">אוספים בגבעת שמואל לפני הטיסה ומחזירים אחרי הנחיתה.</p></div>
+        </div>
+    </section>
+
+    <section class="about-section">
         <p data-i18n-html="aboutText">
             טסים לחופשת סקי בקרוב? ב-<strong>skirent-il</strong> תמצאו ציוד וביגוד סקי ברמה הגבוהה ביותר ולכל המשפחה. אנו מציעים חבילות "קומפלט" משתלמות או השכרה של פריטים בודדים. מודדים, אוספים בקלות מגבעת שמואל ויוצאים לחופשה בראש שקט ומוגן מהקור!
         </p>
-    </div>
+    </section>
 
-    <div class="bundle-banner">
-        <h2 data-i18n="bundleTitle">⛷️ מבצעי חבילות שבועיים משתלמים</h2>
-        <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center; margin-top:15px;">
-            <div style="background:rgba(255,255,255,0.15); border-radius:12px; padding:15px; flex:1; min-width:220px; max-width:280px;">
-                <p data-i18n="bundleDuoDesc" style="margin:0 0 8px 0; font-weight:bold;">מעיל + מכנס</p>
-                <div data-i18n="bundleDuoPrice" style="font-size: 1.4rem; font-weight: bold; margin: 5px 0;">₪200 לשבוע</div>
-                <button data-i18n="bundleDuoBtn" onclick="openBundleWizard('duo')" style="background:white; color:var(--bundle); border:none; padding:10px 20px; border-radius:25px; font-weight:bold; font-size:0.95rem; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.15); margin-top:8px;">הרכב חבילה זו ✅</button>
+    <!-- ================= BUNDLES ================= -->
+    <section class="section" id="bundles">
+        <div class="section-head">
+            <span class="eyebrow" data-i18n="bundlesEyebrow">חבילות שבועיות</span>
+            <h2 data-i18n="bundleTitle">מבצעי חבילות שבועיים משתלמים</h2>
+            <p data-i18n="bundlesSub">בוחרים פריטים ומידות לכל אחד מבני המשפחה – ומשלמים מחיר חבילה אחד.</p>
+        </div>
+
+        <div class="bundle-grid">
+            <article class="bundle-card">
+                <div class="bundle-name" data-i18n="bundleDuoName">חבילת בסיס</div>
+                <p class="bundle-desc" data-i18n="bundleDuoDesc">מעיל + מכנס</p>
+                <div class="bundle-price" data-i18n="bundleDuoPrice">₪200 לשבוע</div>
+                <ul class="check-list">
+                    <li data-i18n="incCoat">מעיל סקי</li>
+                    <li data-i18n="incPants">מכנס סקי</li>
+                </ul>
+                <button class="btn btn-outline btn-block" data-i18n="bundleDuoBtn" onclick="openBundleWizard('duo')">הרכב חבילה זו</button>
+            </article>
+
+            <article class="bundle-card featured">
+                <span class="ribbon" data-i18n="bestValue">הכי משתלם</span>
+                <div class="bundle-name" data-i18n="bundleFullName">חבילת קומפלט</div>
+                <p class="bundle-desc" data-i18n="bundleDesc">מעיל + מכנס + קסדה + גוגלס + כפפות</p>
+                <div class="bundle-price" data-i18n="bundlePrice">₪300 לשבוע</div>
+                <ul class="check-list light">
+                    <li data-i18n="incCoat">מעיל סקי</li>
+                    <li data-i18n="incPants">מכנס סקי</li>
+                    <li data-i18n="incHelmet">קסדה תקנית</li>
+                    <li data-i18n="incGloves">כפפות אטומות</li>
+                    <li data-i18n="incGoggles">משקפת גוגלס</li>
+                </ul>
+                <button class="btn btn-accent btn-block" data-i18n="bundleBtn" onclick="openBundleWizard('full')">הרכב חבילת קומפלט</button>
+            </article>
+        </div>
+    </section>
+
+    <!-- ================= BOOKING / DATES ================= -->
+    <section class="section" id="booking">
+        <div class="booking-card tools-section">
+            <div class="booking-head">
+                <span class="step-num">1</span>
+                <div>
+                    <h2 data-i18n="bookingTitle">מתי אתם טסים?</h2>
+                    <p data-i18n="bookingSub">בחרו תאריכים כדי לראות זמינות ומחיר מדויק.</p>
+                </div>
             </div>
-            <div style="background:rgba(255,255,255,0.15); border-radius:12px; padding:15px; flex:1; min-width:220px; max-width:280px;">
-                <p data-i18n="bundleDesc" style="margin:0 0 8px 0; font-weight:bold;">מעיל + מכנס + קסדה + גוגלס + כפפות</p>
-                <div data-i18n="bundlePrice" style="font-size: 1.4rem; font-weight: bold; margin: 5px 0;">₪300 לשבוע</div>
-                <button data-i18n="bundleBtn" onclick="openBundleWizard('full')" style="background:white; color:var(--bundle); border:none; padding:10px 20px; border-radius:25px; font-weight:bold; font-size:0.95rem; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.15); margin-top:8px;">הרכב חבילת קומפלט ✅</button>
+            <div class="date-fields">
+                <label class="field" for="start-date">
+                    <span class="field-label" data-i18n="fromDate">מתאריך</span>
+                    <input type="date" id="start-date" onchange="validateDates()">
+                </label>
+                <label class="field" for="end-date">
+                    <span class="field-label" data-i18n="toDate">עד תאריך</span>
+                    <input type="date" id="end-date" onchange="validateDates()">
+                </label>
+                <div class="duration-box">
+                    <span class="field-label" data-i18n="durationLabel">תקופת השכרה</span>
+                    <div id="duration-info" data-i18n="pleaseSelectDates">נא לבחור תאריכים</div>
+                </div>
+            </div>
+            <div id="availability-loading" class="status-note" data-i18n="loadingAvailability">🔄 טוען נתוני זמינות עדכניים...</div>
+            <div id="cloud-status" class="cloud-status" data-i18n="cloudError">⚠️ לא ניתן כרגע לטעון את נתוני הזמינות מהענן. ייתכן שחלק מהמידע על מוצרים תפוסים לא יוצג. נסו לרענן את הדף, ואם הבעיה נמשכת - צרו איתנו קשר.</div>
+        </div>
+    </section>
+
+    <!-- ================= CATALOG ================= -->
+    <section class="section" id="catalog">
+        <div class="section-head">
+            <span class="eyebrow" data-i18n="catalogEyebrow">הקטלוג</span>
+            <h2 data-i18n="catalogTitle">או בחרו פריטים בודדים</h2>
+        </div>
+
+        <div class="filters">
+            <div class="filter-row">
+                <span class="filter-label" data-i18n="filterWhoLabel">למי</span>
+                <div class="filter-group">
+                    <button class="cat-btn active" data-i18n="filterAll" onclick="filterGender('all', this)">הכל</button>
+                    <button class="cat-btn" data-i18n="filterMen" onclick="filterGender('גברים', this)">גברים</button>
+                    <button class="cat-btn" data-i18n="filterWomen" onclick="filterGender('נשים', this)">נשים</button>
+                    <button class="cat-btn" data-i18n="filterKids" onclick="filterGender('ילדים', this)">ילדים</button>
+                </div>
+            </div>
+            <div class="filter-row">
+                <span class="filter-label" data-i18n="filterCatLabel">פריט</span>
+                <div class="filter-group">
+                    <button class="cat-btn active" data-i18n="filterAllCat" onclick="filterCategory('all', this)">כל הקטגוריות</button>
+                    <button class="cat-btn" data-i18n="filterCoat" onclick="filterCategory('מעיל', this)">🧥 מעילים</button>
+                    <button class="cat-btn" data-i18n="filterPants" onclick="filterCategory('מכנס', this)">👖 מכנסיים</button>
+                    <button class="cat-btn" data-i18n="filterHelmet" onclick="filterCategory('קסדה', this)">🪖 קסדות</button>
+                    <button class="cat-btn" data-i18n="filterGloves" onclick="filterCategory('כפפות', this)">🧤 כפפות</button>
+                    <button class="cat-btn" data-i18n="filterGoggles" onclick="filterCategory('גוגלס', this)">🥽 גוגלס</button>
+                </div>
             </div>
         </div>
-    </div>
 
-
-    <div class="tools-section">
-        <div style="display:flex; justify-content:center; align-items: center; gap:15px; flex-wrap:wrap; margin-bottom:15px;">
-            <div><label for="start-date"><b data-i18n="fromDate">מתאריך:</b></label> <input type="date" id="start-date" onchange="validateDates()"></div>
-            <div><label for="end-date"><b data-i18n="toDate">עד תאריך:</b></label> <input type="date" id="end-date" onchange="validateDates()"></div>
+        <div id="block-מעיל" class="category-block">
+            <h3 class="category-title" id="title-מעיל">🧥 מעילי סקי</h3>
+            <div class="grid" id="grid-מעיל"></div>
         </div>
-        <div id="duration-info" data-i18n="pleaseSelectDates" style="font-weight:bold; color:var(--primary); margin-bottom:10px;">נא לבחור תאריכים</div>
-        <div id="availability-loading" data-i18n="loadingAvailability" style="font-size:0.85rem; color:#888; margin-bottom:10px;">🔄 טוען נתוני זמינות עדכניים...</div>
-        <div id="cloud-status" class="cloud-status" data-i18n="cloudError">⚠️ לא ניתן כרגע לטעון את נתוני הזמינות מהענן. ייתכן שחלק מהמידע על מוצרים תפוסים לא יוצג. נסו לרענן את הדף, ואם הבעיה נמשכת - צרו איתנו קשר.</div>
+        <div id="block-מכנס" class="category-block">
+            <h3 class="category-title" id="title-מכנס">👖 מכנסי סקי וסנובורד</h3>
+            <div class="grid" id="grid-מכנס"></div>
+        </div>
+        <div id="block-קסדה" class="category-block">
+            <h3 class="category-title" id="title-קסדה">🪖 קסדות מגן</h3>
+            <div class="grid" id="grid-קסדה"></div>
+        </div>
+        <div id="block-כפפות" class="category-block">
+            <h3 class="category-title" id="title-כפפות">🧤 כפפות תרמיות אטומות</h3>
+            <div class="grid" id="grid-כפפות"></div>
+        </div>
+        <div id="block-גוגלס" class="category-block">
+            <h3 class="category-title" id="title-גוגלס">🥽 משקפת גוגלס (Goggles)</h3>
+            <div class="grid" id="grid-גוגלס"></div>
+        </div>
+    </section>
 
-        <div style="border-top: 1px solid #ddd; padding-top: 15px;">
-            <div class="filter-group">
-                <button class="cat-btn active" data-i18n="filterAll" onclick="filterGender('all', this)">הכל</button>
-                <button class="cat-btn" data-i18n="filterMen" onclick="filterGender('גברים', this)">גברים 🧔</button>
-                <button class="cat-btn" data-i18n="filterWomen" onclick="filterGender('נשים', this)">נשים 👩</button>
-                <button class="cat-btn" data-i18n="filterKids" onclick="filterGender('ילדים', this)">ילדים 🧒</button>
+    <!-- ================= REVIEWS CTA ================= -->
+    <section class="reviews-band">
+        <div class="reviews-band-stars" aria-hidden="true">★★★★★</div>
+        <div class="reviews-band-copy">
+            <h2 data-i18n="reviewsBandTitle">מה הלקוחות שלנו אומרים?</h2>
+            <p data-i18n="reviewsBandText">קראו חוויות של משפחות שכבר יצאו איתנו לשלג – או שתפו את שלכם.</p>
+        </div>
+        <button class="btn btn-light" data-i18n="reviewsBandBtn" onclick="openReviewsModal()">לכל הביקורות</button>
+    </section>
+
+    <!-- ================= FAQ + POLICY ================= -->
+    <section class="section info-grid">
+        <div class="faq-section">
+            <span class="eyebrow" data-i18n="faqEyebrow">שאלות ותשובות</span>
+            <h2 data-i18n="faqTitle">שאלות נפוצות על השכרת ציוד סקי</h2>
+            <details class="faq-item" open>
+                <summary><h4 data-i18n="faqQ1">איך עובד חישוב תקופת ההשכרה לחופשה?</h4></summary>
+                <p data-i18n="faqA1">המחירים שלנו מותאמים מראש לחופשות סקי סטנדרטיות (שבוע שלם). המערכת מחשבת אוטומטית שבועות השכרה בהתאם לתאריכים שתבחרו, כך שיש לכם מספיק זמן לאסוף את הציוד בנחת לפני הטיסה ולהחזיר אותו אחרי הנחיתה.</p>
+            </details>
+            <details class="faq-item">
+                <summary><h4 data-i18n="faqQ2">איך אדע איזו מידת ביגוד לבחור?</h4></summary>
+                <p data-i18n="faqA2">פיתחנו עבורכם "מחשבון התאמת מידה חכם" הזמין בלחיצה מכל כרטיסיית פריט או באשף החבילות. בנוסף, בעת האיסוף אצלנו בגבעת שמואל תוכלו למדוד את הביגוד ולוודא התאמה מלאה ונוחות מקסימלית.</p>
+            </details>
+            <details class="faq-item">
+                <summary><h4 data-i18n="faqQ3">מה היתרון של חבילת ה"קומפלט"?</h4></summary>
+                <p data-i18n="faqA3">חבילת הקומפלט סוגרת לכם את כל הפינות במחיר מוזל ומשתלם במיוחד (300 ש"ח לשבוע) וכוללת את חמשת פריטי החובה: מעיל, מכנס, קסדה תקנית, כפפות אטומות ומשקפת גוגלס.</p>
+            </details>
+        </div>
+
+        <div class="policy-section">
+            <span class="eyebrow" data-i18n="policyEyebrow">חשוב לדעת</span>
+            <h2 data-i18n="policyTitle">מדיניות ביטולים והחזרים</h2>
+            <ol class="policy-list">
+                <li data-i18n="policy1">ביטול הזמנה עד 72 שעות לפני מועד האיסוף - החזר מלא.</li>
+                <li data-i18n="policy2">ביטול בין 72-24 שעות לפני האיסוף - חיוב של 25% מסך ההזמנה.</li>
+                <li data-i18n="policy3">ביטול פחות מ-24 שעות לפני האיסוף, או אי-הגעה - החיוב יהיה מלא.</li>
+                <li data-i18n="policy4">במקרה של נזק לציוד מעבר לבלאי סביר, יחול חיוב נוסף בהתאם להערכת הנזק.</li>
+                <li data-i18n="policy5">לשינויים במידות או בפריטים ניתן לפנות אלינו בוואטסאפ בכל שלב לפני האיסוף, בכפוף לזמינות.</li>
+            </ol>
+        </div>
+    </section>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <div class="brand">
+                <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20M4.9 6.5l14.2 11M19.1 6.5 4.9 17.5M9.5 3.5 12 6l2.5-2.5M9.5 20.5 12 18l2.5 2.5"/></svg></span>
+                <span class="brand-name">skirent-il</span>
             </div>
-
-            <div class="filter-group">
-                <button class="cat-btn active" data-i18n="filterAllCat" onclick="filterCategory('all', this)">הצג את כל הקטגוריות</button>
-                <button class="cat-btn" data-i18n="filterCoat" onclick="filterCategory('מעיל', this)">🧥 מעילים</button>
-                <button class="cat-btn" data-i18n="filterPants" onclick="filterCategory('מכנס', this)">👖 מכנסיים</button>
-                <button class="cat-btn" data-i18n="filterHelmet" onclick="filterCategory('קסדה', this)">🪖 קסדות</button>
-                <button class="cat-btn" data-i18n="filterGloves" onclick="filterCategory('כפפות', this)">🧤 כפפות</button>
-                <button class="cat-btn" data-i18n="filterGoggles" onclick="filterCategory('גוגלס', this)">🥽 גוגלס</button>
-            </div>
+            <p data-i18n="footerTagline">השכרת ביגוד וציוד סקי לכל המשפחה. אוספים, טסים, נהנים.</p>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="contactTitle">פרטי איסוף וקשר</h4>
+            <p><span data-i18n="addressLabel">🏠 כתובת:</span> יהודה הלוי 58, גבעת שמואל</p>
+            <p><span data-i18n="phoneLabel">📞 טלפון:</span> <a href="tel:0549943477" dir="ltr">054-9943477</a></p>
+        </div>
+        <div class="footer-col footer-actions">
+            <a href="https://wa.me/972549943477" target="_blank" rel="noopener" class="wa-btn" data-i18n="whatsappBtn">💬 שלח לנו הודעה בוואטסאפ</a>
+            <button class="btn btn-ghost-light" data-i18n="navigateBtn" onclick="window.open('https://maps.google.com/?q=יהודה+הלוי+58+גבעת+שמואל')">📍 ניווט ליעד</button>
         </div>
     </div>
+    <div class="footer-bottom">
+        <span>© skirent-il</span>
+        <button class="admin-link" data-i18n="adminPanelBtn" onclick="openAdminModal()">⚙️ פאנל ניהול מלאי</button>
+    </div>
+</footer>
 
-    <!-- בלוקים של קטגוריות -->
-    <div id="block-מעיל" class="category-block">
-        <div class="category-title" id="title-מעיל">🧥 מעילי סקי</div>
-        <div class="grid" id="grid-מעיל"></div>
-    </div>
-    <div id="block-מכנס" class="category-block">
-        <div class="category-title" id="title-מכנס">👖 מכנסי סקי וסנובורד</div>
-        <div class="grid" id="grid-מכנס"></div>
-    </div>
-    <div id="block-קסדה" class="category-block">
-        <div class="category-title" id="title-קסדה">🪖 קסדות מגן</div>
-        <div class="grid" id="grid-קסדה"></div>
-    </div>
-    <div id="block-כפפות" class="category-block">
-        <div class="category-title" id="title-כפפות">🧤 כפפות תרמיות אטומות</div>
-        <div class="grid" id="grid-כפפות"></div>
-    </div>
-    <div id="block-גוגלס" class="category-block">
-        <div class="category-title" id="title-גוגלס">🥽 משקפת גוגלס (Goggles)</div>
-        <div class="grid" id="grid-גוגלס"></div>
-    </div>
-
-    <div class="faq-section">
-        <h2 data-i18n="faqTitle">שאלות נפוצות על השכרת ציוד סקי</h2>
-        <div class="faq-item">
-            <h4 data-i18n="faqQ1">איך עובד חישוב תקופת ההשכרה לחופשה?</h4>
-            <p data-i18n="faqA1">המחירים שלנו מותאמים מראש לחופשות סקי סטנדרטיות (שבוע שלם). המערכת מחשבת אוטומטית שבועות השכרה בהתאם לתאריכים שתבחרו, כך שיש לכם מספיק זמן לאסוף את הציוד בנחת לפני הטיסה ולהחזיר אותו אחרי הנחיתה.</p>
-        </div>
-        <div class="faq-item">
-            <h4 data-i18n="faqQ2">איך אדע איזו מידת ביגוד לבחור?</h4>
-            <p data-i18n="faqA2">פיתחנו עבורכם "מחשבון התאמת מידה חכם" הזמין בלחיצה מכל כרטיסיית פריט או באשף החבילות. בנוסף, בעת האיסוף אצלנו בגבעת שמואל תוכלו למדוד את הביגוד ולוודא התאמה מלאה ונוחות מקסימלית.</p>
-        </div>
-        <div class="faq-item">
-            <h4 data-i18n="faqQ3">מה היתרון של חבילת ה"קומפלט"?</h4>
-            <p data-i18n="faqA3">חבילת הקומפלט סוגרת לכם את כל הפינות במחיר מוזל ומשתלם במיוחד (300 ש"ח לשבוע) וכוללת את חמשת פריטי החובה: מעיל, מכנס, קסדה תקנית, כפפות אטומות ומשקפת גוגלס.</p>
-        </div>
-    </div>
-
-    <div class="policy-section">
-        <h2 data-i18n="policyTitle">מדיניות ביטולים והחזרים</h2>
-        <ul>
-            <li data-i18n="policy1">ביטול הזמנה עד 72 שעות לפני מועד האיסוף - החזר מלא.</li>
-            <li data-i18n="policy2">ביטול בין 72-24 שעות לפני האיסוף - חיוב של 25% מסך ההזמנה.</li>
-            <li data-i18n="policy3">ביטול פחות מ-24 שעות לפני האיסוף, או אי-הגעה - החיוב יהיה מלא.</li>
-            <li data-i18n="policy4">במקרה של נזק לציוד מעבר לבלאי סביר, יחול חיוב נוסף בהתאם להערכת הנזק.</li>
-            <li data-i18n="policy5">לשינויים במידות או בפריטים ניתן לפנות אלינו בוואטסאפ בכל שלב לפני האיסוף, בכפוף לזמינות.</li>
-        </ul>
-    </div>
-</div>
-
-<div style="text-align: center; margin: 40px 0 20px 0;">
-    <button data-i18n="adminPanelBtn" onclick="openAdminModal()" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid white; padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 0.85rem;">⚙️ פאנל ניהול מלאי</button>
-</div>
+<a class="wa-fab" href="https://wa.me/972549943477" target="_blank" rel="noopener" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>
+</a>
 
 <div class="overlay" id="overlay" onclick="closePopups()"></div>
 
@@ -383,105 +327,101 @@
 <!-- מודל עגלה ותשלום -->
 <div class="modal" id="cartModal">
     <div class="modal-header">
-        <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
         <h3 data-i18n="cartTitle">הסל שלי</h3>
+        <button class="modal-close" onclick="closePopups()" aria-label="סגור">×</button>
     </div>
     <div class="modal-body">
         <div id="cart-list"></div>
-        <div id="checkout-area" style="display:none; margin-top:20px; text-align: center;">
-            <hr>
-            <div style="margin:15px auto; text-align: center;">
-                <label for="cust-name"><b data-i18n="fullNameLabel">שם מלא להזמנה:</b></label><br>
-                <input type="text" id="cust-name" data-i18n-placeholder="fullNamePlaceholder" placeholder="הכנס שם מלא" style="width:90%; padding:10px; margin-top:5px; box-sizing: border-box; text-align: center;">
+        <div id="checkout-area" style="display:none;">
+            <div class="checkout-box">
+                <label class="field" for="cust-name">
+                    <span class="field-label" data-i18n="fullNameLabel">שם מלא להזמנה:</span>
+                    <input type="text" id="cust-name" data-i18n-placeholder="fullNamePlaceholder" placeholder="הכנס שם מלא">
+                </label>
+                <div class="total-row">
+                    <span data-i18n="totalToPay">סה"כ לתשלום:</span>
+                    <span class="total-price">₪<span id="final-price">0</span></span>
+                </div>
             </div>
-            <div style="padding:15px; background:#f0fdf4; border-radius:10px; text-align:center; border: 1px solid #dcfce7; width: 90%; margin: 0 auto; box-sizing: border-box;">
-                <span data-i18n="totalToPay">סה"כ לתשלום:</span> <span style="font-size:1.4rem; font-weight:bold; color:var(--success);">₪<span id="final-price">0</span></span>
-            </div>
-            
-            <p data-i18n="payMethodsHint" style="font-size:0.85rem; text-align:center; margin-top:15px; color:#555; font-weight:bold;">לחצו על האפליקציה המועדפת לתשלום ושריון ההזמנה:</p>
+            <p class="pay-hint" data-i18n="payMethodsHint">לחצו על האפליקציה המועדפת לתשלום ושריון ההזמנה:</p>
             <div class="pay-methods">
-                <button id="pay-btn-bit" onclick="processPaymentAndOrder('bit')" class="pay-btn btn-bit">📱 bit</button>
-                <button id="pay-btn-paybox" onclick="processPaymentAndOrder('paybox')" class="pay-btn btn-paybox">💜 PayBox</button>
+                <button id="pay-btn-bit" onclick="processPaymentAndOrder('bit')" class="pay-btn btn-bit">bit</button>
+                <button id="pay-btn-paybox" onclick="processPaymentAndOrder('paybox')" class="pay-btn btn-paybox">PayBox</button>
             </div>
-            
-            <div id="post-payment-container" style="text-align: center; margin-top: 15px;"></div>
+            <div id="post-payment-container"></div>
         </div>
     </div>
 </div>
 
-<div class="modal" id="paymentInstructionsModal" style="max-width: 480px; z-index: 3500;">
+<div class="modal modal-top" id="paymentInstructionsModal">
     <div class="modal-header">
-        <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePaymentInstructionsModal()">×</span>
         <h3 data-i18n="paymentInstructionsTitle">💳 הוראות תשלום</h3>
+        <button class="modal-close" onclick="closePaymentInstructionsModal()" aria-label="סגור">×</button>
     </div>
-    <div class="modal-body" id="paymentInstructionsBody" style="text-align:center;">
-    </div>
-    <div style="padding: 0 20px 20px 20px; text-align:center;">
-        <button data-i18n="gotItBtn" class="btn-select" style="background:#666; width:100%;" onclick="closePaymentInstructionsModal()">הבנתי, סגור חלון זה</button>
+    <div class="modal-body center" id="paymentInstructionsBody"></div>
+    <div class="modal-footer">
+        <button data-i18n="gotItBtn" class="btn btn-dark btn-block" onclick="closePaymentInstructionsModal()">הבנתי, סגור חלון זה</button>
     </div>
 </div>
 
 <div class="modal" id="bundleWizard">
     <div class="modal-header">
-        <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
         <h3 data-i18n="bundleWizardTitle">בחירת חבילה</h3>
+        <button class="modal-close" onclick="closePopups()" aria-label="סגור">×</button>
     </div>
     <div class="modal-body" id="bundle-wizard-body"></div>
-    <div style="padding: 15px; text-align: center;">
-        <button id="bundle-submit-btn" class="btn-select" style="background:var(--success); width:100%;" onclick="saveBundleToCart()">אישור והוספה לסל</button>
+    <div class="modal-footer">
+        <button id="bundle-submit-btn" class="btn-select" onclick="saveBundleToCart()">אישור והוספה לסל</button>
     </div>
 </div>
 
-<div class="modal" id="sizeGuideModal" style="z-index: 2500;">
+<div class="modal modal-over" id="sizeGuideModal">
     <div class="modal-header">
-        <span style="position:absolute; left:15px; cursor:pointer;" onclick="closeSizeGuide()">×</span>
         <h3 data-i18n="sizeGuideTitle">📏 מחשבון התאמת מידה חכם</h3>
+        <button class="modal-close" onclick="closeSizeGuide()" aria-label="סגור">×</button>
     </div>
     <div class="modal-body">
-        <p data-i18n="sizeGuideDesc" style="font-size: 0.9rem; color: #555; text-align: center;">הזינו את הנתונים שלכם והמערכת תחשב אוטומטית את המידה האידיאלית עבורכם לביגוד סקי נוח וחופשי.</p>
-        
+        <p class="muted center" data-i18n="sizeGuideDesc">הזינו את הנתונים שלכם והמערכת תחשב אוטומטית את המידה האידיאלית עבורכם לביגוד סקי נוח וחופשי.</p>
         <div class="calc-box">
-            <div style="margin-bottom: 12px;">
-                <label style="display:block; margin-bottom:5px;"><b data-i18n="sizeGuideFor">עבור מי הביגוד?</b></label>
-                <select id="calc-gender" style="width: 100%;">
-                    <option value="גברים" data-i18n="sizeGuideMan">גבר 🧔</option>
-                    <option value="נשים" data-i18n="sizeGuideWoman">אישה 👩</option>
-                    <option value="ילדים" data-i18n="sizeGuideKid">ילד/ה 🧒</option>
+            <label class="field">
+                <span class="field-label" data-i18n="sizeGuideFor">עבור מי הביגוד?</span>
+                <select id="calc-gender">
+                    <option value="גברים" data-i18n="sizeGuideMan">גבר</option>
+                    <option value="נשים" data-i18n="sizeGuideWoman">אישה</option>
+                    <option value="ילדים" data-i18n="sizeGuideKid">ילד/ה</option>
                 </select>
+            </label>
+            <div class="field-pair">
+                <label class="field">
+                    <span class="field-label" data-i18n="heightLabel">גובה (בס"מ):</span>
+                    <input type="number" id="calc-height" placeholder="175">
+                </label>
+                <label class="field">
+                    <span class="field-label" data-i18n="weightLabel">משקל (בק"ג):</span>
+                    <input type="number" id="calc-weight" placeholder="78">
+                </label>
             </div>
-            <div style="display: flex; gap: 10px; margin-bottom: 12px;">
-                <div style="flex:1;">
-                    <label style="display:block; margin-bottom:5px;"><b data-i18n="heightLabel">גובה (בס"מ):</b></label>
-                    <input type="number" id="calc-height" placeholder="למשל: 175" style="width: 85%;">
-                </div>
-                <div style="flex:1;">
-                    <label style="display:block; margin-bottom:5px;"><b data-i18n="weightLabel">משקל (בק"ג):</b></label>
-                    <input type="number" id="calc-weight" placeholder="למשל: 78" style="width: 85%;">
-                </div>
-            </div>
-            <button data-i18n="calcBtn" onclick="calculateSkiSize()" class="btn-select" style="width:100%; background:var(--primary); margin-top:5px;">חשב מידה מתאימה 🚀</button>
-            
+            <button data-i18n="calcBtn" onclick="calculateSkiSize()" class="btn btn-primary btn-block">חשב מידה מתאימה</button>
             <div id="calc-result-box" class="calc-result"></div>
         </div>
-
-        <h4 data-i18n="tipTitle" style="color:var(--primary); margin-top:20px; margin-bottom:5px;">💡 טיפ חשוב לנוחות בשלג:</h4>
-        <p data-i18n="tipText" style="font-size:0.85rem; line-height:1.4; color:#666; margin-top:0;">
-            המחשבון שלנו לוקח בחשבון שאתם לובשים ביגוד תרמי או סווטשירט מתחת למעיל. בגדי סקי צריכים להיות מעט משוחררים כדי לאפשר תנועה חופשית בזמן הגלישה.
-        </p>
-        <button data-i18n="closeCalcBtn" class="btn-select" style="width:100%; margin-top:10px; background:#666;" onclick="closeSizeGuide()">סגור מחשבון</button>
+        <div class="tip-box">
+            <h4 data-i18n="tipTitle">💡 טיפ חשוב לנוחות בשלג:</h4>
+            <p data-i18n="tipText">המחשבון שלנו לוקח בחשבון שאתם לובשים ביגוד תרמי או סווטשירט מתחת למעיל. בגדי סקי צריכים להיות מעט משוחררים כדי לאפשר תנועה חופשית בזמן הגלישה.</p>
+        </div>
+        <button data-i18n="closeCalcBtn" class="btn btn-soft btn-block" onclick="closeSizeGuide()">סגור מחשבון</button>
     </div>
 </div>
 
-<div class="modal" id="reviewsModal" style="max-width: 550px;">
+<div class="modal modal-wide" id="reviewsModal">
     <div class="modal-header">
-        <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
         <h3 data-i18n="reviewsTitle">⭐ ביקורות לקוחות</h3>
+        <button class="modal-close" onclick="closePopups()" aria-label="סגור">×</button>
     </div>
     <div class="modal-body">
         <div id="reviews-summary" class="review-summary" style="display:none;"></div>
 
-        <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:12px;">
-            <select id="reviews-star-filter" onchange="renderReviewsPublic()" style="margin:0;">
+        <div class="review-filters">
+            <select id="reviews-star-filter" onchange="renderReviewsPublic()">
                 <option value="all" data-i18n="filterAllRatings">כל הדירוגים</option>
                 <option value="5" data-i18n="stars5">5 כוכבים</option>
                 <option value="4" data-i18n="stars4">4 כוכבים</option>
@@ -489,7 +429,7 @@
                 <option value="2" data-i18n="stars2">2 כוכבים</option>
                 <option value="1" data-i18n="stars1">כוכב אחד</option>
             </select>
-            <select id="reviews-sort" onchange="renderReviewsPublic()" style="margin:0;">
+            <select id="reviews-sort" onchange="renderReviewsPublic()">
                 <option value="newest" data-i18n="sortNewest">החדשות ביותר</option>
                 <option value="highest" data-i18n="sortHighest">דירוג גבוה קודם</option>
                 <option value="lowest" data-i18n="sortLowest">דירוג נמוך קודם</option>
@@ -498,93 +438,96 @@
 
         <div id="reviews-list"></div>
 
-        <hr>
-        <h4 data-i18n="writeReviewTitle" style="color:var(--primary); text-align:center;">כתבו ביקורת משלכם</h4>
-        <div style="text-align:center;">
-            <label><b data-i18n="yourNameLabel">שם:</b></label><br>
-            <input type="text" id="review-name" data-i18n-placeholder="yourNamePlaceholder" placeholder="השם שלך" style="width:85%; text-align:center;">
-        </div>
-        <div style="text-align:center;">
-            <label><b data-i18n="ratingLabel">דירוג:</b></label>
-            <div class="star-rating" id="review-star-input">
-                <span class="star" data-value="1">★</span>
-                <span class="star" data-value="2">★</span>
-                <span class="star" data-value="3">★</span>
-                <span class="star" data-value="4">★</span>
-                <span class="star" data-value="5">★</span>
+        <div class="write-review">
+            <h4 data-i18n="writeReviewTitle">כתבו ביקורת משלכם</h4>
+            <label class="field">
+                <span class="field-label" data-i18n="yourNameLabel">שם:</span>
+                <input type="text" id="review-name" data-i18n-placeholder="yourNamePlaceholder" placeholder="השם שלך">
+            </label>
+            <div class="field">
+                <span class="field-label" data-i18n="ratingLabel">דירוג:</span>
+                <div class="star-rating" id="review-star-input">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
             </div>
+            <label class="field">
+                <span class="field-label" data-i18n="reviewTextLabel">תגובה (אופציונלי):</span>
+                <textarea id="review-text" rows="3" data-i18n-placeholder="reviewTextPlaceholder" placeholder="ספרו לנו על החוויה שלכם..."></textarea>
+            </label>
+            <button id="review-submit-btn" data-i18n="submitReviewBtn" class="btn btn-primary btn-block" onclick="submitReview()">שלח ביקורת</button>
         </div>
-        <div style="text-align:center;">
-            <label><b data-i18n="reviewTextLabel">תגובה (אופציונלי):</b></label><br>
-            <textarea id="review-text" rows="3" data-i18n-placeholder="reviewTextPlaceholder" placeholder="ספרו לנו על החוויה שלכם..." style="width:85%; padding:10px; border-radius:8px; border:1px solid #ccc; font-family:inherit; font-size:1rem; resize:vertical;"></textarea>
-        </div>
-        <button id="review-submit-btn" data-i18n="submitReviewBtn" class="btn-select" style="background:var(--success); margin-top:15px;" onclick="submitReview()">שלח ביקורת</button>
     </div>
 </div>
 
-<div class="modal" id="orderHistoryModal" style="max-width: 550px;">
+<div class="modal modal-wide" id="orderHistoryModal">
     <div class="modal-header">
-        <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
         <h3 data-i18n="orderHistoryTitle">📋 ההזמנות שלי</h3>
+        <button class="modal-close" onclick="closePopups()" aria-label="סגור">×</button>
     </div>
     <div class="modal-body">
-        <p data-i18n="orderHistoryHint" style="font-size:0.85rem; color:#777; text-align:center; margin-top:0;">ההזמנות מוצגות רק בדפדפן הזה, על סמך פעולות תשלום קודמות שביצעת באתר.</p>
+        <p class="muted center small" data-i18n="orderHistoryHint">ההזמנות מוצגות רק בדפדפן הזה, על סמך פעולות תשלום קודמות שביצעת באתר.</p>
         <div id="order-history-list"></div>
     </div>
 </div>
 
 <div class="modal" id="contactModal">
     <div class="modal-header">
-        <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
         <h3 data-i18n="contactTitle">פרטי איסוף וקשר</h3>
-    </div>
-    <div class="modal-body" style="text-align:center; display:flex; flex-direction:column; align-items:center;">
-        <p><strong data-i18n="addressLabel">🏠 כתובת:</strong> יהודה הלוי 58, גבעת שמואל</p>
-        <p><strong data-i18n="phoneLabel">📞 טלפון:</strong> 054-9943477</p>
-        <button data-i18n="navigateBtn" class="btn-select" style="background:#4285F4;" onclick="window.open('https://maps.google.com/?q=יהודה+הלוי+58+גבעת+שמואל')">📍 ניווט ליעד</button>
-        <a href="https://wa.me/972549943477" target="_blank" class="wa-btn" data-i18n="whatsappBtn">💬 שלח לנו הודעה בוואטסאפ</a>
-        <button data-i18n="closeBtn" class="btn-select" style="background:#666;" onclick="closePopups()">סגור</button>
-    </div>
-</div>
-
-<div class="modal" id="adminLoginModal" style="z-index: 2600;">
-    <div class="modal-header">
-        <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
-        <h3 data-i18n="adminLoginTitle">🔐 כניסת מנהל</h3>
-    </div>
-    <div class="modal-body" style="text-align:center;">
-        <p data-i18n="adminLoginDesc" style="font-size:0.9rem; color:#555;">נא להזין סיסמת מנהל לניהול המלאי:</p>
-        <input type="password" id="admin-login-input" data-i18n-placeholder="adminLoginPlaceholder" placeholder="סיסמה" style="width:80%; text-align:center; font-size:1.1rem;" onkeydown="if(event.key==='Enter') submitAdminLogin();">
-        <div id="admin-login-error" style="color:var(--danger); font-size:0.9rem; margin-top:8px; display:none;">סיסמה שגויה, נסה שוב.</div>
-        <button id="admin-login-submit" data-i18n="adminLoginBtn" class="btn-select" style="background:var(--primary); margin-top:15px;" onclick="submitAdminLogin()">כניסה</button>
-    </div>
-</div>
-
-<div class="modal" id="adminModal">
-    <div class="modal-header">
-        <span style="position:absolute; left:15px; cursor:pointer;" onclick="closePopups()">×</span>
-        <h3 data-i18n="adminManageTitle">🛠️ פאנל ניהול חסימות מלאי</h3>
+        <button class="modal-close" onclick="closePopups()" aria-label="סגור">×</button>
     </div>
     <div class="modal-body">
-        <div style="margin-bottom: 15px; text-align: center;">
-            <label for="admin-prod-select"><b data-i18n="chooseProductToBlock">בחר מוצר לחסימה:</b></label><br>
-            <select id="admin-prod-select" style="width: 100%;"></select>
+        <div class="contact-list">
+            <div class="contact-row"><strong data-i18n="addressLabel">🏠 כתובת:</strong> <span>יהודה הלוי 58, גבעת שמואל</span></div>
+            <div class="contact-row"><strong data-i18n="phoneLabel">📞 טלפון:</strong> <a href="tel:0549943477" dir="ltr">054-9943477</a></div>
         </div>
-        <div style="margin-bottom: 15px; text-align: center;">
-            <label for="admin-size-select"><b data-i18n="chooseSizeLabel">בחר מידה:</b></label><br>
-            <select id="admin-size-select" style="width: 100%;"></select>
+        <div class="stack">
+            <button data-i18n="navigateBtn" class="btn btn-primary btn-block" onclick="window.open('https://maps.google.com/?q=יהודה+הלוי+58+גבעת+שמואל')">📍 ניווט ליעד</button>
+            <a href="https://wa.me/972549943477" target="_blank" rel="noopener" class="wa-btn" data-i18n="whatsappBtn">💬 שלח לנו הודעה בוואטסאפ</a>
+            <button data-i18n="closeBtn" class="btn btn-soft btn-block" onclick="closePopups()">סגור</button>
         </div>
-        <div style="display: flex; gap: 10px; margin-bottom: 15px; justify-content: center;">
-            <div><label for="admin-start" data-i18n="fromDateAdmin">מאיזה תאריך:</label><input type="date" id="admin-start"></div>
-            <div><label for="admin-end" data-i18n="toDate">עד תאריך:</label><input type="date" id="admin-end"></div>
+    </div>
+</div>
+
+<div class="modal modal-over" id="adminLoginModal">
+    <div class="modal-header">
+        <h3 data-i18n="adminLoginTitle">🔐 כניסת מנהל</h3>
+        <button class="modal-close" onclick="closePopups()" aria-label="סגור">×</button>
+    </div>
+    <div class="modal-body center">
+        <p class="muted" data-i18n="adminLoginDesc">נא להזין סיסמת מנהל לניהול המלאי:</p>
+        <input type="password" id="admin-login-input" class="input-block" data-i18n-placeholder="adminLoginPlaceholder" placeholder="סיסמה" onkeydown="if(event.key==='Enter') submitAdminLogin();">
+        <div id="admin-login-error" class="error-text" style="display:none;">סיסמה שגויה, נסה שוב.</div>
+        <button id="admin-login-submit" data-i18n="adminLoginBtn" class="btn btn-primary btn-block" onclick="submitAdminLogin()">כניסה</button>
+    </div>
+</div>
+
+<div class="modal modal-wide" id="adminModal">
+    <div class="modal-header">
+        <h3 data-i18n="adminManageTitle">🛠️ פאנל ניהול חסימות מלאי</h3>
+        <button class="modal-close" onclick="closePopups()" aria-label="סגור">×</button>
+    </div>
+    <div class="modal-body">
+        <label class="field" for="admin-prod-select">
+            <span class="field-label" data-i18n="chooseProductToBlock">בחר מוצר לחסימה:</span>
+            <select id="admin-prod-select"></select>
+        </label>
+        <label class="field" for="admin-size-select">
+            <span class="field-label" data-i18n="chooseSizeLabel">בחר מידה:</span>
+            <select id="admin-size-select"></select>
+        </label>
+        <div class="field-pair">
+            <label class="field" for="admin-start"><span class="field-label" data-i18n="fromDateAdmin">מאיזה תאריך:</span><input type="date" id="admin-start"></label>
+            <label class="field" for="admin-end"><span class="field-label" data-i18n="toDate">עד תאריך:</span><input type="date" id="admin-end"></label>
         </div>
-        <button id="admin-submit-btn" data-i18n="blockThisProductBtn" onclick="submitBlock()" style="width:100%; background:var(--danger); color:white; padding:10px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin: 0 auto;">🔒 חסום מוצר זה</button>
-        <hr>
-        <h4 data-i18n="activeBlocksTitle">רשימת חסימות פעילות בענן:</h4>
-        <div id="admin-blocks-list" style="max-height: 200px; overflow-y:auto; font-size:0.9rem; text-align: right;"></div>
-        <hr>
-        <h4 data-i18n="manageReviewsTitle">⭐ ניהול ביקורות:</h4>
-        <div id="admin-reviews-list" style="max-height: 260px; overflow-y:auto; font-size:0.9rem;"></div>
+        <button id="admin-submit-btn" data-i18n="blockThisProductBtn" onclick="submitBlock()" class="btn btn-danger btn-block">🔒 חסום מוצר זה</button>
+        <h4 class="admin-sub" data-i18n="activeBlocksTitle">רשימת חסימות פעילות בענן:</h4>
+        <div id="admin-blocks-list" class="admin-scroll"></div>
+        <h4 class="admin-sub" data-i18n="manageReviewsTitle">⭐ ניהול ביקורות:</h4>
+        <div id="admin-reviews-list" class="admin-scroll tall"></div>
     </div>
 </div>
 
@@ -619,19 +562,33 @@
     const I18N = {
         he: {
             headerTitle: 'skirent-il', headerSubtitle: 'השכרת ביגוד וציוד סקי פרימיום בגבעת שמואל והמרכז',
+            heroEyebrow: 'עונת הסקי כבר כאן', heroTitle: 'כל ציוד הסקי למשפחה. בלי לקנות.',
+            heroCtaBundles: 'לחבילות המשתלמות', heroCtaShop: 'בחירת תאריכים וציוד',
+            trust1: 'מחירים ברורים', trust2: 'התאמת מידה', trust3: 'איסוף בגבעת שמואל',
+            bestValue: 'הכי משתלם', bundleFullName: 'חבילת קומפלט', bundleDuoName: 'חבילת בסיס',
+            incCoat: 'מעיל סקי', incPants: 'מכנס סקי', incHelmet: 'קסדה תקנית', incGloves: 'כפפות אטומות', incGoggles: 'משקפת גוגלס',
+            feat1Title: 'ציוד ברמה הגבוהה ביותר', feat1Text: 'ביגוד וציוד סקי איכותי לכל המשפחה – גברים, נשים וילדים.',
+            feat2Title: 'מידה מדויקת', feat2Text: 'מחשבון מידות חכם באתר + מדידה בזמן האיסוף.',
+            feat3Title: 'איסוף קל ומהיר', feat3Text: 'אוספים בגבעת שמואל לפני הטיסה ומחזירים אחרי הנחיתה.',
+            bundlesEyebrow: 'חבילות שבועיות', bundlesSub: 'בוחרים פריטים ומידות לכל אחד מבני המשפחה – ומשלמים מחיר חבילה אחד.',
+            bookingTitle: 'מתי אתם טסים?', bookingSub: 'בחרו תאריכים כדי לראות זמינות ומחיר מדויק.', durationLabel: 'תקופת השכרה',
+            catalogEyebrow: 'הקטלוג', catalogTitle: 'או בחרו פריטים בודדים', filterWhoLabel: 'למי', filterCatLabel: 'פריט',
+            reviewsBandTitle: 'מה הלקוחות שלנו אומרים?', reviewsBandText: 'קראו חוויות של משפחות שכבר יצאו איתנו לשלג – או שתפו את שלכם.', reviewsBandBtn: 'לכל הביקורות',
+            faqEyebrow: 'שאלות ותשובות', policyEyebrow: 'חשוב לדעת',
+            footerTagline: 'השכרת ביגוד וציוד סקי לכל המשפחה. אוספים, טסים, נהנים.', qtyLabel: 'כמות', ofLabel: (n) => `מתוך ${n}`,
             navCart: 'הסל שלי', navReviews: 'ביקורות', navOrders: 'ההזמנות שלי', navContact: 'איסוף וקשר',
             aboutText: 'טסים לחופשת סקי בקרוב? ב-<strong>skirent-il</strong> תמצאו ציוד וביגוד סקי ברמה הגבוהה ביותר ולכל המשפחה. אנו מציעים חבילות "קומפלט" משתלמות או השכרה של פריטים בודדים. מודדים, אוספים בקלות מגבעת שמואל ויוצאים לחופשה בראש שקט ומוגן מהקור!',
-            bundleTitle: '⛷️ מבצעי חבילות שבועיים משתלמים', bundleDesc: 'מעיל + מכנס + קסדה + גוגלס + כפפות',
-            bundlePrice: '₪300 לשבוע', bundleBtn: 'הרכב חבילת קומפלט ✅',
-            bundleDuoDesc: 'מעיל + מכנס', bundleDuoPrice: '₪200 לשבוע', bundleDuoBtn: 'הרכב חבילה זו ✅',
-            fromDate: 'מתאריך:', toDate: 'עד תאריך:', pleaseSelectDates: 'נא לבחור תאריכים',
+            bundleTitle: 'מבצעי חבילות שבועיים משתלמים', bundleDesc: 'מעיל + מכנס + קסדה + גוגלס + כפפות',
+            bundlePrice: '₪300 לשבוע', bundleBtn: 'הרכב חבילת קומפלט',
+            bundleDuoDesc: 'מעיל + מכנס', bundleDuoPrice: '₪200 לשבוע', bundleDuoBtn: 'הרכב חבילה זו',
+            fromDate: 'מתאריך', toDate: 'עד תאריך', pleaseSelectDates: 'נא לבחור תאריכים',
             loadingAvailability: '🔄 טוען נתוני זמינות עדכניים...',
             cloudError: '⚠️ לא ניתן כרגע לטעון את נתוני הזמינות מהענן. ייתכן שחלק מהמידע על מוצרים תפוסים לא יוצג. נסו לרענן את הדף, ואם הבעיה נמשכת - צרו איתנו קשר.',
-            filterAll: 'הכל', filterMen: 'גברים 🧔', filterWomen: 'נשים 👩', filterKids: 'ילדים 🧒',
-            filterAllCat: 'הצג את כל הקטגוריות', filterCoat: '🧥 מעילים', filterPants: '👖 מכנסיים',
+            filterAll: 'הכל', filterMen: 'גברים', filterWomen: 'נשים', filterKids: 'ילדים',
+            filterAllCat: 'כל הקטגוריות', filterCoat: '🧥 מעילים', filterPants: '👖 מכנסיים',
             filterHelmet: '🪖 קסדות', filterGloves: '🧤 כפפות', filterGoggles: '🥽 גוגלס',
             sizeLabel: 'מידה:', sizeGuideLink: 'מידות?', perWeek: 'לשבוע',
-            addToCart: 'הוסף לסל', inCartLabel: '✅ במידה זו בסל', sizeTaken: (s) => `❌ מידה ${s} תפוסה`,
+            addToCart: 'הוסף לסל', inCartLabel: '✓ נוסף לסל', sizeTaken: (s) => `מידה ${s} תפוסה בתאריכים אלו`,
             faqTitle: 'שאלות נפוצות על השכרת ציוד סקי',
             faqQ1: 'איך עובד חישוב תקופת ההשכרה לחופשה?',
             faqA1: 'המחירים שלנו מותאמים מראש לחופשות סקי סטנדרטיות (שבוע שלם). המערכת מחשבת אוטומטית שבועות השכרה בהתאם לתאריכים שתבחרו, כך שיש לכם מספיק זמן לאסוף את הציוד בנחת לפני הטיסה ולהחזיר אותו אחרי הנחיתה.',
@@ -651,8 +608,8 @@
             bundleWizardTitle: 'בחירת חבילה', bundleWizardFor: 'עבור מי החבילה?', smartCalcLink: '📏 מחשבון מידות חכם',
             bundleConfirmBtn: 'אישור והוספה לסל',
             sizeGuideTitle: '📏 מחשבון התאמת מידה חכם', sizeGuideDesc: 'הזינו את הנתונים שלכם והמערכת תחשב אוטומטית את המידה האידיאלית עבורכם לביגוד סקי נוח וחופשי.',
-            sizeGuideFor: 'עבור מי הביגוד?', sizeGuideMan: 'גבר 🧔', sizeGuideWoman: 'אישה 👩', sizeGuideKid: 'ילד/ה 🧒',
-            heightLabel: 'גובה (בס"מ):', weightLabel: 'משקל (בק"ג):', calcBtn: 'חשב מידה מתאימה 🚀',
+            sizeGuideFor: 'עבור מי הביגוד?', sizeGuideMan: 'גבר', sizeGuideWoman: 'אישה', sizeGuideKid: 'ילד/ה',
+            heightLabel: 'גובה (בס"מ):', weightLabel: 'משקל (בק"ג):', calcBtn: 'חשב מידה מתאימה',
             recommendedSize: 'המידה המומלצת עבורך:', tipTitle: '💡 טיפ חשוב לנוחות בשלג:',
             tipText: 'המחשבון שלנו לוקח בחשבון שאתם לובשים ביגוד תרמי או סווטשירט מתחת למעיל. בגדי סקי צריכים להיות מעט משוחררים כדי לאפשר תנועה חופשית בזמן הגלישה.',
             closeCalcBtn: 'סגור מחשבון',
@@ -700,19 +657,33 @@
         },
         en: {
             headerTitle: 'skirent-il', headerSubtitle: 'Premium ski gear & clothing rental in Givat Shmuel and central Israel',
+            heroEyebrow: 'Ski season is here', heroTitle: 'All the ski gear your family needs. No buying.',
+            heroCtaBundles: 'See bundle deals', heroCtaShop: 'Pick dates & gear',
+            trust1: 'Clear pricing', trust2: 'Size matching', trust3: 'Pickup in Givat Shmuel',
+            bestValue: 'Best value', bundleFullName: 'Complete Bundle', bundleDuoName: 'Basic Bundle',
+            incCoat: 'Ski jacket', incPants: 'Ski pants', incHelmet: 'Certified helmet', incGloves: 'Sealed gloves', incGoggles: 'Goggles',
+            feat1Title: 'Top-quality gear', feat1Text: 'Quality ski clothing and gear for the whole family – men, women and kids.',
+            feat2Title: 'Perfect fit', feat2Text: 'Smart size calculator on the site + try-on at pickup.',
+            feat3Title: 'Quick, easy pickup', feat3Text: 'Pick up in Givat Shmuel before your flight, return after you land.',
+            bundlesEyebrow: 'Weekly bundles', bundlesSub: 'Choose items and sizes for each family member – pay one bundle price.',
+            bookingTitle: 'When are you flying?', bookingSub: 'Pick your dates to see availability and exact pricing.', durationLabel: 'Rental period',
+            catalogEyebrow: 'Catalog', catalogTitle: 'Or pick individual items', filterWhoLabel: 'For', filterCatLabel: 'Item',
+            reviewsBandTitle: 'What our customers say', reviewsBandText: 'Read about families who hit the slopes with us – or share your own experience.', reviewsBandBtn: 'All reviews',
+            faqEyebrow: 'Q&A', policyEyebrow: 'Good to know',
+            footerTagline: 'Ski clothing & gear rental for the whole family. Pick up, fly, enjoy.', qtyLabel: 'Qty', ofLabel: (n) => `of ${n}`,
             navCart: 'My Cart', navReviews: 'Reviews', navOrders: 'My Orders', navContact: 'Pickup & Contact',
             aboutText: 'Flying out for a ski trip soon? At <strong>skirent-il</strong> you\'ll find top-quality ski gear and clothing for the whole family. We offer great-value "complete" bundles or individual item rentals. Try things on, pick up easily in Givat Shmuel, and head off on vacation warm and worry-free!',
-            bundleTitle: '⛷️ Great Weekly Bundle Deals', bundleDesc: 'Jacket + Pants + Helmet + Goggles + Gloves',
-            bundlePrice: '₪300 per week', bundleBtn: 'Build Complete Bundle ✅',
-            bundleDuoDesc: 'Jacket + Pants', bundleDuoPrice: '₪200 per week', bundleDuoBtn: 'Build This Bundle ✅',
-            fromDate: 'From date:', toDate: 'To date:', pleaseSelectDates: 'Please select dates',
+            bundleTitle: 'Great Weekly Bundle Deals', bundleDesc: 'Jacket + Pants + Helmet + Goggles + Gloves',
+            bundlePrice: '₪300 per week', bundleBtn: 'Build Complete Bundle',
+            bundleDuoDesc: 'Jacket + Pants', bundleDuoPrice: '₪200 per week', bundleDuoBtn: 'Build This Bundle',
+            fromDate: 'From', toDate: 'To', pleaseSelectDates: 'Please select dates',
             loadingAvailability: '🔄 Loading current availability...',
             cloudError: "⚠️ We couldn't load availability data from the cloud right now. Some blocked-item info may not display. Try refreshing the page, and if the issue persists, contact us.",
-            filterAll: 'All', filterMen: 'Men 🧔', filterWomen: 'Women 👩', filterKids: 'Kids 🧒',
-            filterAllCat: 'Show All Categories', filterCoat: '🧥 Jackets', filterPants: '👖 Pants',
+            filterAll: 'All', filterMen: 'Men', filterWomen: 'Women', filterKids: 'Kids',
+            filterAllCat: 'All Categories', filterCoat: '🧥 Jackets', filterPants: '👖 Pants',
             filterHelmet: '🪖 Helmets', filterGloves: '🧤 Gloves', filterGoggles: '🥽 Goggles',
             sizeLabel: 'Size:', sizeGuideLink: 'Sizes?', perWeek: '/week',
-            addToCart: 'Add to Cart', inCartLabel: '✅ This size is in cart', sizeTaken: (s) => `❌ Size ${s} unavailable`,
+            addToCart: 'Add to Cart', inCartLabel: '✓ Added to cart', sizeTaken: (s) => `Size ${s} unavailable`,
             faqTitle: 'Frequently Asked Questions',
             faqQ1: 'How is the rental period calculated?',
             faqA1: "Our prices are pre-set for standard ski vacations (a full week). The system automatically calculates rental weeks based on the dates you choose, giving you plenty of time to pick up the gear comfortably before your flight and return it after landing.",
@@ -732,8 +703,8 @@
             bundleWizardTitle: 'Build a Bundle', bundleWizardFor: 'Who is the bundle for?', smartCalcLink: '📏 Smart Size Calculator',
             bundleConfirmBtn: 'Confirm & Add to Cart',
             sizeGuideTitle: '📏 Smart Size Calculator', sizeGuideDesc: 'Enter your details and the system will automatically calculate the ideal size for comfortable, free-moving ski clothing.',
-            sizeGuideFor: 'Who is the clothing for?', sizeGuideMan: 'Man 🧔', sizeGuideWoman: 'Woman 👩', sizeGuideKid: 'Kid 🧒',
-            heightLabel: 'Height (cm):', weightLabel: 'Weight (kg):', calcBtn: 'Calculate Size 🚀',
+            sizeGuideFor: 'Who is the clothing for?', sizeGuideMan: 'Man', sizeGuideWoman: 'Woman', sizeGuideKid: 'Kid',
+            heightLabel: 'Height (cm):', weightLabel: 'Weight (kg):', calcBtn: 'Calculate Size',
             recommendedSize: 'Your recommended size:', tipTitle: '💡 Snow Comfort Tip:',
             tipText: 'Our calculator assumes you\'ll wear thermal clothing or a sweatshirt underneath the jacket. Ski clothes should fit a bit loose to allow free movement while riding.',
             closeCalcBtn: 'Close Calculator',
@@ -805,11 +776,12 @@
 
         cats.forEach(c => {
             const titleEl = document.getElementById(`title-${c}`);
-            if (titleEl) titleEl.textContent = `${catIcons[c]} ${catNamesPlural[currentLang][c]}`;
+            if (titleEl) titleEl.innerHTML = `<span class="cat-ic">${catIcons[c]}</span><span>${catNamesPlural[currentLang][c]}</span>`;
         });
 
         const langBtn = document.getElementById('lang-toggle-btn');
-        if (langBtn) langBtn.textContent = currentLang === 'he' ? '🌐 English' : '🌐 עברית';
+        const langTx = langBtn && langBtn.querySelector('.nav-tx');
+        if (langTx) langTx.textContent = currentLang === 'he' ? 'English' : 'עברית';
     }
 
     function setLanguage(lang) {
@@ -1126,7 +1098,7 @@
         if (qtyEl) qtyEl.value = qty;
         if (minusEl) minusEl.disabled = blockData || maxQty <= 1;
         if (plusEl) plusEl.disabled = blockData || qty >= maxQty || maxQty <= 0;
-        if (stockEl) stockEl.innerText = currentLang === 'he' ? `מתוך ${maxQty}` : `of ${maxQty}`;
+        if (stockEl) stockEl.innerText = t('ofLabel', maxQty);
     }
 
     function openLightbox(src) {
@@ -1155,43 +1127,52 @@
             if (!targetGrid) return;
 
             const imageHTML = p.images ? `
-                <div style="position:relative; width:100%; height:100%;">
+                <div class="img-slider">
                     <img id="img-${p.id}" 
                         src="${p.images[0]}" 
                         alt="${translateProductName(p)}"
                         onclick="openLightbox('${p.images[0]}')"
                         ontouchstart="handleTouchStart(event)"
                         ontouchend="handleTouchEnd(event, '${p.id}')">
-                    <button onclick="prevImage('${p.id}')" class="image-nav-btn" style="left:5px;">‹</button>
-                    <button onclick="nextImage('${p.id}')" class="image-nav-btn" style="right:5px;">›</button>
+                    <button onclick="prevImage('${p.id}')" class="image-nav-btn prev">‹</button>
+                    <button onclick="nextImage('${p.id}')" class="image-nav-btn next">›</button>
                 </div>
             ` : `<img src="${p.image}" alt="${translateProductName(p)}" onclick="openLightbox('${p.image}')" title="לחץ להגדלה">`;
 
+            const maxQ = getMaxCartQuantity(p.id, defaultSize);
+            const cartQ = isInCart ? Math.min(maxQ, Math.max(1, Number((cartItems.find(i => i.id === p.id && i.size === defaultSize) || {}).qty) || 1)) : 1;
             targetGrid.innerHTML += `
-                <div class="card ${blockData ? 'size-blocked' : ''}" id="card-${p.id}">
+                <article class="card ${blockData ? 'size-blocked' : ''}" id="card-${p.id}">
                     <div class="img-container">
+                        <span class="card-tag">${genderNames[currentLang][p.gender] || p.gender}</span>
                         ${imageHTML}
                     </div>
-                    <h3>${translateProductName(p)}</h3>
-                    <div style="display:flex; justify-content:center; align-items:center; gap:8px; margin: 5px 0;">
-                        <span style="font-size:0.9rem; font-weight:bold;">${t('sizeLabel')}</span>
-                        <select id="size-${p.id}" style="width:45%; margin:0;" onchange="onSizeChange('${p.id}')">
-                            ${sizes[p.cat].map(s => `<option value="${s}" ${s === defaultSize ? 'selected' : ''}>${s}</option>`).join('')}
-                        </select>
-                        <span class="size-link" onclick="showSizeGuide('${p.gender}')">${t('sizeGuideLink')}</span>
+                    <div class="card-body">
+                        <div class="card-head">
+                            <h3>${translateProductName(p)}</h3>
+                            <div class="card-price">₪${p.price}<small>${t('perWeek')}</small></div>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">${t('sizeLabel')}</span>
+                            <select id="size-${p.id}" class="card-select" onchange="onSizeChange('${p.id}')">
+                                ${sizes[p.cat].map(s => `<option value="${s}" ${s === defaultSize ? 'selected' : ''}>${s}</option>`).join('')}
+                            </select>
+                            <span class="size-link" onclick="showSizeGuide('${p.gender}')">${t('sizeGuideLink')}</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">${t('qtyLabel')}</span>
+                            <div class="stepper">
+                                <button type="button" id="qty-minus-${p.id}" onclick="changeProductCardQuantity('${p.id}', -1)" ${blockData || maxQ <= 1 ? 'disabled' : ''} aria-label="-">−</button>
+                                <input id="qty-${p.id}" type="text" inputmode="numeric" value="${cartQ}" readonly>
+                                <button type="button" id="qty-plus-${p.id}" onclick="changeProductCardQuantity('${p.id}', 1)" ${blockData || maxQ <= 1 ? 'disabled' : ''} aria-label="+">+</button>
+                            </div>
+                            <span id="qty-stock-${p.id}" class="qty-stock">${t('ofLabel', maxQ)}</span>
+                        </div>
+                        <button id="btn-${p.id}" ${blockData ? 'disabled' : ''} class="btn-select ${blockData ? 'disabled-btn' : (isInCart ? 'in-cart' : '')}" onclick="toggleCartItem('${p.id}')">
+                            ${blockData ? t('sizeTaken', defaultSize) : (isInCart ? t('inCartLabel') : t('addToCart'))}
+                        </button>
                     </div>
-                    <div style="color:var(--success); font-weight:bold; margin:8px 0;">₪${p.price} ${t('perWeek')}</div>
-                    <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin:10px 0;">
-                        <span style="font-size:0.9rem; font-weight:bold;">${currentLang === 'he' ? 'כמות:' : 'Quantity:'}</span>
-                        <button type="button" id="qty-minus-${p.id}" onclick="changeProductCardQuantity('${p.id}', -1)" ${blockData || getMaxCartQuantity(p.id, defaultSize) <= 1 ? 'disabled' : ''} style="width:34px;height:34px;border:1px solid #ddd;border-radius:9px;background:#fff;font-size:20px;cursor:pointer;">−</button>
-                        <input id="qty-${p.id}" type="text" inputmode="numeric" value="${isInCart ? Math.min(getMaxCartQuantity(p.id, defaultSize), Math.max(1, Number((cartItems.find(i => i.id === p.id && i.size === defaultSize) || {}).qty) || 1)) : 1}" readonly style="width:38px;height:34px;text-align:center;border:1px solid #ddd;border-radius:9px;font-weight:bold;background:#fff;">
-                        <button type="button" id="qty-plus-${p.id}" onclick="changeProductCardQuantity('${p.id}', 1)" ${blockData || getMaxCartQuantity(p.id, defaultSize) <= 1 ? 'disabled' : ''} style="width:34px;height:34px;border:1px solid #ddd;border-radius:9px;background:#fff;font-size:20px;cursor:pointer;">+</button>
-                        <span id="qty-stock-${p.id}" style="font-size:0.75rem;color:#777;">${currentLang === 'he' ? `מתוך ${getMaxCartQuantity(p.id, defaultSize)}` : `of ${getMaxCartQuantity(p.id, defaultSize)}`}</span>
-                    </div>
-                    <button id="btn-${p.id}" ${blockData ? 'disabled' : ''} class="btn-select ${blockData ? 'disabled-btn' : (isInCart ? 'in-cart' : '')}" onclick="toggleCartItem('${p.id}')">
-                        ${blockData ? t('sizeTaken', defaultSize) : (isInCart ? t('inCartLabel') : t('addToCart'))}
-                    </button>
-                </div>`;
+                </article>`;
         });
     }
 
@@ -1300,19 +1281,18 @@
         selectedBundleType = typeId || 'full';
         const body = document.getElementById('bundle-wizard-body');
         body.innerHTML = `
-            <div style="display:flex; gap:8px; justify-content:center; margin-bottom:15px;">
-                <button type="button" id="bt-duo" class="cat-btn" onclick="selectBundleType('duo')" style="flex:1;">${bundleTypes.duo['labelHe']} - ₪${bundleTypes.duo.price}</button>
-                <button type="button" id="bt-full" class="cat-btn" onclick="selectBundleType('full')" style="flex:1;">${bundleTypes.full['labelHe']} - ₪${bundleTypes.full.price}</button>
+            <div class="segmented">
+                <button type="button" id="bt-duo" class="seg-btn" onclick="selectBundleType('duo')"><span>${currentLang === 'he' ? bundleTypes.duo.labelHe : bundleTypes.duo.labelEn}</span><b>₪${bundleTypes.duo.price}</b></button>
+                <button type="button" id="bt-full" class="seg-btn" onclick="selectBundleType('full')"><span>${currentLang === 'he' ? bundleTypes.full.labelHe : bundleTypes.full.labelEn}</span><b>₪${bundleTypes.full.price}</b></button>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <label><b>${t('bundleWizardFor')}</b></label>
-                <span class="size-link" style="font-size:0.95rem;" onclick="showSizeGuide()">${t('smartCalcLink')}</span>
+            <div class="wiz-head">
+                <span class="field-label">${t('bundleWizardFor')}</span>
+                <span class="size-link" onclick="showSizeGuide()">${t('smartCalcLink')}</span>
             </div>
-            <select id="bundle-gen" style="width:100%; margin-bottom:10px;" onchange="updateWizardOptions()">
+            <select id="bundle-gen" class="input-block" onchange="updateWizardOptions()">
                 ${genders.map(g => `<option value="${g}">${genderNames[currentLang][g] || g}</option>`).join('')}
             </select>
-            <hr>
-            <div id="wizard-items" style="text-align: right;"></div>`;
+            <div id="wizard-items"></div>`;
         updateBundleTypeButtons();
         updateWizardOptions();
         showModal('bundleWizard');
@@ -1335,13 +1315,13 @@
         const g = document.getElementById('bundle-gen').value;
         const activeCats = bundleTypes[selectedBundleType].cats;
         document.getElementById('wizard-items').innerHTML = activeCats.map(c => `
-            <div style="margin-top:12px; background:#f9f9f9; padding:10px; border-radius:8px; border:1px solid #eee;">
-                <label style="display:block; margin-bottom:5px;"><b>${catIcons[c]} ${catNames[currentLang][c] || c}:</b></label>
-                <div style="display:flex; gap:10px;">
-                    <select id="wb-${c}" style="flex:2; margin:0;" onchange="checkWizardSelectionValidity()">
+            <div class="wiz-item">
+                <div class="wiz-item-title"><span class="cat-ic">${catIcons[c]}</span>${catNames[currentLang][c] || c}</div>
+                <div class="wiz-selects">
+                    <select id="wb-${c}" class="wiz-prod" onchange="checkWizardSelectionValidity()">
                         ${products.filter(p => p.cat === c && p.gender === g).map(p => `<option value="${p.id}">${translateProductName(p)}</option>`).join('')}
                     </select>
-                    <select id="wbs-${c}" style="flex:1; margin:0;" onchange="checkWizardSelectionValidity()">
+                    <select id="wbs-${c}" class="wiz-size" onchange="checkWizardSelectionValidity()">
                         ${sizes[c].map(s => `<option value="${s}">${s}</option>`).join('')}
                     </select>
                 </div>
@@ -1387,7 +1367,6 @@
         } else {
             submitBtn.innerText = t('bundleConfirmBtn');
             submitBtn.className = "btn-select";
-            submitBtn.style.background = "var(--success)";
             submitBtn.disabled = false;
         }
     }
@@ -1502,7 +1481,7 @@
         let htmlContent = '';
 
         if(cartItems.length === 0 && cartBundles.length === 0) {
-            htmlContent = `<p style="text-align:center; padding:20px; color:#666;">${t('cartEmpty')}</p>`;
+            htmlContent = `<div class="empty-state"><div class="empty-ic">🛒</div><p>${t('cartEmpty')}</p></div>`;
             if (checkoutArea) checkoutArea.style.display = 'none';
         } else {
             if (checkoutArea) checkoutArea.style.display = 'block';
@@ -1514,11 +1493,12 @@
                 const bundleLabel = `🎁 ${bundleLabelText} - ${translatedGender}`;
                 htmlContent += `
                     <div class="cart-bundle-item">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div class="cb-head">
                             <b>${bundleLabel}</b>
-                            <span class="remove-btn" onclick="removeBundle(${idx})">×</span>
+                            <span class="cb-price">₪${bType.price * weeks}</span>
+                            <span class="remove-btn" onclick="removeBundle(${idx})" title="הסר">×</span>
                         </div>
-                        <div style="font-size:0.85rem; color:#555; margin-top:5px; line-height:1.4;">
+                        <div class="cb-items">
                             ${b.items.map(item => {
                                 const prod = products.find(p => p.id === item.id);
                                 return `${prod ? translateProductName(prod) : item.name} (${item.size})`;
@@ -1534,20 +1514,20 @@
                     const maxQty = Math.max(1, getMaxCartQuantity(item.id, item.size));
                     total += productData.price * weeks * qty;
                     htmlContent += `
-                        <div class="cart-item" style="gap:12px;">
-                            <div style="flex:1;">
-                                <div style="font-weight:bold;">${translateProductName(productData)}</div>
-                                <div style="font-size:0.8rem; color:#666;">${t('sizeLabel')} ${item.size}</div>
-                                <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
-                                    <button type="button" onclick="changeCartQuantity('${item.id}', '${item.size}', -1)" style="width:30px;height:30px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:18px;cursor:pointer;">−</button>
-                                    <b style="min-width:24px;text-align:center;">${qty}</b>
-                                    <button type="button" onclick="changeCartQuantity('${item.id}', '${item.size}', 1)" ${qty >= maxQty ? 'disabled' : ''} style="width:30px;height:30px;border:1px solid #ddd;border-radius:8px;background:${qty >= maxQty ? '#eee' : '#fff'};font-size:18px;cursor:${qty >= maxQty ? 'not-allowed' : 'pointer'};">+</button>
-                                    <span style="font-size:0.75rem;color:#777;">${currentLang === 'he' ? `מתוך ${maxQty}` : `of ${maxQty}`}</span>
+                        <div class="cart-item">
+                            <img class="ci-thumb" src="${productData.image}" alt="">
+                            <div class="ci-info">
+                                <div class="ci-name">${translateProductName(productData)}</div>
+                                <div class="ci-meta">${t('sizeLabel')} ${item.size}</div>
+                                <div class="stepper sm">
+                                    <button type="button" onclick="changeCartQuantity('${item.id}', '${item.size}', -1)">−</button>
+                                    <b>${qty}</b>
+                                    <button type="button" onclick="changeCartQuantity('${item.id}', '${item.size}', 1)" ${qty >= maxQty ? 'disabled' : ''}>+</button>
                                 </div>
                             </div>
-                            <div style="text-align:left;">
-                                <div style="font-weight:bold; margin-bottom:5px;">₪${productData.price * weeks * qty}</div>
-                                <span class="remove-btn" onclick="removeSpecificItem('${item.id}', '${item.size}')">×</span>
+                            <div class="ci-side">
+                                <div class="ci-price">₪${productData.price * weeks * qty}</div>
+                                <span class="remove-btn" onclick="removeSpecificItem('${item.id}', '${item.size}')" title="הסר">×</span>
                             </div>
                         </div>`;
                 }
@@ -1619,15 +1599,15 @@
         const bodyEl = document.getElementById('paymentInstructionsBody');
         if (bodyEl) {
             bodyEl.innerHTML = wasCopied ? `
-                <p style="font-size:1.4rem; margin:0 0 15px 0;">${t('passwordCopiedText')}</p>
-                <div style="font-size:1.6rem; font-weight:bold; color:var(--primary); background:#f0f4ff; padding:10px; border-radius:10px; margin-bottom:15px; direction:ltr;">${MERCHANT_PHONE}</div>
-                <p style="font-size:1.15rem; line-height:1.6;">${t('transferToAppText', appName, finalPrice)}</p>
-                <p style="font-size:1rem; color:#666; margin-top:15px;">${t('afterTransferText')}</p>
+                <p class="pi-title">${t('passwordCopiedText')}</p>
+                <div class="pi-phone">${MERCHANT_PHONE}</div>
+                <p class="pi-text">${t('transferToAppText', appName, finalPrice)}</p>
+                <p class="pi-muted">${t('afterTransferText')}</p>
             ` : `
-                <p style="font-size:1.3rem; margin:0 0 15px 0;">${t('manualTransferText')}</p>
-                <div style="font-size:1.6rem; font-weight:bold; color:var(--primary); background:#f0f4ff; padding:10px; border-radius:10px; margin-bottom:15px; direction:ltr;">${MERCHANT_PHONE}</div>
-                <p style="font-size:1.15rem; line-height:1.6;">${t('manualTransferInstructionText', appName, finalPrice)}</p>
-                <p style="font-size:1rem; color:#666; margin-top:15px;">${t('afterTransferText')}</p>
+                <p class="pi-title">${t('manualTransferText')}</p>
+                <div class="pi-phone">${MERCHANT_PHONE}</div>
+                <p class="pi-text">${t('manualTransferInstructionText', appName, finalPrice)}</p>
+                <p class="pi-muted">${t('afterTransferText')}</p>
             `;
         }
         showModal('paymentInstructionsModal');
@@ -1637,10 +1617,10 @@
         const container = document.getElementById('post-payment-container');
         if (container) {
             container.innerHTML = `
-                <div style="padding:15px; background:#fff3cd; border:2px dashed #ffc107; border-radius:10px; text-align:center; margin:15px auto; width: 90%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center;">
-                    <h3 style="color:#856404; margin:0 auto 5px auto; text-align: center;">${t('postPaymentTitle')}</h3>
-                    <p style="font-size:0.92rem; margin: 0 auto 12px auto; text-align: center;">${t('postPaymentHint')}</p>
-                    <a href="${whatsappUrl}" target="_blank" class="wa-btn" style="font-size:1.1rem; padding:12px; background-color:#25d366; width: 90%; margin: 5px auto;">${t('postPaymentSendBtn')}</a>
+                <div class="post-pay">
+                    <h3>${t('postPaymentTitle')}</h3>
+                    <p>${t('postPaymentHint')}</p>
+                    <a href="${whatsappUrl}" target="_blank" class="wa-btn">${t('postPaymentSendBtn')}</a>
                     <button onclick="cancelPostPaymentView()" class="back-btn">${t('postPaymentBackBtn')}</button>
                 </div>
             `;
@@ -1774,12 +1754,12 @@
             const prod = products.find(p => p.id === b.productId);
             const displayName = prod ? translateProductName(prod) : b.productName;
             list.innerHTML += `
-                <div style="background:#f8d7da; padding: 8px; margin-bottom:5px; border-radius:5px; display:flex; justify-content:space-between; align-items:center;">
+                <div class="admin-block-item">
                     <div>
                         <b>${displayName} (${b.size})</b><br>
                         ${t('datesLabel')} ${b.startDate} - ${b.endDate}
                     </div>
-                    <button onclick="removeBlock(${b.id})" style="background:var(--danger); color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">${t('releaseBtn')}</button>
+                    <button class="a-btn delete" onclick="removeBlock(${b.id})">${t('releaseBtn')}</button>
                 </div>`;
         });
     }
@@ -2009,7 +1989,7 @@
         const history = getOrderHistory();
 
         if (history.length === 0) {
-            listEl.innerHTML = `<p style='text-align:center; color:#666;'>${t('noOrdersYet')}</p>`;
+            listEl.innerHTML = `<div class="empty-state"><div class="empty-ic">📋</div><p>${t('noOrdersYet')}</p></div>`;
             return;
         }
 
@@ -2032,12 +2012,12 @@
                         <b>${o.customerName}</b>
                         <span class="order-date">${new Date(o.date).toLocaleDateString(currentLang === 'he' ? 'he-IL' : 'en-US')}</span>
                     </div>
-                    <div style="font-size:0.85rem; color:#666;">${t('rentalDatesLabel')} ${o.startDate} - ${o.endDate}</div>
+                    <div class="order-dates">${t('rentalDatesLabel')} ${o.startDate} - ${o.endDate}</div>
                     <div class="order-items">${itemsText || t('emptyItemsText')}</div>
                     <div class="order-total">${t('totalLabel')} ₪${o.totalPrice}</div>
                     <div class="order-actions">
-                        <button style="background:var(--primary); color:white;" onclick="reorderFromHistory(${o.id})">${t('reorderBtn')}</button>
-                        <button style="background:#eee; color:#555;" onclick="removeOrderFromHistory(${o.id})">${t('removeFromHistoryBtn')}</button>
+                        <button class="oa-primary" onclick="reorderFromHistory(${o.id})">${t('reorderBtn')}</button>
+                        <button class="oa-ghost" onclick="removeOrderFromHistory(${o.id})">${t('removeFromHistoryBtn')}</button>
                     </div>
                 </div>`;
         }).join('');
@@ -2111,6 +2091,14 @@
 
     applyStaticTranslations();
     render(); updateUI();
+
+    // צל לסרגל העליון בזמן גלילה
+    (function () {
+        const bar = document.getElementById('topbar');
+        const onScroll = () => bar && bar.classList.toggle('scrolled', window.scrollY > 8);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+    })();
 
     // רישום Service Worker - נדרש כדי שכפתור התקנת האפליקציה יופיע (בעיקר באנדרואיד/כרום)
     if ('serviceWorker' in navigator) {
