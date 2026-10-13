@@ -825,7 +825,7 @@
     // המפתח והסיסמה כבר לא חשופים כאן בקוד - הם שמורים ב-Vercel Environment Variables.
     // ==========================================
     const API_BASE = "https://skirent-ten.vercel.app/api/blocks";
-    const ORDERS_API = "https://skirent-ten.vercel.app/api/orders";
+    const ORDERS_API = location.hostname.endsWith('.vercel.app') ? '/api/orders' : 'https://skirent-ten.vercel.app/api/orders';
     
     const MERCHANT_PHONE = "0547884607";
 
