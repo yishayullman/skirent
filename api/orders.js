@@ -20,62 +20,6 @@ const CAT_PRICES = { 'מעיל': 150, 'מכנס': 120, 'קסדה': 50, 'כפפו
 const BUNDLE_PRICES = { duo: 200, full: 300 };
 const BUNDLE_LABELS = { duo: 'חבילת מעיל + מכנס', full: 'חבילת קומפלט (הכל)' };
 
-function calcWeeks(startDate, endDate) {
-  const diffDays = Math.ceil(Math.abs(new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24));
-  return Math.max(1, Math.ceil(diffDays / 7));
-}
-
-function makeOrderId(existing) {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // בלי תווים מבלבלים (0/O, 1/I)
-  for (let attempt = 0; attempt < 20; attempt++) {
-    let id = 'SK-';
-    for (let i = 0; i < 5; i++) id += chars[Math.floor(Math.random() * chars.length)];
-    if (!existing.some(o => o.id === id)) return id;
-  }
-  return 'SK-' + Date.now().toString(36).toUpperCase();
-}
-
-async function readOrders(BIN_ID, API_KEY) {
-  const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-    headers: { 'X-Master-Key': API_KEY },
-  });
-  if (!r.ok) throw new Error('קריאה מ-JSONBin נכשלה: ' + r.status);
-  const data = await r.json();
-  const record = data.record || {};
-  return Array.isArray(record.orders) ? record.orders : [];
-}
-
-async function writeOrders(BIN_ID, API_KEY, orders) {
-  const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Master-Key': API_KEY,
-    },
-    body: JSON.stringify({ orders }),
-  });
-  if (!r.ok) {
-// פונקציית Serverless ל-Vercel: מערכת הזמנות עם אימות תשלום ידני.
-//
-// ההזמנות נשמרות ב-Bin נפרד ב-JSONBin (לא ב-Bin של החסימות והביקורות),
-// כדי שפרטי הלקוחות לא יהיו חשופים ב-GET הציבורי של /api/blocks.
-//
-// הגדרה ב-Vercel > Settings > Environment Variables:
-//      JSONBIN_ORDERS_ID = מזהה של Bin חדש וריק שיוצרים ב-JSONBin (רשומה: {"orders": []})
-//      JSONBIN_KEY       = אותו מפתח סודי קיים
-//      ADMIN_PASSWORD    = אותה סיסמת מנהל קיימת
-//
-// פעולות:
-//   POST { action: 'create_order', order: {...} }  - פתוח לכולם. השרת מחשב את הסכום לבד
-//                                                    מתוך מחירון צד-שרת + תאריכים, ומחזיר מספר הזמנה.
-//   GET                                            - דורש סיסמת מנהל. מחזיר את כל ההזמנות.
-//   PUT  { action: 'set_status', orderId, status } - דורש סיסמת מנהל. status: pending/paid/cancelled
-
-// מחירון צד-שרת. זהה למחירים ב-index.html. אם משנים מחירים באתר - לעדכן גם כאן.
-const CAT_PRICES = { 'מעיל': 150, 'מכנס': 120, 'קסדה': 50, 'כפפות': 30, 'גוגלס': 40 };
-const BUNDLE_PRICES = { duo: 200, full: 300 };
-const BUNDLE_LABELS = { duo: 'חבילת מעיל + מכנס', full: 'חבילת קומפלט (הכל)' };
-
 // מקבל רק תאריך אמיתי בפורמט YYYY-MM-DD. מחזיר מספר (ms) או null.
 function parseISODate(str) {
   if (typeof str !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(str)) return null;
@@ -267,4 +211,4 @@ export default async function handler(req, res) {
     }
     return res.status(500).json({ error: 'שגיאת שרת', details: String(e) });
   }
-                   }
+    }
