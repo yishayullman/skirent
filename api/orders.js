@@ -7,6 +7,7 @@
 // הגדרה ב-Vercel > Settings > Environment Variables:
 //      JSONBIN_ORDERS_ID = מזהה של Bin חדש וריק שיוצרים ב-JSONBin (רשומה: {"orders": []})
 //      JSONBIN_KEY       = אותו מפתח סודי קיים
+//      JSONBIN_ORDERS_KEY = (לא חובה) מפתח X-Master-Key אחר, אם ה-Bin של ההזמנות בחשבון JSONBin אחר
 //      ADMIN_PASSWORD    = אותה סיסמת מנהל קיימת
 //
 // פעולות:
@@ -74,7 +75,7 @@ async function writeOrders(BIN_ID, API_KEY, orders) {
 
 export default async function handler(req, res) {
   const BIN_ID = process.env.JSONBIN_ORDERS_ID;
-  const API_KEY = process.env.JSONBIN_KEY;
+  const API_KEY = process.env.JSONBIN_ORDERS_KEY || process.env.JSONBIN_KEY;
   const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
   res.setHeader('Access-Control-Allow-Origin', '*');
