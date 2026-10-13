@@ -55,6 +55,71 @@ async function writeOrders(BIN_ID, API_KEY, orders) {
     body: JSON.stringify({ orders }),
   });
   if (!r.ok) {
+// פונקציית Serverless ל-Vercel: מערכת הזמנות עם אימות תשלום ידני.
+//
+// ההזמנות נשמרות ב-Bin נפרד ב-JSONBin (לא ב-Bin של החסימות והביקורות),
+// כדי שפרטי הלקוחות לא יהיו חשופים ב-GET הציבורי של /api/blocks.
+//
+// הגדרה ב-Vercel > Settings > Environment Variables:
+//      JSONBIN_ORDERS_ID = מזהה של Bin חדש וריק שיוצרים ב-JSONBin (רשומה: {"orders": []})
+//      JSONBIN_KEY       = אותו מפתח סודי קיים
+//      ADMIN_PASSWORD    = אותה סיסמת מנהל קיימת
+//
+// פעולות:
+//   POST { action: 'create_order', order: {...} }  - פתוח לכולם. השרת מחשב את הסכום לבד
+//                                                    מתוך מחירון צד-שרת + תאריכים, ומחזיר מספר הזמנה.
+//   GET                                            - דורש סיסמת מנהל. מחזיר את כל ההזמנות.
+//   PUT  { action: 'set_status', orderId, status } - דורש סיסמת מנהל. status: pending/paid/cancelled
+
+// מחירון צד-שרת. זהה למחירים ב-index.html. אם משנים מחירים באתר - לעדכן גם כאן.
+const CAT_PRICES = { 'מעיל': 150, 'מכנס': 120, 'קסדה': 50, 'כפפות': 30, 'גוגלס': 40 };
+const BUNDLE_PRICES = { duo: 200, full: 300 };
+const BUNDLE_LABELS = { duo: 'חבילת מעיל + מכנס', full: 'חבילת קומפלט (הכל)' };
+
+// מקבל רק תאריך אמיתי בפורמט YYYY-MM-DD. מחזיר מספר (ms) או null.
+function parseISODate(str) {
+  if (typeof str !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(str)) return null;
+  const t = Date.parse(str + 'T00:00:00Z');
+  if (!Number.isFinite(t)) return null;
+  if (new Date(t).toISOString().slice(0, 10) !== str) return null; // למשל 2026-02-31
+  return t;
+}
+
+function calcWeeks(startMs, endMs) {
+  const diffDays = Math.ceil((endMs - startMs) / (1000 * 60 * 60 * 24));
+  return Math.max(1, Math.ceil(diffDays / 7));
+}
+
+function makeOrderId(existing) {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // בלי תווים מבלבלים (0/O, 1/I)
+  for (let attempt = 0; attempt < 20; attempt++) {
+    let id = 'SK-';
+    for (let i = 0; i < 5; i++) id += chars[Math.floor(Math.random() * chars.length)];
+    if (!existing.some(o => o.id === id)) return id;
+  }
+  return 'SK-' + Date.now().toString(36).toUpperCase();
+}
+
+async function readOrders(BIN_ID, API_KEY) {
+  const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+    headers: { 'X-Master-Key': API_KEY },
+  });
+  if (!r.ok) throw new Error('קריאה מ-JSONBin נכשלה: ' + r.status);
+  const data = await r.json();
+  const record = data.record || {};
+  return Array.isArray(record.orders) ? record.orders : [];
+}
+
+async function writeOrders(BIN_ID, API_KEY, orders) {
+  const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Master-Key': API_KEY,
+    },
+    body: JSON.stringify({ orders }),
+  });
+  if (!r.ok) {
     const errorText = await r.text();
     const err = new Error('עדכון מול JSONBin נכשל');
     err.jsonbinStatus = r.status;
@@ -75,7 +140,16 @@ export default async function handler(req, res) {
 
   if (!BIN_ID || !API_KEY) return res.status(500).json({ error: 'השרת לא מוגדר (חסר JSONBIN_ORDERS_ID)' });
 
-  const isAdmin = () => req.headers['x-admin-password'] === ADMIN_PASSWORD;
+  // בלי ADMIN_PASSWORD לא מוגדרת (או ריקה) - אף אחד לא נחשב מנהל
+  const isAdmin = () => {
+    if (typeof ADMIN_PASSWORD !== 'string' || ADMIN_PASSWORD.length === 0) return false;
+    const given = req.headers['x-admin-password'];
+    if (typeof given !== 'string' || given.length === 0) return false;
+    if (given.length !== ADMIN_PASSWORD.length) return false;
+    let diff = 0;
+    for (let i = 0; i < given.length; i++) diff |= given.charCodeAt(i) ^ ADMIN_PASSWORD.charCodeAt(i);
+    return diff === 0;
+  };
 
   try {
     if (req.method === 'GET') {
@@ -96,13 +170,16 @@ export default async function handler(req, res) {
       const method = input.method === 'paybox' ? 'paybox' : 'bit';
 
       if (!customerName) return res.status(400).json({ error: 'חסר שם לקוח' });
-      if (!startDate || !endDate || endDate < startDate) return res.status(400).json({ error: 'תאריכים לא תקינים' });
+      const startMs = parseISODate(startDate);
+      const endMs = parseISODate(endDate);
+      if (startMs === null || endMs === null || endMs < startMs) return res.status(400).json({ error: 'תאריכים לא תקינים' });
 
       const items = Array.isArray(input.items) ? input.items : [];
       const bundles = Array.isArray(input.bundles) ? input.bundles : [];
       if (items.length === 0 && bundles.length === 0) return res.status(400).json({ error: 'הסל ריק' });
 
-      const weeks = calcWeeks(startDate, endDate);
+      const weeks = calcWeeks(startMs, endMs);
+      if (!Number.isFinite(weeks) || weeks < 1 || weeks > 52) return res.status(400).json({ error: 'תאריכים לא תקינים' });
 
       // חישוב סכום בצד שרת בלבד - המחיר שהלקוח שולח לא נתפס
       let total = 0;
@@ -158,6 +235,7 @@ export default async function handler(req, res) {
         total,
         status: 'pending', // pending | paid | cancelled - "שולם" מסומן ידנית אחרי שהכסף מגיע
       };
+      if (!Number.isFinite(total) || total <= 0) return res.status(400).json({ error: 'סכום לא תקין' });
       orders.push(order);
       await writeOrders(BIN_ID, API_KEY, orders);
 
@@ -185,8 +263,8 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'שיטה לא נתמכת' });
   } catch (e) {
     if (e.jsonbinStatus) {
-      return res.status(502).json({ error: e.message, jsonbin_status: e.jsonbinStatus, jsonbin_response: e.jsonbinResponse });
+      return res.status(502).json({ error: e.message, jsonbin_status: e.jsonbinStatus });
     }
     return res.status(500).json({ error: 'שגיאת שרת', details: String(e) });
   }
-    }
+                   }
