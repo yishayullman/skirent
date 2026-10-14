@@ -1,0 +1,56 @@
+name: Fix Hebrew social preview (one-shot)
+on:
+  push:
+    branches: [fix-hebrew-share-image]
+permissions:
+  contents: write
+jobs:
+  fix-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix-hebrew-share-image
+      - name: Install RTL renderer and fonts
+        run: sudo apt-get update && sudo apt-get install -y python3-pil fonts-noto-core fonts-dejavu-core
+      - name: Render Hebrew with proper RTL shaping and update preview tags
+        run: |
+          python3 - <<'PYTHON'
+          from PIL import Image, ImageDraw, ImageFont, ImageOps, ImageFilter
+          from pathlib import Path
+          root=Path('.')
+          im=ImageOps.fit(Image.open(root/'images/ski-mountains.jpg'),(1200,630),method=Image.Resampling.LANCZOS).convert('RGBA')
+          im=im.filter(ImageFilter.GaussianBlur(1.2))
+          overlay=Image.new('RGBA',im.size)
+          pix=overlay.load()
+          for x in range(1200):
+              alpha=int(90+145*x/1199)
+              for y in range(630): pix[x,y]=(6,17,33,alpha)
+          im=Image.alpha_composite(im,overlay)
+          draw=ImageDraw.Draw(im)
+          font='/usr/share/fonts/truetype/noto/NotoSansHebrew-Bold.ttf'
+          regular='/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
+          latin='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
+          def line(text,y,size,color,face=font,direction='rtl'):
+              f=ImageFont.truetype(face,size)
+              while draw.textlength(text,font=f,direction=direction)>1060:
+                  size-=1; f=ImageFont.truetype(face,size)
+              draw.text((1125,y),text,font=f,fill=color,anchor='rt',direction=direction,language='he' if direction=='rtl' else 'en')
+          line('skirent-il',180,56,'#ff914d',latin,'ltr')
+          line('השכרה של כל ציוד הסקי למשפחה',278,64,'white')
+          line('חבילות קומפלט משתלמות • איסוף בגבעת שמואל',397,36,'#e2e8f0',regular)
+          line('מעיל • מכנס • קסדה • כפפות • גוגלס',471,36,'#b9c8d9',regular)
+          im.convert('RGB').save('images/og-image-he-v2.jpg',quality=92,optimize=True)
+          
+          p=Path('index.html')
+          html=p.read_text().replace('/images/og-image.jpg','/images/og-image-he-v2.jpg')
+          p.write_text(html)
+          PYTHON
+      - name: Commit corrected image and remove this one-shot workflow
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm .github/workflows/fix-hebrew-preview.yml
+          git add images/og-image-he-v2.jpg index.html .github/workflows/fix-hebrew-preview.yml
+          git commit -m 'Fix Hebrew direction in social preview image and refresh image URL'
+          git push origin fix-hebrew-share-image
