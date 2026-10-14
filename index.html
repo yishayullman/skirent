@@ -662,7 +662,7 @@
             orderCreateFailedToast: 'יצירת ההזמנה נכשלה. בדקו חיבור לאינטרנט ונסו שוב.',
             adminOrdersTitle: '📦 הזמנות שהתקבלו:', noOrdersAdminYetText: 'עדיין אין הזמנות.',
             orderStatusText: (s) => ({ pending: '⏳ ממתין לתשלום', paid: '✅ שולם', cancelled: '❌ בוטל' })[s] || s,
-            markPaidBtn: 'סמן שולם', cancelOrderBtn: 'בטל הזמנה', reopenOrderBtn: 'החזר לממתין',
+            markPaidBtn: '✅ סמן שולם', cancelOrderBtn: '❌ בטל הזמנה', deleteOrderBtn: '🗑️ מחק לצמיתות', confirmDeleteOrderText: 'למחוק את ההזמנה לצמיתות? אי אפשר לשחזר.', reopenOrderBtn: 'החזר לממתין',
             orderLoadErrorText: 'טעינת ההזמנות נכשלה. נסו לרענן.',
         },
         en: {
@@ -765,7 +765,7 @@
             orderCreateFailedToast: 'Could not create the order. Check your connection and try again.',
             adminOrdersTitle: '📦 Received orders:', noOrdersAdminYetText: 'No orders yet.',
             orderStatusText: (s) => ({ pending: '⏳ Pending payment', paid: '✅ Paid', cancelled: '❌ Cancelled' })[s] || s,
-            markPaidBtn: 'Mark paid', cancelOrderBtn: 'Cancel order', reopenOrderBtn: 'Back to pending',
+            markPaidBtn: '✅ Mark paid', cancelOrderBtn: '❌ Cancel order', deleteOrderBtn: '🗑️ Delete permanently', confirmDeleteOrderText: 'Delete this order permanently? This cannot be undone.', reopenOrderBtn: 'Back to pending',
             orderLoadErrorText: 'Failed to load orders. Try refreshing.',
         }
     };
@@ -2043,9 +2043,10 @@
                 ].join(' • ');
                 const status = o.status || 'pending';
                 const actions = status === 'pending'
-                    ? `<button class="a-btn restore" onclick="setOrderStatus('${o.id}','paid')">${t('markPaidBtn')}</button>
-                       <button class="a-btn delete" onclick="setOrderStatus('${o.id}','cancelled')">${t('cancelOrderBtn')}</button>`
+                    ? `<button class="a-btn restore" style="background:#2e7d32;color:#fff;" onclick="setOrderStatus('${o.id}','paid')">${t('markPaidBtn')}</button>
+                       <button class="a-btn delete" style="background:#ef6c00;color:#fff;" onclick="setOrderStatus('${o.id}','cancelled')">${t('cancelOrderBtn')}</button>`
                     : `<button class="a-btn delete" onclick="setOrderStatus('${o.id}','pending')">${t('reopenOrderBtn')}</button>`;
+                const deleteBtn = `<button class="a-btn delete" style="background:#b71c1c;color:#fff;" onclick="deleteOrder('${o.id}')">${t('deleteOrderBtn')}</button>`;
                 return `
                 <div class="admin-block-item">
                     <div>
@@ -2054,7 +2055,7 @@
                         <small>${desc}</small><br>
                         <b>${t('orderStatusText', status)}</b>
                     </div>
-                    <div style="display:flex; flex-direction:column; gap:6px;">${actions}</div>
+                    <div style="display:flex; flex-direction:column; gap:6px;">${actions}${deleteBtn}</div>
                 </div>`;
             }).join('');
         } catch (e) {
@@ -2076,6 +2077,27 @@
                 return;
             }
             if (!res.ok) throw new Error('status failed');
+            renderAdminOrders();
+        } catch (e) {
+            showToast(t('orderLoadErrorText'), "error");
+        }
+    }
+
+    async function deleteOrder(orderId) {
+        if (!confirm(t('confirmDeleteOrderText') + '\n' + orderId)) return;
+        try {
+            const res = await fetch(ORDERS_API, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json', "X-Admin-Password": adminPassword },
+                body: JSON.stringify({ orderId })
+            });
+            if (res.status === 401) {
+                isAdminAuthenticated = false;
+                adminPassword = "";
+                showToast(t('adminWrongPasswordToast'), "error");
+                return;
+            }
+            if (!res.ok) throw new Error('delete failed');
             renderAdminOrders();
         } catch (e) {
             showToast(t('orderLoadErrorText'), "error");
