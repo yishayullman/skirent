@@ -528,6 +528,8 @@
         <div id="admin-blocks-list" class="admin-scroll"></div>
         <h4 class="admin-sub" data-i18n="manageReviewsTitle">⭐ ניהול ביקורות:</h4>
         <div id="admin-reviews-list" class="admin-scroll tall"></div>
+        <h4 class="admin-sub" data-i18n="adminOrdersTitle">📦 הזמנות שהתקבלו:</h4>
+        <div id="admin-orders-list" class="admin-scroll tall"></div>
     </div>
 </div>
 
@@ -654,6 +656,14 @@
             postPaymentTitle: 'שלב אחרון לסיום! 🎉',
             postPaymentHint: 'אם ביצעתם את ההעברה באפליקציה, לחצו כעת על הכפתור כדי לשלוח אלינו את הפירוט האוטומטי ולשריין את המלאי:',
             postPaymentSendBtn: 'לחצו כאן לשליחת ההודעה', postPaymentBackBtn: '⬅️ טעיתי / רוצה לשנות אמצעי תשלום',
+            reasonCopiedText: 'סיבת ההעברה הועתקה - הדביקו אותה בשדה הסיבה/הערה באפליקציה:', manualReasonText: 'רשמו באפליקציה את סיבת ההעברה הזו:',
+            payNowLineText: (appName, price, phone) => `עברו לאפליקציית <b>${appName}</b> והעבירו <b style="color:var(--success);">₪${price}</b> למספר <b dir="ltr">${phone}</b>.`,
+            orderNumberLineText: (orderId) => `מספר ההזמנה שלכם: <b>${orderId}</b>`,
+            orderCreateFailedToast: 'יצירת ההזמנה נכשלה. בדקו חיבור לאינטרנט ונסו שוב.',
+            adminOrdersTitle: '📦 הזמנות שהתקבלו:', noOrdersAdminYetText: 'עדיין אין הזמנות.',
+            orderStatusText: (s) => ({ pending: '⏳ ממתין לתשלום', paid: '✅ שולם', cancelled: '❌ בוטל' })[s] || s,
+            markPaidBtn: 'סמן שולם', cancelOrderBtn: 'בטל הזמנה', reopenOrderBtn: 'החזר לממתין',
+            orderLoadErrorText: 'טעינת ההזמנות נכשלה. נסו לרענן.',
         },
         en: {
             headerTitle: 'skirent-il', headerSubtitle: 'Premium ski gear & clothing rental in Givat Shmuel and central Israel',
@@ -749,6 +759,14 @@
             postPaymentTitle: 'Final step! 🎉',
             postPaymentHint: "If you've completed the transfer in the app, tap the button now to send us the automatic order details and reserve your gear:",
             postPaymentSendBtn: 'Tap Here to Send the Message', postPaymentBackBtn: '⬅️ Made a mistake / want to change payment method',
+            reasonCopiedText: "The transfer reason was copied - paste it in the app's reason/note field:", manualReasonText: 'Enter this transfer reason in the app:',
+            payNowLineText: (appName, price, phone) => `Open <b>${appName}</b> and transfer <b style="color:var(--success);">₪${price}</b> to <b dir="ltr">${phone}</b>.`,
+            orderNumberLineText: (orderId) => `Your order number: <b>${orderId}</b>`,
+            orderCreateFailedToast: 'Could not create the order. Check your connection and try again.',
+            adminOrdersTitle: '📦 Received orders:', noOrdersAdminYetText: 'No orders yet.',
+            orderStatusText: (s) => ({ pending: '⏳ Pending payment', paid: '✅ Paid', cancelled: '❌ Cancelled' })[s] || s,
+            markPaidBtn: 'Mark paid', cancelOrderBtn: 'Cancel order', reopenOrderBtn: 'Back to pending',
+            orderLoadErrorText: 'Failed to load orders. Try refreshing.',
         }
     };
 
@@ -807,6 +825,7 @@
     // המפתח והסיסמה כבר לא חשופים כאן בקוד - הם שמורים ב-Vercel Environment Variables.
     // ==========================================
     const API_BASE = "https://skirent-ten.vercel.app/api/blocks";
+    const ORDERS_API = location.hostname.endsWith('.vercel.app') ? '/api/orders' : 'https://skirent-ten.vercel.app/api/orders';
     
     const MERCHANT_PHONE = "0547884607";
 
@@ -1541,19 +1560,63 @@
 
     function removeBundle(idx) { cartBundles.splice(idx, 1); updateUI(); }
 
-    function processPaymentAndOrder(method) {
+    async function processPaymentAndOrder(method) {
         const nameInput = document.getElementById('cust-name');
         const sInput = document.getElementById('start-date');
         const eInput = document.getElementById('end-date');
-        const finalPrice = document.getElementById('final-price').innerText;
 
         if(!nameInput.value.trim()) { showToast(t('nameRequiredForOrderToast'), "error"); return; }
         if(!sInput.value || !eInput.value) { showToast(t('datesRequiredToast'), "error"); return; }
 
-        let msg = `שלום, אני מעוניין להזמין ציוד סקי (משולם ב-${method === 'bit' ? 'bit' : 'PayBox'} בסך ₪${finalPrice}):\n`;
+        const btnBit = document.getElementById('pay-btn-bit');
+        const btnPaybox = document.getElementById('pay-btn-paybox');
+        if (btnBit) btnBit.disabled = true;
+        if (btnPaybox) btnPaybox.disabled = true;
+
+        // שלב 1: יצירת ההזמנה בשרת לפני התשלום. השרת מחשב את הסכום לבד ומחזיר מספר הזמנה.
+        let serverOrder;
+        try {
+            const res = await fetch(ORDERS_API, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'create_order',
+                    order: {
+                        customerName: nameInput.value.trim(),
+                        startDate: sInput.value,
+                        endDate: eInput.value,
+                        method,
+                        items: cartItems.map(i => {
+                            const p = products.find(x => x.id === i.id);
+                            return { id: i.id, name: p ? p.name : i.id, cat: p ? p.cat : '', size: i.size, qty: Math.max(1, Number(i.qty) || 1) };
+                        }),
+                        bundles: cartBundles.map(b => ({
+                            typeId: b.typeId,
+                            gender: b.gender,
+                            items: b.items.map(it => ({ id: it.id, name: it.name, size: it.size }))
+                        }))
+                    }
+                })
+            });
+            const data = await res.json();
+            if (!res.ok || !data.ok) throw new Error(data.error || 'create_order failed');
+            serverOrder = data;
+        } catch (err) {
+            if (btnBit) btnBit.disabled = false;
+            if (btnPaybox) btnPaybox.disabled = false;
+            showToast(t('orderCreateFailedToast'), "error");
+            return;
+        }
+
+        // שלב 2: מכאן והלאה עובדים עם הנתונים מהשרת - מספר הזמנה, סכום שחושב בשרת, וסיבת העברה אחידה
+        const orderId = serverOrder.orderId;
+        const finalPrice = serverOrder.total;
+        const transferReason = `Skirent ${orderId}`;
+
+        let msg = `שלום, אני מעוניין להזמין ציוד סקי (הזמנה ${orderId}, אמצעי תשלום: ${method === 'bit' ? 'bit' : 'PayBox'} בסך ₪${finalPrice}):\n`;
         msg += `שם הלקוח: ${nameInput.value}\n`;
         msg += `תאריכים: ${sInput.value} עד ${eInput.value}\n\n`;
-        
+
         if(cartBundles.length > 0) {
             msg += `--- חבילות ---\n`;
             cartBundles.forEach((b, i) => {
@@ -1562,7 +1625,7 @@
             });
             msg += `\n`;
         }
-        
+
         if(cartItems.length > 0) {
             msg += `--- פריטים בודדים ---\n`;
             cartItems.forEach(i => {
@@ -1570,7 +1633,7 @@
                 if(p) msg += `• ${p.name} (מידה: ${i.size})\n`;
             });
         }
-        
+
         msg += `\nסה"כ לתשלום: ₪${finalPrice}`;
 
         saveOrderToHistory(nameInput.value, sInput.value, eInput.value, finalPrice);
@@ -1578,36 +1641,28 @@
         const whatsappUrl = `https://wa.me/972549943477?text=${encodeURIComponent(msg)}`;
         const appName = method === 'bit' ? 'ביט (bit)' : 'פייבוקס (PayBox)';
 
-        const btnBit = document.getElementById('pay-btn-bit');
-        const btnPaybox = document.getElementById('pay-btn-paybox');
-        if (btnBit) btnBit.disabled = true;
-        if (btnPaybox) btnPaybox.disabled = true;
+        // מעתיקים את סיבת ההעברה (עם מספר ההזמנה) כדי שהתשלום יזוהה אצלך באפליקציה
+        navigator.clipboard.writeText(transferReason).then(() => {
+            showPaymentInstructionsModal(appName, finalPrice, orderId, true);
 
-        navigator.clipboard.writeText(MERCHANT_PHONE).then(() => {
-            showPaymentInstructionsModal(appName, finalPrice, true);
-            
             const appUrl = method === 'bit' ? "bitpay://" : "paybox://";
             window.location.href = appUrl;
 
             showPostPaymentWhatsappButton(whatsappUrl);
         }).catch(() => {
-            showPaymentInstructionsModal(appName, finalPrice, false);
+            showPaymentInstructionsModal(appName, finalPrice, orderId, false);
             showPostPaymentWhatsappButton(whatsappUrl);
         });
     }
 
-    function showPaymentInstructionsModal(appName, finalPrice, wasCopied) {
+    function showPaymentInstructionsModal(appName, finalPrice, orderId, wasCopied) {
         const bodyEl = document.getElementById('paymentInstructionsBody');
         if (bodyEl) {
-            bodyEl.innerHTML = wasCopied ? `
-                <p class="pi-title">${t('passwordCopiedText')}</p>
-                <div class="pi-phone">${MERCHANT_PHONE}</div>
-                <p class="pi-text">${t('transferToAppText', appName, finalPrice)}</p>
-                <p class="pi-muted">${t('afterTransferText')}</p>
-            ` : `
-                <p class="pi-title">${t('manualTransferText')}</p>
-                <div class="pi-phone">${MERCHANT_PHONE}</div>
-                <p class="pi-text">${t('manualTransferInstructionText', appName, finalPrice)}</p>
+            bodyEl.innerHTML = `
+                <p class="pi-title">${wasCopied ? t('reasonCopiedText') : t('manualReasonText')}</p>
+                <div class="pi-phone" dir="ltr">Skirent ${orderId}</div>
+                <p class="pi-text">${t('payNowLineText', appName, finalPrice, MERCHANT_PHONE)}</p>
+                <p class="pi-text">${t('orderNumberLineText', orderId)}</p>
                 <p class="pi-muted">${t('afterTransferText')}</p>
             `;
         }
@@ -1704,6 +1759,7 @@
         pSelect.onchange();
 
         renderAdminReviews();
+        renderAdminOrders();
         showModal('adminModal');
     }
 
@@ -1951,6 +2007,80 @@
     }
 
     setupStarInput();
+
+    // ==================== הזמנות (צד מנהל) ====================
+
+    function escHtml(s) {
+        return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    async function renderAdminOrders() {
+        const list = document.getElementById('admin-orders-list');
+        if (!list) return;
+        list.innerHTML = `<p style='color:#666;'>...</p>`;
+        try {
+            const res = await fetch(ORDERS_API, { headers: { "X-Admin-Password": adminPassword } });
+            if (res.status === 401) {
+                isAdminAuthenticated = false;
+                adminPassword = "";
+                list.innerHTML = "";
+                showToast(t('adminWrongPasswordToast'), "error");
+                return;
+            }
+            if (!res.ok) throw new Error('load failed');
+            const data = await res.json();
+            const orders = data.orders || [];
+
+            if (orders.length === 0) {
+                list.innerHTML = `<p style='color:#666;'>${t('noOrdersAdminYetText')}</p>`;
+                return;
+            }
+
+            list.innerHTML = orders.map(o => {
+                const desc = [
+                    ...(o.bundles || []).map(b => `🎁 ${escHtml(b.label)} (${escHtml(b.gender)})`),
+                    ...(o.items || []).map(i => `${escHtml(i.name)} (${escHtml(i.size)}) ×${i.qty}`)
+                ].join(' • ');
+                const status = o.status || 'pending';
+                const actions = status === 'pending'
+                    ? `<button class="a-btn restore" onclick="setOrderStatus('${o.id}','paid')">${t('markPaidBtn')}</button>
+                       <button class="a-btn delete" onclick="setOrderStatus('${o.id}','cancelled')">${t('cancelOrderBtn')}</button>`
+                    : `<button class="a-btn delete" onclick="setOrderStatus('${o.id}','pending')">${t('reopenOrderBtn')}</button>`;
+                return `
+                <div class="admin-block-item">
+                    <div>
+                        <b>${escHtml(o.id)}</b> · ${escHtml(o.customerName)} · <b>₪${o.total}</b><br>
+                        <small>${t('rentalDatesLabel')} ${escHtml(o.startDate)} - ${escHtml(o.endDate)} · ${o.method === 'paybox' ? 'PayBox' : 'bit'} · ${new Date(o.createdAt).toLocaleString('he-IL')}</small><br>
+                        <small>${desc}</small><br>
+                        <b>${t('orderStatusText', status)}</b>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:6px;">${actions}</div>
+                </div>`;
+            }).join('');
+        } catch (e) {
+            list.innerHTML = `<p style='color:#c00;'>${t('orderLoadErrorText')}</p>`;
+        }
+    }
+
+    async function setOrderStatus(orderId, status) {
+        try {
+            const res = await fetch(ORDERS_API, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', "X-Admin-Password": adminPassword },
+                body: JSON.stringify({ action: 'set_status', orderId, status })
+            });
+            if (res.status === 401) {
+                isAdminAuthenticated = false;
+                adminPassword = "";
+                showToast(t('adminWrongPasswordToast'), "error");
+                return;
+            }
+            if (!res.ok) throw new Error('status failed');
+            renderAdminOrders();
+        } catch (e) {
+            showToast(t('orderLoadErrorText'), "error");
+        }
+    }
 
     // ==================== היסטוריית הזמנות (מקומית, בדפדפן בלבד) ====================
 
