@@ -1613,7 +1613,7 @@
         const finalPrice = serverOrder.total;
         const transferReason = `Skirent ${orderId}`;
 
-        let msg = `שלום, אני מעוניין להזמין ציוד סקי (הזמנה ${orderId}, משולם ב-${method === 'bit' ? 'bit' : 'PayBox'} בסך ₪${finalPrice}):\n`;
+        let msg = `שלום, אני מעוניין להזמין ציוד סקי (הזמנה ${orderId}, אמצעי תשלום: ${method === 'bit' ? 'bit' : 'PayBox'} בסך ₪${finalPrice}):\n`;
         msg += `שם הלקוח: ${nameInput.value}\n`;
         msg += `תאריכים: ${sInput.value} עד ${eInput.value}\n\n`;
 
