@@ -16,6 +16,33 @@
     <meta property="og:title" content="skirent-il | השכרת ציוד סקי וסנובורד בגבעת שמואל">
     <meta property="og:description" content="חבילות קומפלט משתלמות להשכרת ציוד סקי - מעיל, מכנס, קסדה, כפפות וגוגלס. איסוף קל בגבעת שמואל.">
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://skirent-ten.vercel.app/">
+    <meta property="og:image" content="https://skirent-ten.vercel.app/images/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="he_IL">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="skirent-il | השכרת ציוד סקי וסנובורד בגבעת שמואל">
+    <meta name="twitter:description" content="חבילות קומפלט משתלמות להשכרת ציוד סקי - מעיל, מכנס, קסדה, כפפות וגוגלס. איסוף קל בגבעת שמואל.">
+    <meta name="twitter:image" content="https://skirent-ten.vercel.app/images/og-image.jpg">
+    <link rel="canonical" href="https://skirent-ten.vercel.app/">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "skirent-il",
+      "description": "השכרת ביגוד וציוד סקי וסנובורד לכל המשפחה בגבעת שמואל",
+      "url": "https://skirent-ten.vercel.app/",
+      "telephone": "+972-54-994-3477",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "יהודה הלוי 58",
+        "addressLocality": "גבעת שמואל",
+        "addressCountry": "IL"
+      },
+      "priceRange": "₪30-₪300 לשבוע"
+    }
+    </script>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0b1a2e">
     <link rel="icon" type="image/png" sizes="192x192" href="images/icon-192.png">
@@ -26,6 +53,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body id="top">
+<a class="skip-link" href="#booking" data-i18n="skipLink">דלג לבחירת תאריכים וציוד</a>
 
 <!-- ================= TOP BAR ================= -->
 <header class="topbar" id="topbar">
@@ -50,7 +78,7 @@
                 <svg class="nav-ic" viewBox="0 0 24 24"><path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
                 <span class="nav-tx" data-i18n="navContact">איסוף וקשר</span>
             </a>
-            <a class="nav-link" id="lang-toggle-btn" onclick="toggleLanguage()">
+            <a class="nav-link" id="lang-toggle-btn" onclick="toggleLanguage()" aria-label="Switch language">
                 <svg class="nav-ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>
                 <span class="nav-tx">English</span>
             </a>
@@ -115,6 +143,30 @@
         <div class="feature">
             <span class="feature-ic">📍</span>
             <div><h3 data-i18n="feat3Title">איסוף קל ומהיר</h3><p data-i18n="feat3Text">אוספים בגבעת שמואל לפני הטיסה ומחזירים אחרי הנחיתה.</p></div>
+        </div>
+    </section>
+
+    <section class="how-section" aria-label="איך זה עובד">
+        <div class="section-head">
+            <span class="eyebrow" data-i18n="howEyebrow">איך זה עובד</span>
+            <h2 data-i18n="howTitle">מזמינים ב-3 צעדים פשוטים</h2>
+        </div>
+        <div class="how-steps">
+            <div class="how-step">
+                <span class="how-num">1</span>
+                <h3 data-i18n="howS1Title">בוחרים תאריכים וציוד</h3>
+                <p data-i18n="howS1Text">מסמנים את תאריכי החופשה, מרכיבים חבילה משתלמת או בוחרים פריטים בודדים במידות שלכם.</p>
+            </div>
+            <div class="how-step">
+                <span class="how-num">2</span>
+                <h3 data-i18n="howS2Title">משלמים בביט או ב-PayBox</h3>
+                <p data-i18n="howS2Text">מעבירים את הסכום המדויק ישירות מהאפליקציה, עם מספר ההזמנה שמופיע על המסך - כדי שנזהה את התשלום ונאשר לך.</p>
+            </div>
+            <div class="how-step">
+                <span class="how-num">3</span>
+                <h3 data-i18n="howS3Title">מאשרים בוואטסאפ ואוספים</h3>
+                <p data-i18n="howS3Text">לחיצה אחת שולחת אלינו את הפרטים ושומרת לכם את הציוד. אוספים מגבעת שמואל לפני הטיסה.</p>
+            </div>
         </div>
     </section>
 
@@ -269,6 +321,10 @@
                 <summary><h4 data-i18n="faqQ3">מה היתרון של חבילת ה"קומפלט"?</h4></summary>
                 <p data-i18n="faqA3">חבילת הקומפלט סוגרת לכם את כל הפינות במחיר מוזל ומשתלם במיוחד (300 ש"ח לשבוע) וכוללת את חמשת פריטי החובה: מעיל, מכנס, קסדה תקנית, כפפות אטומות ומשקפת גוגלס.</p>
             </details>
+            <details class="faq-item">
+                <summary><h4 data-i18n="faqQ4">איך משלמים ומה קורה אחרי התשלום?</h4></summary>
+                <p data-i18n="faqA4">בסיום הבחירה לוחצים על bit או PayBox ומעבירים את הסכום המדויק עם מספר ההזמנה שמופיע על המסך. לאחר מכן לוחצים על כפתור הוואטסאפ הירוק ששולח אלינו את פרטי ההזמנה - ואנחנו מאשרים שהציוד שמור עבורכם.</p>
+            </details>
         </div>
 
         <div class="policy-section">
@@ -315,6 +371,12 @@
     <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>
 </a>
 
+<button type="button" class="cart-pill" id="cart-pill" onclick="showModal('cartModal')" aria-label="הסל שלי">
+    <span class="cp-count" id="cp-count">0</span>
+    <span class="cp-total">₪<span id="cp-total-num">0</span></span>
+    <span class="cp-cta" data-i18n="cartPillCta">לסל</span>
+</button>
+
 <div class="overlay" id="overlay" onclick="closePopups()"></div>
 
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
@@ -336,8 +398,9 @@
             <div class="checkout-box">
                 <label class="field" for="cust-name">
                     <span class="field-label" data-i18n="fullNameLabel">שם מלא להזמנה:</span>
-                    <input type="text" id="cust-name" data-i18n-placeholder="fullNamePlaceholder" placeholder="הכנס שם מלא">
+                    <input type="text" id="cust-name" autocomplete="name" data-i18n-placeholder="fullNamePlaceholder" placeholder="הכנס שם מלא">
                 </label>
+                <div class="cart-dates" id="cart-dates-summary"></div>
                 <div class="total-row">
                     <span data-i18n="totalToPay">סה"כ לתשלום:</span>
                     <span class="total-price">₪<span id="final-price">0</span></span>
@@ -528,7 +591,19 @@
         <div id="admin-blocks-list" class="admin-scroll"></div>
         <h4 class="admin-sub" data-i18n="manageReviewsTitle">⭐ ניהול ביקורות:</h4>
         <div id="admin-reviews-list" class="admin-scroll tall"></div>
-        <h4 class="admin-sub" data-i18n="adminOrdersTitle">📦 הזמנות שהתקבלו:</h4>
+        <div class="admin-orders-head">
+            <h4 class="admin-sub" data-i18n="adminOrdersTitle">📦 הזמנות שהתקבלו:</h4>
+            <button type="button" class="a-btn" data-i18n="refreshOrdersBtn" onclick="renderAdminOrders()">🔄 רענן</button>
+        </div>
+        <div class="order-filters">
+            <select id="admin-orders-filter" onchange="renderAdminOrdersList()">
+                <option value="all" data-i18n="orderFilterAll">כל ההזמנות</option>
+                <option value="pending" data-i18n="orderFilterPending">ממתינות לתשלום</option>
+                <option value="paid" data-i18n="orderFilterPaid">שולמו</option>
+                <option value="cancelled" data-i18n="orderFilterCancelled">בוטלו</option>
+            </select>
+            <span id="admin-orders-count" class="muted small"></span>
+        </div>
         <div id="admin-orders-list" class="admin-scroll tall"></div>
     </div>
 </div>
@@ -604,7 +679,7 @@
             policy3: 'ביטול פחות מ-24 שעות לפני האיסוף, או אי-הגעה - החיוב יהיה מלא.',
             policy4: 'במקרה של נזק לציוד מעבר לבלאי סביר, יחול חיוב נוסף בהתאם להערכת הנזק.',
             policy5: 'לשינויים במידות או בפריטים ניתן לפנות אלינו בוואטסאפ בכל שלב לפני האיסוף, בכפוף לזמינות.',
-            adminPanelBtn: '⚙️ פאנל ניהול מלאי',
+            adminPanelBtn: '⚙️ פאנל ניהול',
             cartTitle: 'הסל שלי', cartEmpty: 'הסל שלך ריק כרגע...', fullNameLabel: 'שם מלא להזמנה:',
             fullNamePlaceholder: 'הכנס שם מלא', totalToPay: 'סה"כ לתשלום:', payMethodsHint: 'לחצו על האפליקציה המועדפת לתשלום ושריון ההזמנה:',
             bundleWizardTitle: 'בחירת חבילה', bundleWizardFor: 'עבור מי החבילה?', smartCalcLink: '📏 מחשבון מידות חכם',
@@ -637,7 +712,7 @@
             invalidHeightWeightToast: 'אנא הזינו ערכי גובה ומשקל תקינים.', nameRequiredForOrderToast: 'נא להזין שם מלא להזמנה לפני התשלום',
             datesRequiredToast: 'נא לבחור תאריכי השכרה בראש העמוד', blockDatesRequiredToast: 'יש לבחור תאריכים לחסימה',
             blockEndBeforeStartToast: 'תאריך הסיום לא יכול להיות לפני תאריך ההתחלה', reviewNameRequiredToast: 'נא להזין שם.',
-            adminPasswordRequiredText: 'נא להזין סיסמה.', confirmReleaseBlockText: 'האם לשחרר חסימה זו ולהחזיר את המוצר למלאי לכולם?', adminManageTitle: '🛠️ פאנל ניהול חסימות מלאי', chooseProductToBlock: 'בחר מוצר לחסימה:', chooseSizeLabel: 'בחר מידה:', fromDateAdmin: 'מאיזה תאריך:',
+            adminPasswordRequiredText: 'נא להזין סיסמה.', confirmReleaseBlockText: 'האם לשחרר חסימה זו ולהחזיר את המוצר למלאי לכולם?', adminManageTitle: '🛠️ פאנל ניהול', chooseProductToBlock: 'בחר מוצר לחסימה:', chooseSizeLabel: 'בחר מידה:', fromDateAdmin: 'מאיזה תאריך:',
             reviewStarsRequiredToast: 'נא לבחור דירוג בכוכבים.', reviewThanksToast: 'תודה על הביקורת!',
             reviewSendErrorToast: 'תקלה בשליחת הביקורת. נסה שוב.', networkErrorToast: 'שגיאת רשת. נסה שוב.',
             reviewDeletedToast: 'הביקורת נמחקה.', reviewRestoredToast: 'הביקורת שוחזרה.',
@@ -664,6 +739,24 @@
             orderStatusText: (s) => ({ pending: '⏳ ממתין לתשלום', paid: '✅ שולם', cancelled: '❌ בוטל' })[s] || s,
             markPaidBtn: '✅ סמן שולם', cancelOrderBtn: '❌ בטל הזמנה', deleteOrderBtn: '🗑️ מחק לצמיתות', confirmDeleteOrderText: 'למחוק את ההזמנה לצמיתות? אי אפשר לשחזר.', reopenOrderBtn: 'החזר לממתין',
             orderLoadErrorText: 'טעינת ההזמנות נכשלה. נסו לרענן.',
+            skipLink: 'דלג לבחירת תאריכים וציוד',
+            howEyebrow: 'איך זה עובד', howTitle: 'מזמינים ב-3 צעדים פשוטים',
+            howS1Title: 'בוחרים תאריכים וציוד', howS1Text: 'מסמנים את תאריכי החופשה, מרכיבים חבילה משתלמת או בוחרים פריטים בודדים במידות שלכם.',
+            howS2Title: 'משלמים בביט או ב-PayBox', howS2Text: 'מעבירים את הסכום המדויק ישירות מהאפליקציה, עם מספר ההזמנה שמופיע על המסך - כדי שנזהה את התשלום ונאשר לך.',
+            howS3Title: 'מאשרים בוואטסאפ ואוספים', howS3Text: 'לחיצה אחת שולחת אלינו את הפרטים ושומרת לכם את הציוד. אוספים מגבעת שמואל לפני הטיסה.',
+            faqQ4: 'איך משלמים ומה קורה אחרי התשלום?',
+            faqA4: 'בסיום הבחירה לוחצים על bit או PayBox ומעבירים את הסכום המדויק עם מספר ההזמנה שמופיע על המסך. לאחר מכן לוחצים על כפתור הוואטסאפ הירוק ששולח אלינו את פרטי ההזמנה - ואנחנו מאשרים שהציוד שמור עבורכם.',
+            cartPillCta: 'לסל',
+            orderSentToast: 'ההזמנה נשלחה אלינו בוואטסאפ! נחזור אליך לאישור סופי.',
+            cartDatesLine: (s, e, weeks, days) => `תאריכי השכרה: ${s} עד ${e} · ${weeks} שבועות (${days} ימים)`,
+            cartNoDatesLine: 'לא נבחרו תאריכי השכרה - בחרו בראש העמוד לפני התשלום',
+            durationInfoText: (weeks, days) => `תקופת חישוב: ${weeks} שבועות (${days} ימים)`,
+            orderIdLabel: 'מספר הזמנה:',
+            lastUnitText: '🔥 נשארה יחידה אחרונה בתאריכים אלו',
+            refreshOrdersBtn: '🔄 רענן',
+            orderFilterAll: 'כל ההזמנות', orderFilterPending: 'ממתינות לתשלום', orderFilterPaid: 'שולמו', orderFilterCancelled: 'בוטלו',
+            ordersCountText: (p, paid, c) => `${p} ממתינות · ${paid} שולמו · ${c} בוטלו`,
+            copyPhoneBtn: '📋 העתק מספר',
         },
         en: {
             headerTitle: 'skirent-il', headerSubtitle: 'Premium ski gear & clothing rental in Givat Shmuel and central Israel',
@@ -707,7 +800,7 @@
             policy3: 'Cancel less than 24 hours before pickup, or no-show - full charge applies.',
             policy4: 'In case of damage beyond reasonable wear, an additional charge will apply based on damage assessment.',
             policy5: 'For size or item changes, contact us on WhatsApp any time before pickup, subject to availability.',
-            adminPanelBtn: '⚙️ Inventory Admin Panel',
+            adminPanelBtn: '⚙️ Admin Panel',
             cartTitle: 'My Cart', cartEmpty: 'Your cart is currently empty...', fullNameLabel: 'Full name for order:',
             fullNamePlaceholder: 'Enter your full name', totalToPay: 'Total to pay:', payMethodsHint: 'Tap your preferred payment app to pay and reserve your order:',
             bundleWizardTitle: 'Build a Bundle', bundleWizardFor: 'Who is the bundle for?', smartCalcLink: '📏 Smart Size Calculator',
@@ -740,7 +833,7 @@
             invalidHeightWeightToast: 'Please enter valid height and weight values.', nameRequiredForOrderToast: 'Please enter your full name before paying',
             datesRequiredToast: 'Please select rental dates at the top of the page', blockDatesRequiredToast: 'Please select dates to block',
             blockEndBeforeStartToast: 'End date cannot be before start date', reviewNameRequiredToast: 'Please enter your name.',
-            adminPasswordRequiredText: 'Please enter a password.', confirmReleaseBlockText: 'Release this block and make the product available to everyone again?', adminManageTitle: '🛠️ Inventory Blocking Admin Panel', chooseProductToBlock: 'Choose a product to block:', chooseSizeLabel: 'Choose a size:', fromDateAdmin: 'From date:',
+            adminPasswordRequiredText: 'Please enter a password.', confirmReleaseBlockText: 'Release this block and make the product available to everyone again?', adminManageTitle: '🛠️ Admin Panel', chooseProductToBlock: 'Choose a product to block:', chooseSizeLabel: 'Choose a size:', fromDateAdmin: 'From date:',
             reviewStarsRequiredToast: 'Please select a star rating.', reviewThanksToast: 'Thanks for your review!',
             reviewSendErrorToast: 'There was a problem sending your review. Please try again.', networkErrorToast: 'Network error. Please try again.',
             reviewDeletedToast: 'The review was deleted.', reviewRestoredToast: 'The review was restored.',
@@ -767,6 +860,24 @@
             orderStatusText: (s) => ({ pending: '⏳ Pending payment', paid: '✅ Paid', cancelled: '❌ Cancelled' })[s] || s,
             markPaidBtn: '✅ Mark paid', cancelOrderBtn: '❌ Cancel order', deleteOrderBtn: '🗑️ Delete permanently', confirmDeleteOrderText: 'Delete this order permanently? This cannot be undone.', reopenOrderBtn: 'Back to pending',
             orderLoadErrorText: 'Failed to load orders. Try refreshing.',
+            skipLink: 'Skip to dates & gear',
+            howEyebrow: 'How it works', howTitle: 'Order in 3 simple steps',
+            howS1Title: 'Pick dates & gear', howS1Text: 'Mark your trip dates, build a value bundle or choose individual items in your sizes.',
+            howS2Title: 'Pay with bit or PayBox', howS2Text: 'Transfer the exact amount straight from the app, with the order number shown on screen - so we can identify your payment and confirm.',
+            howS3Title: 'Confirm on WhatsApp & pick up', howS3Text: 'One tap sends us your order details and reserves your gear. Pick up in Givat Shmuel before your flight.',
+            faqQ4: 'How do I pay and what happens next?',
+            faqA4: 'When you finish choosing, tap bit or PayBox and transfer the exact amount with the order number shown on screen. Then tap the green WhatsApp button which sends us your order details - and we confirm the gear is reserved for you.',
+            cartPillCta: 'Cart',
+            orderSentToast: 'Your order was sent to us on WhatsApp! We will get back to you with final confirmation.',
+            cartDatesLine: (s, e, weeks, days) => `Rental dates: ${s} to ${e} · ${weeks} week${weeks > 1 ? 's' : ''} (${days} days)`,
+            cartNoDatesLine: 'No rental dates selected - pick dates at the top of the page before paying',
+            durationInfoText: (weeks, days) => `Calculated period: ${weeks} week${weeks > 1 ? 's' : ''} (${days} days)`,
+            orderIdLabel: 'Order ID:',
+            lastUnitText: '🔥 Last unit left for these dates',
+            refreshOrdersBtn: '🔄 Refresh',
+            orderFilterAll: 'All orders', orderFilterPending: 'Pending payment', orderFilterPaid: 'Paid', orderFilterCancelled: 'Cancelled',
+            ordersCountText: (p, paid, c) => `${p} pending · ${paid} paid · ${c} cancelled`,
+            copyPhoneBtn: '📋 Copy number',
         }
     };
 
@@ -843,11 +954,11 @@
 
     let products = [
         { id: 'coat-men-1', name: 'מעיל גברים 1', cat: 'מעיל', gender: 'גברים', price: 150, image: 'images/coat-men-1.jpg' },
-        { id: 'coat-men-2', name: 'מעיל גברים 2', cat: 'מעיל', gender: 'גברים', price: 150, image: 'images/coat-men-2.png' },
-        { id: 'coat-men-3', name: 'מעיל גברים 3', cat: 'מעיל', gender: 'גברים', price: 150, image: 'images/coat-men-3.png' },
+        { id: 'coat-men-2', name: 'מעיל גברים 2', cat: 'מעיל', gender: 'גברים', price: 150, image: 'images/coat-men-2.webp' },
+        { id: 'coat-men-3', name: 'מעיל גברים 3', cat: 'מעיל', gender: 'גברים', price: 150, image: 'images/coat-men-3.webp' },
         { id: 'coat-men-4', name: 'מעיל גברים 4', cat: 'מעיל', gender: 'גברים', price: 150, image: 'images/coat-men-4.jpg' },
-        { id: 'coat-men-5', name: 'מעיל גברים 5', cat: 'מעיל', gender: 'גברים', price: 150, image: 'images/coat-men-5.png' },
-        { id: 'coat-kids-1', name: 'מעיל ילדים 1', cat: 'מעיל', gender: 'ילדים', price: 150, image: 'images/set-kids-1.png' },
+        { id: 'coat-men-5', name: 'מעיל גברים 5', cat: 'מעיל', gender: 'גברים', price: 150, image: 'images/coat-men-5.webp' },
+        { id: 'coat-kids-1', name: 'מעיל ילדים 1', cat: 'מעיל', gender: 'ילדים', price: 150, image: 'images/set-kids-1.webp' },
         { id: 'coat-women-1', name: 'מעיל נשים 1', cat: 'מעיל', gender: 'נשים', price: 150, image: 'images/coat-women-1.jpg' },
         { id: 'coat-women-2', name: 'מעיל נשים 2', cat: 'מעיל', gender: 'נשים', price: 150, image: `https://placehold.jp/24/1a2a6c/ffffff/300x250.png?text=מעיל+נשים` }
     ];
@@ -870,14 +981,14 @@
     });
 
     // תמונות אמיתיות לקסדות (דגם ראשון בכל מגדר)
-    const realHelmetImages = { 'גברים': 'images/helmet-men-1.jpg', 'נשים': 'images/helmet-women-1.jpg', 'ילדים': 'images/helmet-kids-1.png' };
+    const realHelmetImages = { 'גברים': 'images/helmet-men-1.webp', 'נשים': 'images/helmet-women-1.webp', 'ילדים': 'images/helmet-kids-1.webp' };
     Object.keys(realHelmetImages).forEach(g => {
         const helmet = products.find(p => p.id === `קסדה-${g}-1`);
         if (helmet) helmet.image = realHelmetImages[g];
     });
 
     // תמונות אמיתיות לגוגלס (דגם ראשון, גברים ונשים)
-    const realGogglesImages = { 'גברים': 'images/goggles-men-1.png', 'נשים': 'images/goggles-women-1.png' };
+    const realGogglesImages = { 'גברים': 'images/goggles-men-1.webp', 'נשים': 'images/goggles-women-1.webp' };
     Object.keys(realGogglesImages).forEach(g => {
         const goggles = products.find(p => p.id === `גוגלס-${g}-1`);
         if (goggles) goggles.image = realGogglesImages[g];
@@ -885,17 +996,17 @@
 
     // תמונות אמיתיות נוספות לגוגלס - ילדים (דגם 1) וגברים (דגם 2)
     const gogglesKids1 = products.find(p => p.id === 'גוגלס-ילדים-1');
-    if (gogglesKids1) gogglesKids1.image = 'images/goggles-kids-1.png';
+    if (gogglesKids1) gogglesKids1.image = 'images/goggles-kids-1.webp';
     const gogglesMen2 = products.find(p => p.id === 'גוגלס-גברים-2');
-    if (gogglesMen2) gogglesMen2.image = 'images/goggles-men-2.png';
+    if (gogglesMen2) gogglesMen2.image = 'images/goggles-men-2.webp';
     const gogglesWomen2 = products.find(p => p.id === 'גוגלס-נשים-2');
-    if (gogglesWomen2) gogglesWomen2.image = 'images/goggles-women-2.png';
+    if (gogglesWomen2) gogglesWomen2.image = 'images/goggles-women-2.webp';
 
     // דגם שלישי של גוגלס גברים - נוסף במפורש כי יש תמונה אמיתית שלישית
-    products.push({ id: 'גוגלס-גברים-3', name: 'גוגלס גברים 3', cat: 'גוגלס', gender: 'גברים', price: prices['גוגלס'], image: 'images/goggles-men-3.png' });
+    products.push({ id: 'גוגלס-גברים-3', name: 'גוגלס גברים 3', cat: 'גוגלס', gender: 'גברים', price: prices['גוגלס'], image: 'images/goggles-men-3.webp' });
 
     // תמונות אמיתיות לכפפות (דגם ראשון בכל מגדר)
-    const realGlovesImages = { 'גברים': 'images/gloves-men-1.png', 'נשים': 'images/gloves-women-1.png' };
+    const realGlovesImages = { 'גברים': 'images/gloves-men-1.webp', 'נשים': 'images/gloves-women-1.webp' };
     Object.keys(realGlovesImages).forEach(g => {
         const gloves = products.find(p => p.id === `כפפות-${g}-1`);
         if (gloves) gloves.image = realGlovesImages[g];
@@ -903,15 +1014,15 @@
 
     // תמונה אמיתית למכנס ילדים (דגם ראשון) - אותה תמונה כמו מעיל ילדים 1, כי הם נמכרים בנפרד
     const pantsKids1 = products.find(p => p.id === 'מכנס-ילדים-1');
-    if (pantsKids1) pantsKids1.image = 'images/set-kids-1.png';
+    if (pantsKids1) pantsKids1.image = 'images/set-kids-1.webp';
 
     // מכנס גברים 1 - החלטתי לשייך אותו לגברים לפי הגזרה הפשוטה והשחורה
     const pantsMen1 = products.find(p => p.id === 'מכנס-גברים-1');
-    if (pantsMen1) pantsMen1.image = 'images/pants-men-1.png';
+    if (pantsMen1) pantsMen1.image = 'images/pants-men-1.webp';
 
     // מכנס נשים 1 - תמונת מוצר נקייה ומקצועית
     const pantsWomen1 = products.find(p => p.id === 'מכנס-נשים-1');
-    if (pantsWomen1) pantsWomen1.image = 'images/pants-women-1.png';
+    if (pantsWomen1) pantsWomen1.image = 'images/pants-women-1.webp';
 
     // מסירים לגמרי מהקטלוג כל מוצר שעדיין אין לו תמונה אמיתית (רק placeholder)
     products = products.filter(p => !p.image.includes('placehold.jp'));
@@ -1148,7 +1259,7 @@
 
             const imageHTML = p.images ? `
                 <div class="img-slider">
-                    <img id="img-${p.id}" 
+                    <img id="img-${p.id}" loading="lazy" decoding="async"
                         src="${p.images[0]}" 
                         alt="${translateProductName(p)}"
                         onclick="openLightbox('${p.images[0]}')"
@@ -1157,9 +1268,10 @@
                     <button onclick="prevImage('${p.id}')" class="image-nav-btn prev">‹</button>
                     <button onclick="nextImage('${p.id}')" class="image-nav-btn next">›</button>
                 </div>
-            ` : `<img src="${p.image}" alt="${translateProductName(p)}" onclick="openLightbox('${p.image}')" title="לחץ להגדלה">`;
+            ` : `<img loading="lazy" decoding="async" src="${p.image}" alt="${translateProductName(p)}" onclick="openLightbox('${p.image}')" title="לחץ להגדלה">`;
 
             const maxQ = getMaxCartQuantity(p.id, defaultSize);
+            const datesChosen = Boolean(document.getElementById('start-date').value && document.getElementById('end-date').value);
             const cartQ = isInCart ? Math.min(maxQ, Math.max(1, Number((cartItems.find(i => i.id === p.id && i.size === defaultSize) || {}).qty) || 1)) : 1;
             targetGrid.innerHTML += `
                 <article class="card ${blockData ? 'size-blocked' : ''}" id="card-${p.id}">
@@ -1191,6 +1303,7 @@
                         <button id="btn-${p.id}" ${blockData ? 'disabled' : ''} class="btn-select ${blockData ? 'disabled-btn' : (isInCart ? 'in-cart' : '')}" onclick="toggleCartItem('${p.id}')">
                             ${blockData ? t('sizeTaken', defaultSize) : (isInCart ? t('inCartLabel') : t('addToCart'))}
                         </button>
+                        ${datesChosen && !blockData && maxQ === 1 ? `<div class="stock-hint">${t('lastUnitText')}</div>` : ''}
                     </div>
                 </article>`;
         });
@@ -1490,7 +1603,7 @@
         if (s && e && e >= s) {
             const diffDays = Math.ceil(Math.abs(new Date(e) - new Date(s)) / (1000 * 60 * 60 * 24));
             weeks = Math.max(1, Math.ceil(diffDays / 7));
-            document.getElementById('duration-info').innerText = currentLang === 'he' ? `תקופת חישוב: ${weeks} שבועות` : `Calculated period: ${weeks} week${weeks > 1 ? 's' : ''}`;
+            document.getElementById('duration-info').innerText = t('durationInfoText', weeks, diffDays);
         } else {
             document.getElementById('duration-info').innerText = t('pleaseSelectDates');
         }
@@ -1556,6 +1669,27 @@
         if (listContainer) listContainer.innerHTML = htmlContent;
         const finalPriceEl = document.getElementById('final-price');
         if (finalPriceEl) finalPriceEl.innerText = total;
+
+        // שורת תאריכי ההשכרה בתוך הסל - כדי שהלקוח יראה על מה הוא משלם
+        const cartDatesEl = document.getElementById('cart-dates-summary');
+        if (cartDatesEl) {
+            if (s && e && e >= s) {
+                const cartDays = Math.ceil(Math.abs(new Date(e) - new Date(s)) / (1000 * 60 * 60 * 24));
+                cartDatesEl.innerText = t('cartDatesLine', s, e, weeks, cartDays);
+                cartDatesEl.classList.remove('warn');
+            } else {
+                cartDatesEl.innerText = t('cartNoDatesLine');
+                cartDatesEl.classList.add('warn');
+            }
+        }
+
+        // כפתור סל צף במובייל - מוצג רק כשיש פריטים בסל
+        const totalUnits = itemUnits + cartBundles.length;
+        document.body.classList.toggle('has-cart', totalUnits > 0);
+        const cpCount = document.getElementById('cp-count');
+        const cpTotal = document.getElementById('cp-total-num');
+        if (cpCount) cpCount.innerText = totalUnits;
+        if (cpTotal) cpTotal.innerText = total;
     }
 
     function removeBundle(idx) { cartBundles.splice(idx, 1); updateUI(); }
@@ -1636,7 +1770,7 @@
 
         msg += `\nסה"כ לתשלום: ₪${finalPrice}`;
 
-        saveOrderToHistory(nameInput.value, sInput.value, eInput.value, finalPrice);
+        saveOrderToHistory(nameInput.value.trim(), sInput.value, eInput.value, finalPrice, orderId, method);
 
         const whatsappUrl = `https://wa.me/972549943477?text=${encodeURIComponent(msg)}`;
         const appName = method === 'bit' ? 'ביט (bit)' : 'פייבוקס (PayBox)';
@@ -1663,10 +1797,15 @@
                 <div class="pi-phone" dir="ltr">Skirent ${orderId}</div>
                 <p class="pi-text">${t('payNowLineText', appName, finalPrice, MERCHANT_PHONE)}</p>
                 <p class="pi-text">${t('orderNumberLineText', orderId)}</p>
+                <button type="button" class="copy-phone-btn" onclick="copyMerchantPhone()">${t('copyPhoneBtn')} · ${MERCHANT_PHONE}</button>
                 <p class="pi-muted">${t('afterTransferText')}</p>
             `;
         }
         showModal('paymentInstructionsModal');
+    }
+
+    function copyMerchantPhone() {
+        navigator.clipboard.writeText(MERCHANT_PHONE).then(() => showToast(t('passwordCopiedText'), 'success')).catch(() => {});
     }
 
     function showPostPaymentWhatsappButton(whatsappUrl) {
@@ -1676,11 +1815,26 @@
                 <div class="post-pay">
                     <h3>${t('postPaymentTitle')}</h3>
                     <p>${t('postPaymentHint')}</p>
-                    <a href="${whatsappUrl}" target="_blank" class="wa-btn">${t('postPaymentSendBtn')}</a>
+                    <a href="${whatsappUrl}" target="_blank" class="wa-btn" onclick="completeOrder()">${t('postPaymentSendBtn')}</a>
                     <button onclick="cancelPostPaymentView()" class="back-btn">${t('postPaymentBackBtn')}</button>
                 </div>
             `;
         }
+    }
+
+    // נקרא כשהלקוח לוחץ על כפתור שליחת הוואטסאפ - סיום הזמנה: מנקים את הסל לקנייה הבאה
+    function completeOrder() {
+        cartItems = [];
+        cartBundles = [];
+        const nameInput = document.getElementById('cust-name');
+        if (nameInput) nameInput.value = '';
+        cancelPostPaymentView();
+        updateUI();
+        render();
+        setTimeout(() => {
+            closePopups();
+            showToast(t('orderSentToast'), 'success', 6000);
+        }, 400);
     }
 
     function cancelPostPaymentView() {
@@ -2014,6 +2168,8 @@
         return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     }
 
+    let adminOrdersCache = [];
+
     async function renderAdminOrders() {
         const list = document.getElementById('admin-orders-list');
         if (!list) return;
@@ -2029,38 +2185,55 @@
             }
             if (!res.ok) throw new Error('load failed');
             const data = await res.json();
-            const orders = data.orders || [];
-
-            if (orders.length === 0) {
-                list.innerHTML = `<p style='color:#666;'>${t('noOrdersAdminYetText')}</p>`;
-                return;
-            }
-
-            list.innerHTML = orders.map(o => {
-                const desc = [
-                    ...(o.bundles || []).map(b => `🎁 ${escHtml(b.label)} (${escHtml(b.gender)})`),
-                    ...(o.items || []).map(i => `${escHtml(i.name)} (${escHtml(i.size)}) ×${i.qty}`)
-                ].join(' • ');
-                const status = o.status || 'pending';
-                const actions = status === 'pending'
-                    ? `<button class="a-btn restore" style="background:#2e7d32;color:#fff;" onclick="setOrderStatus('${o.id}','paid')">${t('markPaidBtn')}</button>
-                       <button class="a-btn delete" style="background:#ef6c00;color:#fff;" onclick="setOrderStatus('${o.id}','cancelled')">${t('cancelOrderBtn')}</button>`
-                    : `<button class="a-btn delete" onclick="setOrderStatus('${o.id}','pending')">${t('reopenOrderBtn')}</button>`;
-                const deleteBtn = `<button class="a-btn delete" style="background:#b71c1c;color:#fff;" onclick="deleteOrder('${o.id}')">${t('deleteOrderBtn')}</button>`;
-                return `
-                <div class="admin-block-item">
-                    <div>
-                        <b>${escHtml(o.id)}</b> · ${escHtml(o.customerName)} · <b>₪${o.total}</b><br>
-                        <small>${t('rentalDatesLabel')} ${escHtml(o.startDate)} - ${escHtml(o.endDate)} · ${o.method === 'paybox' ? 'PayBox' : 'bit'} · ${new Date(o.createdAt).toLocaleString('he-IL')}</small><br>
-                        <small>${desc}</small><br>
-                        <b>${t('orderStatusText', status)}</b>
-                    </div>
-                    <div style="display:flex; flex-direction:column; gap:6px;">${actions}${deleteBtn}</div>
-                </div>`;
-            }).join('');
+            adminOrdersCache = data.orders || [];
+            renderAdminOrdersList();
         } catch (e) {
             list.innerHTML = `<p style='color:#c00;'>${t('orderLoadErrorText')}</p>`;
         }
+    }
+
+    function renderAdminOrdersList() {
+        const list = document.getElementById('admin-orders-list');
+        if (!list) return;
+        const orders = adminOrdersCache;
+
+        const cPending = orders.filter(o => (o.status || 'pending') === 'pending').length;
+        const cPaid = orders.filter(o => o.status === 'paid').length;
+        const cCancelled = orders.filter(o => o.status === 'cancelled').length;
+        const countEl = document.getElementById('admin-orders-count');
+        if (countEl) countEl.innerText = orders.length ? t('ordersCountText', cPending, cPaid, cCancelled) : '';
+
+        const filterEl = document.getElementById('admin-orders-filter');
+        const filter = filterEl ? filterEl.value : 'all';
+        const visible = orders.filter(o => filter === 'all' || (o.status || 'pending') === filter);
+
+        if (visible.length === 0) {
+            list.innerHTML = `<p style='color:#666;'>${t('noOrdersAdminYetText')}</p>`;
+            return;
+        }
+
+        list.innerHTML = visible.map(o => {
+            const desc = [
+                ...(o.bundles || []).map(b => `🎁 ${escHtml(b.label)} (${escHtml(b.gender)})`),
+                ...(o.items || []).map(i => `${escHtml(i.name)} (${escHtml(i.size)}) ×${i.qty}`)
+            ].join(' • ');
+            const status = o.status || 'pending';
+            const actions = status === 'pending'
+                ? `<button class="a-btn restore" style="background:#2e7d32;color:#fff;" onclick="setOrderStatus('${o.id}','paid')">${t('markPaidBtn')}</button>
+                   <button class="a-btn delete" style="background:#ef6c00;color:#fff;" onclick="setOrderStatus('${o.id}','cancelled')">${t('cancelOrderBtn')}</button>`
+                : `<button class="a-btn delete" onclick="setOrderStatus('${o.id}','pending')">${t('reopenOrderBtn')}</button>`;
+            const deleteBtn = `<button class="a-btn delete" style="background:#b71c1c;color:#fff;" onclick="deleteOrder('${o.id}')">${t('deleteOrderBtn')}</button>`;
+            return `
+            <div class="admin-block-item">
+                <div>
+                    <b>${escHtml(o.id)}</b> · ${escHtml(o.customerName)} · <b>₪${o.total}</b><br>
+                    <small>${t('rentalDatesLabel')} ${escHtml(o.startDate)} - ${escHtml(o.endDate)} · ${o.method === 'paybox' ? 'PayBox' : 'bit'} · ${new Date(o.createdAt).toLocaleString('he-IL')}</small><br>
+                    <small>${desc}</small><br>
+                    <b>${t('orderStatusText', status)}</b>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:6px;">${actions}${deleteBtn}</div>
+            </div>`;
+        }).join('');
     }
 
     async function setOrderStatus(orderId, status) {
@@ -2114,7 +2287,7 @@
         }
     }
 
-    function saveOrderToHistory(customerName, startDate, endDate, totalPrice) {
+    function saveOrderToHistory(customerName, startDate, endDate, totalPrice, serverOrderId, method) {
         const history = getOrderHistory();
         const order = {
             id: Date.now(),
@@ -2123,6 +2296,8 @@
             startDate,
             endDate,
             totalPrice,
+            serverOrderId: serverOrderId || null,
+            method: method || null,
             bundles: JSON.parse(JSON.stringify(cartBundles)),
             items: JSON.parse(JSON.stringify(cartItems)),
         };
@@ -2166,6 +2341,7 @@
                         <span class="order-date">${new Date(o.date).toLocaleDateString(currentLang === 'he' ? 'he-IL' : 'en-US')}</span>
                     </div>
                     <div class="order-dates">${t('rentalDatesLabel')} ${o.startDate} - ${o.endDate}</div>
+                    ${o.serverOrderId ? `<div class="order-sid">${t('orderIdLabel')} <b>${escHtml(o.serverOrderId)}</b></div>` : ''}
                     <div class="order-items">${itemsText || t('emptyItemsText')}</div>
                     <div class="order-total">${t('totalLabel')} ₪${o.totalPrice}</div>
                     <div class="order-actions">
@@ -2242,6 +2418,18 @@
         if (diff > 0) { nextImage(id); } else { prevImage(id); }
     }
 
+    // נגישות: Escape סוגר חלונות קופצים, Enter/רווח מפעיל קישורי ניווט
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') { closePopups(); closeLightbox(); }
+    });
+    document.querySelectorAll('.nav-link[onclick]').forEach(a => {
+        a.setAttribute('role', 'button');
+        a.setAttribute('tabindex', '0');
+        a.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); a.click(); }
+        });
+    });
+
     applyStaticTranslations();
     render(); updateUI();
 
@@ -2261,4 +2449,4 @@
     }
 </script>
 </body>
-</html>
+    </html>
