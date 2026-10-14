@@ -1,0 +1,35 @@
+name: Add optimized images (one-shot, self-deleting)
+on:
+  push:
+    branches: [improvements-oct14]
+permissions:
+  contents: write
+jobs:
+  add-images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: improvements-oct14
+      - name: Install webp tools
+        run: sudo apt-get update && sudo apt-get install -y webp
+      - name: Convert images to webp
+        run: |
+          cd images
+          for f in coat-men-2 coat-men-3 coat-men-5 gloves-men-1 gloves-women-1 goggles-kids-1 goggles-men-1 goggles-men-2 goggles-men-3 goggles-women-1 goggles-women-2 helmet-kids-1 pants-men-1 pants-women-1 set-kids-1; do
+            cwebp -quiet -q 82 "$f.png" -o "$f.webp" || convert "$f.png" -quality 82 "$f.webp"
+          done
+          for f in helmet-men-1 helmet-women-1; do
+            cwebp -quiet -q 82 "$f.jpg" -o "$f.webp" || convert "$f.jpg" -quality 82 "$f.webp"
+          done
+          ls -la *.webp
+      - name: Decode og-image
+        run: base64 -d og-image.b64 > images/og-image.jpg && rm og-image.b64
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -f .github/workflows/add-images.yml
+          git add -A
+          git commit -m "Add webp product images + og-image (via one-shot workflow)"
+          git push origin improvements-oct14
