@@ -79,7 +79,7 @@ export default async function handler(req, res) {
   const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Admin-Password');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
@@ -201,6 +201,19 @@ export default async function handler(req, res) {
       if (idx === -1) return res.status(404).json({ error: 'הזמנה לא נמצאה' });
       orders[idx].status = status;
       orders[idx].statusUpdatedAt = new Date().toISOString();
+      await writeOrders(BIN_ID, API_KEY, orders);
+      return res.status(200).json({ ok: true });
+    }
+
+    if (req.method === 'DELETE') {
+      // מחיקת הזמנה לצמיתות - דורש סיסמת מנהל בצד שרת
+      if (!isAdmin()) return res.status(401).json({ error: 'סיסמת מנהל שגויה' });
+      const orderId = String((req.body && req.body.orderId) || (req.query && req.query.orderId) || '');
+      if (!orderId) return res.status(400).json({ error: 'חסר מספר הזמנה' });
+      const orders = await readOrders(BIN_ID, API_KEY);
+      const idx = orders.findIndex(o => o.id === orderId);
+      if (idx === -1) return res.status(404).json({ error: 'הזמנה לא נמצאה' });
+      orders.splice(idx, 1);
       await writeOrders(BIN_ID, API_KEY, orders);
       return res.status(200).json({ ok: true });
     }
