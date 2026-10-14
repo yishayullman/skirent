@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://skirent-ten.vercel.app/sitemap.xml
+Sitemap: https://ski.surfrent-il.com/sitemap.xml
