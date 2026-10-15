@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ski.surfrent-il.com/sitemap.xml
