@@ -1,7 +1,7 @@
 {
-  "name": "skirent-il - השכרת ציוד סקי",
+  "name": "skirent-il - השכרת ביגוד סקי",
   "short_name": "skirent-il",
-  "description": "השכרת ביגוד וציוד סקי פרימיום בגבעת שמואל",
+  "description": "השכרת ביגוד סקי פרימיום בגבעת שמואל",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#1a2a6c",
