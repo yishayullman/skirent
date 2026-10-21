@@ -83,6 +83,13 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Admin-Password');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
+  // סביבת Preview ב-Vercel (VERCEL_ENV === 'preview'): חוסם כל כתיבה כדי שהתצוגה
+  // המקדימה לא תיגע בנתוני הייצור (הזמנות אמיתיות של לקוחות).
+  // בסביבת production אין שום שינוי בהתנהגות.
+  if (process.env.VERCEL_ENV === 'preview' && req.method !== 'GET') {
+    return res.status(403).json({ error: 'סביבת תצוגה מקדימה לביקורת בלבד - יצירת הזמנות ושינוי סטטוסים מושבתים. להזמנה באתר החי: https://ski.surfrent-il.com' });
+  }
+
   if (!BIN_ID || !API_KEY) return res.status(500).json({ error: 'השרת לא מוגדר (חסר JSONBIN_ORDERS_ID)' });
 
   // בלי ADMIN_PASSWORD לא מוגדרת (או ריקה) - אף אחד לא נחשב מנהל

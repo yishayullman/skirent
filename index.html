@@ -2507,5 +2507,22 @@
         });
     }
 </script>
+<style>
+#preview-banner { position: fixed; bottom: 0; left: 0; right: 0; z-index: 99999; background: #b45309; color: #fff; text-align: center; padding: 8px 44px; font-size: 14px; line-height: 1.5; }
+#preview-banner a { color: #fff; text-decoration: underline; }
+#preview-banner button { position: absolute; inset-inline-end: 10px; top: 50%; transform: translateY(-50%); background: none; border: 1px solid #fff; color: #fff; border-radius: 6px; cursor: pointer; padding: 2px 9px; font-size: 13px; }
+</style>
+<script>
+// באנר סביבת תצוגה מקדימה: מוצג רק במארחי vercel.app (דיפלוימנטים של preview), לעולם לא בדומיין החי.
+if (location.hostname.endsWith('.vercel.app')) {
+  document.addEventListener('DOMContentLoaded', function () {
+    var pb = document.createElement('div');
+    pb.id = 'preview-banner';
+    pb.setAttribute('role', 'status');
+    pb.innerHTML = 'סביבת תצוגה מקדימה לביקורת — הזמנות וביקורות חדשות מושבתות כאן. האתר החי: <a href="https://ski.surfrent-il.com">ski.surfrent-il.com</a><button type="button" aria-label="סגור" onclick="document.getElementById(\'preview-banner\').remove()">✕</button>';
+    document.body.appendChild(pb);
+  });
+}
+</script>
 </body>
 </html>

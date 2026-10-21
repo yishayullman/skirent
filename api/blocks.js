@@ -55,6 +55,11 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Admin-Password');
   if (req.method === 'OPTIONS') return res.status(200).end();
+
+  // סביבת Preview ב-Vercel: חוסם כתיבות (ביקורות/חסימות) כדי לא לגעת בנתוני הייצור.
+  if (process.env.VERCEL_ENV === 'preview' && req.method !== 'GET') {
+    return res.status(403).json({ error: 'סביבת תצוגה מקדימה לביקורת בלבד - הוספת ביקורות ושמירת שינויים מושבתים. האתר החי: https://ski.surfrent-il.com' });
+  }
  
   const isAdmin = () => req.headers['x-admin-password'] === ADMIN_PASSWORD;
  
