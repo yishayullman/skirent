@@ -1,0 +1,23 @@
+name: Apply preview write guard (one-shot, self-deleting)
+on:
+  push:
+    branches: [audit-improvements-oct21]
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit-improvements-oct21
+      - name: Apply preview guard
+        run: python3 scripts/preview_guard.py
+      - name: Clean up and commit
+        run: |
+          rm -f .github/workflows/guard.yml scripts/preview_guard.py
+          git config user.name "yishayullman"
+          git config user.email "yishayullman@users.noreply.github.com"
+          git add -A
+          git commit -m "Guard preview writes + preview banner (one-shot applied)"
+          git push
