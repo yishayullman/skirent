@@ -66,23 +66,23 @@
         </a>
 
         <nav class="main-nav" aria-label="ניווט ראשי">
-            <a class="nav-link" onclick="openReviewsModal()">
+            <a class="nav-link" onclick="openReviewsModal()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
                 <svg class="nav-ic" viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z"/></svg>
                 <span class="nav-tx" data-i18n="navReviews">ביקורות</span>
             </a>
-            <a class="nav-link" onclick="openOrderHistoryModal()">
+            <a class="nav-link" onclick="openOrderHistoryModal()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
                 <svg class="nav-ic" viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"/></svg>
                 <span class="nav-tx" data-i18n="navOrders">ההזמנות שלי</span>
             </a>
-            <a class="nav-link" onclick="showModal('contactModal')">
+            <a class="nav-link" onclick="showModal('contactModal')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
                 <svg class="nav-ic" viewBox="0 0 24 24"><path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
                 <span class="nav-tx" data-i18n="navContact">איסוף וקשר</span>
             </a>
-            <a class="nav-link" id="lang-toggle-btn" onclick="toggleLanguage()" aria-label="Switch language">
+            <a class="nav-link" id="lang-toggle-btn" onclick="toggleLanguage()" aria-label="Switch language" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
                 <svg class="nav-ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>
                 <span class="nav-tx">English</span>
             </a>
-            <a class="nav-link nav-cart" onclick="showModal('cartModal')">
+            <a class="nav-link nav-cart" onclick="showModal('cartModal')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
                 <svg class="nav-ic" viewBox="0 0 24 24"><path d="M5 7h14l-1.2 12.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9zM9 7V6a3 3 0 0 1 6 0v1"/></svg>
                 <span class="nav-tx" data-i18n="navCart">הסל שלי</span>
                 <span class="cart-badge" id="cart-count">0</span>
@@ -129,52 +129,6 @@
 </section>
 
 <main class="container">
-
-    <!-- ================= FEATURES ================= -->
-    <section class="features" aria-label="למה אנחנו">
-        <div class="feature">
-            <span class="feature-ic">🎿</span>
-            <div><h3 data-i18n="feat1Title">ביגוד ברמה הגבוהה ביותר</h3><p data-i18n="feat1Text">ביגוד סקי איכותי לכל המשפחה – גברים, נשים וילדים.</p></div>
-        </div>
-        <div class="feature">
-            <span class="feature-ic">📏</span>
-            <div><h3 data-i18n="feat2Title">מידה מדויקת</h3><p data-i18n="feat2Text">מחשבון מידות חכם באתר + מדידה בזמן האיסוף.</p></div>
-        </div>
-        <div class="feature">
-            <span class="feature-ic">📍</span>
-            <div><h3 data-i18n="feat3Title">איסוף קל ומהיר</h3><p data-i18n="feat3Text">אוספים בגבעת שמואל לפני הטיסה ומחזירים אחרי הנחיתה.</p></div>
-        </div>
-    </section>
-
-    <section class="how-section" aria-label="איך זה עובד">
-        <div class="section-head">
-            <span class="eyebrow" data-i18n="howEyebrow">איך זה עובד</span>
-            <h2 data-i18n="howTitle">מזמינים ב-3 צעדים פשוטים</h2>
-        </div>
-        <div class="how-steps">
-            <div class="how-step">
-                <span class="how-num">1</span>
-                <h3 data-i18n="howS1Title">בוחרים תאריכים וביגוד</h3>
-                <p data-i18n="howS1Text">מסמנים את תאריכי החופשה, מרכיבים חבילה משתלמת או בוחרים פריטים בודדים במידות שלכם.</p>
-            </div>
-            <div class="how-step">
-                <span class="how-num">2</span>
-                <h3 data-i18n="howS2Title">משלמים בביט או ב-PayBox</h3>
-                <p data-i18n="howS2Text">מעבירים את הסכום המדויק ישירות מהאפליקציה, עם מספר ההזמנה שמופיע על המסך - כדי שנזהה את התשלום ונאשר לך.</p>
-            </div>
-            <div class="how-step">
-                <span class="how-num">3</span>
-                <h3 data-i18n="howS3Title">מאשרים בוואטסאפ ואוספים</h3>
-                <p data-i18n="howS3Text">לחיצה אחת שולחת אלינו את הפרטים ושומרת לכם את הפריטים שבחרתם. אוספים מגבעת שמואל לפני הטיסה.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="about-section">
-        <p data-i18n-html="aboutText">
-            טסים לחופשת סקי בקרוב? ב-<strong>skirent-il</strong> תמצאו ביגוד סקי ברמה הגבוהה ביותר ולכל המשפחה. אנו מציעים חבילות "קומפלט" משתלמות או השכרה של פריטים בודדים. מודדים, אוספים בקלות מגבעת שמואל ויוצאים לחופשה בראש שקט ומוגן מהקור!
-        </p>
-    </section>
 
     <!-- ================= BUNDLES ================= -->
     <section class="section" id="bundles">
@@ -240,6 +194,52 @@
             <div id="availability-loading" class="status-note" data-i18n="loadingAvailability">🔄 טוען נתוני זמינות עדכניים...</div>
             <div id="cloud-status" class="cloud-status" data-i18n="cloudError">⚠️ לא ניתן כרגע לטעון את נתוני הזמינות מהענן. ייתכן שחלק מהמידע על מוצרים תפוסים לא יוצג. נסו לרענן את הדף, ואם הבעיה נמשכת - צרו איתנו קשר.</div>
         </div>
+    </section>
+
+    <!-- ================= FEATURES ================= -->
+    <section class="features" aria-label="למה אנחנו">
+        <div class="feature">
+            <span class="feature-ic">🎿</span>
+            <div><h3 data-i18n="feat1Title">ביגוד ברמה הגבוהה ביותר</h3><p data-i18n="feat1Text">ביגוד סקי איכותי לכל המשפחה – גברים, נשים וילדים.</p></div>
+        </div>
+        <div class="feature">
+            <span class="feature-ic">📏</span>
+            <div><h3 data-i18n="feat2Title">מידה מדויקת</h3><p data-i18n="feat2Text">מחשבון מידות חכם באתר + מדידה בזמן האיסוף.</p></div>
+        </div>
+        <div class="feature">
+            <span class="feature-ic">📍</span>
+            <div><h3 data-i18n="feat3Title">איסוף קל ומהיר</h3><p data-i18n="feat3Text">אוספים בגבעת שמואל לפני הטיסה ומחזירים אחרי הנחיתה.</p></div>
+        </div>
+    </section>
+
+    <section class="how-section" aria-label="איך זה עובד">
+        <div class="section-head">
+            <span class="eyebrow" data-i18n="howEyebrow">איך זה עובד</span>
+            <h2 data-i18n="howTitle">מזמינים ב-3 צעדים פשוטים</h2>
+        </div>
+        <div class="how-steps">
+            <div class="how-step">
+                <span class="how-num">1</span>
+                <h3 data-i18n="howS1Title">בוחרים תאריכים וביגוד</h3>
+                <p data-i18n="howS1Text">מסמנים את תאריכי החופשה, מרכיבים חבילה משתלמת או בוחרים פריטים בודדים במידות שלכם.</p>
+            </div>
+            <div class="how-step">
+                <span class="how-num">2</span>
+                <h3 data-i18n="howS2Title">משלמים בביט או ב-PayBox</h3>
+                <p data-i18n="howS2Text">מעבירים את הסכום המדויק ישירות מהאפליקציה, עם מספר ההזמנה שמופיע על המסך - כדי שנזהה את התשלום ונאשר לך.</p>
+            </div>
+            <div class="how-step">
+                <span class="how-num">3</span>
+                <h3 data-i18n="howS3Title">מאשרים בוואטסאפ ואוספים</h3>
+                <p data-i18n="howS3Text">לחיצה אחת שולחת אלינו את הפרטים ושומרת לכם את הפריטים שבחרתם. אוספים מגבעת שמואל לפני הטיסה.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <p data-i18n-html="aboutText">
+            טסים לחופשת סקי בקרוב? ב-<strong>skirent-il</strong> תמצאו ביגוד סקי ברמה הגבוהה ביותר ולכל המשפחה. אנו מציעים חבילות "קומפלט" משתלמות או השכרה של פריטים בודדים. מודדים, אוספים בקלות מגבעת שמואל ויוצאים לחופשה בראש שקט ומוגן מהקור!
+        </p>
     </section>
 
     <!-- ================= CATALOG ================= -->
@@ -484,7 +484,7 @@
         <div id="reviews-summary" class="review-summary" style="display:none;"></div>
 
         <div class="review-filters">
-            <select id="reviews-star-filter" onchange="renderReviewsPublic()">
+            <select id="reviews-star-filter" aria-label="סינון ביקורות לפי דירוג" onchange="renderReviewsPublic()">
                 <option value="all" data-i18n="filterAllRatings">כל הדירוגים</option>
                 <option value="5" data-i18n="stars5">5 כוכבים</option>
                 <option value="4" data-i18n="stars4">4 כוכבים</option>
@@ -492,7 +492,7 @@
                 <option value="2" data-i18n="stars2">2 כוכבים</option>
                 <option value="1" data-i18n="stars1">כוכב אחד</option>
             </select>
-            <select id="reviews-sort" onchange="renderReviewsPublic()">
+            <select id="reviews-sort" aria-label="מיון ביקורות" onchange="renderReviewsPublic()">
                 <option value="newest" data-i18n="sortNewest">החדשות ביותר</option>
                 <option value="highest" data-i18n="sortHighest">דירוג גבוה קודם</option>
                 <option value="lowest" data-i18n="sortLowest">דירוג נמוך קודם</option>
@@ -562,7 +562,7 @@
     </div>
     <div class="modal-body center">
         <p class="muted" data-i18n="adminLoginDesc">נא להזין סיסמת מנהל לניהול המלאי:</p>
-        <input type="password" id="admin-login-input" class="input-block" data-i18n-placeholder="adminLoginPlaceholder" placeholder="סיסמה" onkeydown="if(event.key==='Enter') submitAdminLogin();">
+        <input type="password" id="admin-login-input" aria-label="סיסמת מנהל" class="input-block" data-i18n-placeholder="adminLoginPlaceholder" placeholder="סיסמה" onkeydown="if(event.key==='Enter') submitAdminLogin();">
         <div id="admin-login-error" class="error-text" style="display:none;">סיסמה שגויה, נסה שוב.</div>
         <button id="admin-login-submit" data-i18n="adminLoginBtn" class="btn btn-primary btn-block" onclick="submitAdminLogin()">כניסה</button>
     </div>
@@ -653,6 +653,7 @@
             reviewsBandTitle: 'מה הלקוחות שלנו אומרים?', reviewsBandText: 'קראו חוויות של משפחות שכבר יצאו איתנו לשלג – או שתפו את שלכם.', reviewsBandBtn: 'לכל הביקורות',
             faqEyebrow: 'שאלות ותשובות', policyEyebrow: 'חשוב לדעת',
             footerTagline: 'השכרת ביגוד סקי לכל המשפחה. אוספים, טסים, נהנים.', qtyLabel: 'כמות', ofLabel: (n) => `מתוך ${n}`,
+            showMoreItems: (n) => `הצג עוד ${n} פריטים`, showLessItems: 'הצג פחות',
             navCart: 'הסל שלי', navReviews: 'ביקורות', navOrders: 'ההזמנות שלי', navContact: 'איסוף וקשר',
             aboutText: 'טסים לחופשת סקי בקרוב? ב-<strong>skirent-il</strong> תמצאו ביגוד סקי ברמה הגבוהה ביותר ולכל המשפחה. אנו מציעים חבילות "קומפלט" משתלמות או השכרה של פריטים בודדים. מודדים, אוספים בקלות מגבעת שמואל ויוצאים לחופשה בראש שקט ומוגן מהקור!',
             bundleTitle: 'מבצעי חבילות שבועיים משתלמים', bundleDesc: 'מעיל + מכנס + קסדה + גוגלס + כפפות',
@@ -774,6 +775,7 @@
             reviewsBandTitle: 'What our customers say', reviewsBandText: 'Read about families who hit the slopes with us – or share your own experience.', reviewsBandBtn: 'All reviews',
             faqEyebrow: 'Q&A', policyEyebrow: 'Good to know',
             footerTagline: 'Ski clothing rental for the whole family. Pick up, fly, enjoy.', qtyLabel: 'Qty', ofLabel: (n) => `of ${n}`,
+            showMoreItems: (n) => `Show ${n} more items`, showLessItems: 'Show less',
             navCart: 'My Cart', navReviews: 'Reviews', navOrders: 'My Orders', navContact: 'Pickup & Contact',
             aboutText: 'Flying out for a ski trip soon? At <strong>skirent-il</strong> you\'ll find top-quality ski clothing for the whole family. We offer great-value "complete" bundles or individual item rentals. Try things on, pick up easily in Givat Shmuel, and head off on vacation warm and worry-free!',
             bundleTitle: 'Great Weekly Bundle Deals', bundleDesc: 'Jacket + Pants + Helmet + Goggles + Gloves',
@@ -1027,6 +1029,34 @@
     // מסירים לגמרי מהקטלוג כל מוצר שעדיין אין לו תמונה אמיתית (רק placeholder)
     products = products.filter(p => !p.image.includes('placehold.jp'));
 
+    // גרסאות מוקטנות של תמונות המוצר לכרטיסים בקטלוג (התמונה המלאה נשמרת לתצוגה מוגדלת).
+    const imageThumbs = {
+        'images/coat-men-1.jpg': { src: 'images/thumb-coat-men-1.webp', w: 560, h: 560 },
+        'images/coat-men-2.webp': { src: 'images/thumb-coat-men-2.webp', w: 491, h: 560 },
+        'images/coat-men-3.webp': { src: 'images/thumb-coat-men-3.webp', w: 481, h: 560 },
+        'images/coat-men-4.jpg': { src: 'images/thumb-coat-men-4.webp', w: 452, h: 560 },
+        'images/coat-men-5.webp': { src: 'images/thumb-coat-men-5.webp', w: 428, h: 560 },
+        'images/set-kids-1.webp': { src: 'images/thumb-set-kids-1.webp', w: 286, h: 298 },
+        'images/coat-women-1.jpg': { src: 'images/thumb-coat-women-1.webp', w: 188, h: 268 },
+        'images/helmet-men-1.webp': { src: 'images/thumb-helmet-men-1.webp', w: 532, h: 560 },
+        'images/helmet-women-1.webp': { src: 'images/thumb-helmet-women-1.webp', w: 473, h: 560 },
+        'images/helmet-kids-1.webp': { src: 'images/thumb-helmet-kids-1.webp', w: 560, h: 560 },
+        'images/goggles-men-1.webp': { src: 'images/thumb-goggles-men-1.webp', w: 560, h: 474 },
+        'images/goggles-men-2.webp': { src: 'images/thumb-goggles-men-2.webp', w: 560, h: 414 },
+        'images/goggles-men-3.webp': { src: 'images/thumb-goggles-men-3.webp', w: 560, h: 338 },
+        'images/goggles-women-1.webp': { src: 'images/thumb-goggles-women-1.webp', w: 560, h: 438 },
+        'images/goggles-women-2.webp': { src: 'images/thumb-goggles-women-2.webp', w: 560, h: 377 },
+        'images/goggles-kids-1.webp': { src: 'images/thumb-goggles-kids-1.webp', w: 560, h: 289 },
+        'images/gloves-men-1.webp': { src: 'images/thumb-gloves-men-1.webp', w: 560, h: 524 },
+        'images/gloves-women-1.webp': { src: 'images/thumb-gloves-women-1.webp', w: 542, h: 560 },
+        'images/pants-men-1.webp': { src: 'images/thumb-pants-men-1.webp', w: 455, h: 560 },
+        'images/pants-women-1.webp': { src: 'images/thumb-pants-women-1.webp', w: 511, h: 560 }
+    };
+
+    // קיצור הגלילה בקטלוג: מציגים 4 פריטים ראשונים בכל קטגוריה, עם כפתור להצגת השאר
+    const CAT_INITIAL_COUNT = 4;
+    const expandedCats = {};
+
     // מלאי פיזי למוצרים שיש מהם יותר מיחידה אחת
     const productStock = {
         'קסדה-גברים-1': 4,
@@ -1242,11 +1272,38 @@
         cats.forEach(c => {
             const gridEl = document.getElementById(`grid-${c}`);
             if (gridEl) gridEl.innerHTML = '';
+            const oldToggle = document.getElementById(`cat-more-${c}`);
+            if (oldToggle) oldToggle.remove();
         });
 
         const filtered = products.filter(p => (currentCat === 'all' || p.cat === currentCat) && (currentGender === 'all' || p.gender === currentGender));
-        
-        filtered.forEach(p => {
+        const isFiltered = currentCat !== 'all' || currentGender !== 'all';
+        const byCat = {};
+        filtered.forEach(p => { (byCat[p.cat] = byCat[p.cat] || []).push(p); });
+
+        Object.keys(byCat).forEach(catName => {
+            const catList = byCat[catName];
+            const expanded = isFiltered || expandedCats[catName];
+            const visibleList = expanded ? catList : catList.slice(0, CAT_INITIAL_COUNT);
+            visibleList.forEach(p => renderProductCard(p));
+
+            const targetGrid = document.getElementById(`grid-${catName}`);
+            if (!targetGrid || isFiltered || catList.length <= CAT_INITIAL_COUNT) return;
+            const wrap = document.createElement('div');
+            wrap.className = 'show-more-wrap';
+            wrap.id = `cat-more-${catName}`;
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn btn-outline show-more-btn';
+            btn.textContent = expanded ? t('showLessItems') : t('showMoreItems', catList.length - CAT_INITIAL_COUNT);
+            btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+            btn.onclick = () => { expandedCats[catName] = !expandedCats[catName]; render(); };
+            wrap.appendChild(btn);
+            targetGrid.after(wrap);
+        });
+    }
+
+    function renderProductCard(p) {
             // בוחרים כברירת מחדל את המידה הראשונה שפנויה בתאריכים שנבחרו;
             // אם כולן תפוסות, נופלים חזרה למידה הראשונה ומציגים שהיא תפוסה
             const availableSize = sizes[p.cat].find(s => !isProductBlocked(p.id, s));
@@ -1257,18 +1314,21 @@
             
             if (!targetGrid) return;
 
+            const thumb = imageThumbs[p.image];
+            const cardSrc = thumb ? thumb.src : p.image;
+            const dimAttrs = thumb ? ` width="${thumb.w}" height="${thumb.h}"` : '';
             const imageHTML = p.images ? `
                 <div class="img-slider">
                     <img id="img-${p.id}" loading="lazy" decoding="async"
-                        src="${p.images[0]}" 
+                        src="${p.images[0]}"${dimAttrs}
                         alt="${translateProductName(p)}"
                         onclick="openLightbox('${p.images[0]}')"
                         ontouchstart="handleTouchStart(event)"
                         ontouchend="handleTouchEnd(event, '${p.id}')">
-                    <button onclick="prevImage('${p.id}')" class="image-nav-btn prev">‹</button>
-                    <button onclick="nextImage('${p.id}')" class="image-nav-btn next">›</button>
+                    <button onclick="prevImage('${p.id}')" class="image-nav-btn prev" aria-label="תמונה קודמת">‹</button>
+                    <button onclick="nextImage('${p.id}')" class="image-nav-btn next" aria-label="תמונה הבאה">›</button>
                 </div>
-            ` : `<img loading="lazy" decoding="async" src="${p.image}" alt="${translateProductName(p)}" onclick="openLightbox('${p.image}')" title="לחץ להגדלה">`;
+            ` : `<img loading="lazy" decoding="async" src="${cardSrc}"${dimAttrs} alt="${translateProductName(p)}" onclick="openLightbox('${p.image}')" title="לחץ להגדלה">`;
 
             const maxQ = getMaxCartQuantity(p.id, defaultSize);
             const datesChosen = Boolean(document.getElementById('start-date').value && document.getElementById('end-date').value);
@@ -1286,7 +1346,7 @@
                         </div>
                         <div class="card-row">
                             <span class="card-label">${t('sizeLabel')}</span>
-                            <select id="size-${p.id}" class="card-select" onchange="onSizeChange('${p.id}')">
+                            <select id="size-${p.id}" class="card-select" aria-label="${t('sizeLabel')} ${translateProductName(p)}" onchange="onSizeChange('${p.id}')">
                                 ${sizes[p.cat].map(s => `<option value="${s}" ${s === defaultSize ? 'selected' : ''}>${s}</option>`).join('')}
                             </select>
                             <span class="size-link" onclick="showSizeGuide('${p.gender}')">${t('sizeGuideLink')}</span>
@@ -1295,7 +1355,7 @@
                             <span class="card-label">${t('qtyLabel')}</span>
                             <div class="stepper">
                                 <button type="button" id="qty-minus-${p.id}" onclick="changeProductCardQuantity('${p.id}', -1)" ${blockData || maxQ <= 1 ? 'disabled' : ''} aria-label="-">−</button>
-                                <input id="qty-${p.id}" type="text" inputmode="numeric" value="${cartQ}" readonly>
+                                <input id="qty-${p.id}" type="text" inputmode="numeric" value="${cartQ}" readonly aria-label="${t('qtyLabel')} ${translateProductName(p)}">
                                 <button type="button" id="qty-plus-${p.id}" onclick="changeProductCardQuantity('${p.id}', 1)" ${blockData || maxQ <= 1 ? 'disabled' : ''} aria-label="+">+</button>
                             </div>
                             <span id="qty-stock-${p.id}" class="qty-stock">${t('ofLabel', maxQ)}</span>
@@ -1306,7 +1366,6 @@
                         ${datesChosen && !blockData && maxQ === 1 ? `<div class="stock-hint">${t('lastUnitText')}</div>` : ''}
                     </div>
                 </article>`;
-        });
     }
 
     function getProductStock(id) {
@@ -1648,7 +1707,7 @@
                     total += productData.price * weeks * qty;
                     htmlContent += `
                         <div class="cart-item">
-                            <img class="ci-thumb" src="${productData.image}" alt="">
+                            <img class="ci-thumb" src="${(imageThumbs[productData.image] || {}).src || productData.image}" alt="${translateProductName(productData)}" width="64" height="64">
                             <div class="ci-info">
                                 <div class="ci-name">${translateProductName(productData)}</div>
                                 <div class="ci-meta">${t('sizeLabel')} ${item.size}</div>
