@@ -631,6 +631,7 @@
 
     function translateProductName(p) {
         if (currentLang === 'he') return p.name;
+        if (p.nameEn) return p.nameEn;
         // ממיר "מעיל גברים 1" ל-"Men's Coat 1" באנגלית, על סמך המבנה הקבוע של השם
         const num = (p.name.match(/\d+$/) || [''])[0];
         return `${genderNames.en[p.gender] || p.gender} ${catNames.en[p.cat] || p.cat} ${num}`.trim();
@@ -1035,6 +1036,15 @@
     products.push({ id: 'כפפות-ילדים-1', name: 'כפפות ורודות', cat: 'כפפות', gender: 'ילדים', price: prices['כפפות'], image: 'gloves-kids-1.webp' });
     products.push({ id: 'כפפות-ילדים-2', name: 'כפפות סגולות', cat: 'כפפות', gender: 'ילדים', price: prices['כפפות'], image: 'gloves-kids-2.webp' });
 
+    // חליפות שלמות (מעיל + מכנס יחד) - 200 ש"ח לשבוע לחליפה. מוצר אחד לכל חליפה, מוצג גם בקטגוריית המכנסיים.
+    // מידות: כל האפשרויות של קטגוריית המעיל באתר, כמו בקסדות, ויחידה אחת מכל חליפה. המידות הפיזיות לא אומתו.
+    const SUIT_NOTE = { he: 'חליפה שלמה: מעיל + מכנס יחד', en: 'Full suit: jacket + pants together' };
+    [
+        { id: 'חליפה-ילדים-1', he: 'חליפת סקי שלמה (מעיל + מכנס) - צבעוני', en: 'Full ski suit (jacket + pants) - Tie-dye', image: 'suit-kids-1.webp' },
+        { id: 'חליפה-ילדים-2', he: 'חליפת סקי שלמה (מעיל + מכנס) - גלקסיה', en: 'Full ski suit (jacket + pants) - Galaxy', image: 'suit-kids-2.webp' },
+        { id: 'חליפה-ילדים-3', he: 'חליפת סקי שלמה (מעיל + מכנס) - ורוד סגול', en: 'Full ski suit (jacket + pants) - Pink purple', image: 'suit-kids-3.webp' }
+    ].forEach(x => products.push({ id: x.id, name: x.he, nameEn: x.en, cat: 'מעיל', alsoCat: 'מכנס', set: true, gender: 'ילדים', price: 200, image: x.image, sizeNote: SUIT_NOTE }));
+
     // מלאי פיזי למוצרים שיש מהם יותר מיחידה אחת
     const productStock = {
         'קסדה-גברים-1': 4,
@@ -1201,9 +1211,13 @@
         render();
     }
 
-    function onSizeChange(id) {
-        const sizeEl = document.getElementById(`size-${id}`);
-        const btnEl = document.getElementById(`btn-${id}`);
+    function baseId(key) { return String(key).split('~')[0]; }
+    function syncTwin(id) { onSizeChange(id); onSizeChange(id + '~2'); }
+
+    function onSizeChange(key) {
+        const id = baseId(key);
+        const sizeEl = document.getElementById(`size-${key}`);
+        const btnEl = document.getElementById(`btn-${key}`);
         if (!sizeEl || !btnEl) return;
         
         const cardEl = sizeEl.closest('.card');
@@ -1228,10 +1242,10 @@
             }
         }
 
-        const qtyEl = document.getElementById(`qty-${id}`);
-        const minusEl = document.getElementById(`qty-minus-${id}`);
-        const plusEl = document.getElementById(`qty-plus-${id}`);
-        const stockEl = document.getElementById(`qty-stock-${id}`);
+        const qtyEl = document.getElementById(`qty-${key}`);
+        const minusEl = document.getElementById(`qty-minus-${key}`);
+        const plusEl = document.getElementById(`qty-plus-${key}`);
+        const stockEl = document.getElementById(`qty-stock-${key}`);
         const maxQty = getMaxCartQuantity(id, selectedSize);
         const cartItem = cartItems.find(i => i.id === id && i.size === selectedSize);
         const qty = maxQty > 0 ? Math.min(maxQty, Math.max(1, Number(cartItem?.qty) || Number(qtyEl?.value) || 1)) : 0;
@@ -1255,9 +1269,16 @@
         });
 
         // קסדות מבוגרים (יוניסקס) מופיעות גם תחת גברים וגם תחת נשים, בלי שכפול מלאי
-        const filtered = products.filter(p => (currentCat === 'all' || p.cat === currentCat) && (currentGender === 'all' || p.gender === currentGender || (p.gender === 'מבוגרים' && currentGender !== 'ילדים')));
-        
-        filtered.forEach(p => {
+        // חליפה שלמה (set) מופיעה גם בקטגוריה השנייה (alsoCat) עם מפתח DOM נפרד, אבל זהה במוצר, במחיר ובמלאי
+        const entries = [];
+        products.forEach(p => {
+            const genderOk = currentGender === 'all' || p.gender === currentGender || (p.gender === 'מבוגרים' && currentGender !== 'ילדים');
+            if (!genderOk) return;
+            if (currentCat === 'all' || p.cat === currentCat) entries.push({ p, key: p.id, cat: p.cat });
+            if (p.alsoCat && (currentCat === 'all' || p.alsoCat === currentCat)) entries.push({ p, key: p.id + '~2', cat: p.alsoCat });
+        });
+
+        entries.forEach(({ p, key, cat }) => {
             // בוחרים כברירת מחדל את המידה הראשונה שפנויה בתאריכים שנבחרו;
             // אם כולן תפוסות, נופלים חזרה למידה הראשונה ומציגים שהיא תפוסה
             const prodSizes = p.sizes || sizes[p.cat];
@@ -1265,7 +1286,7 @@
             const defaultSize = availableSize || prodSizes[0];
             const blockData = getProductBlockData(p.id, defaultSize);
             const isInCart = cartItems.some(i => i.id === p.id && i.size === defaultSize);
-            const targetGrid = document.getElementById(`grid-${p.cat}`);
+            const targetGrid = document.getElementById(`grid-${cat}`);
             
             if (!targetGrid) return;
 
@@ -1286,7 +1307,7 @@
             const datesChosen = Boolean(document.getElementById('start-date').value && document.getElementById('end-date').value);
             const cartQ = isInCart ? Math.min(maxQ, Math.max(1, Number((cartItems.find(i => i.id === p.id && i.size === defaultSize) || {}).qty) || 1)) : 1;
             targetGrid.innerHTML += `
-                <article class="card ${blockData ? 'size-blocked' : ''}" id="card-${p.id}">
+                <article class="card ${blockData ? 'size-blocked' : ''}" id="card-${key}">
                     <div class="img-container">
                         <span class="card-tag">${genderNames[currentLang][p.gender] || p.gender}</span>
                         ${imageHTML}
@@ -1298,7 +1319,7 @@
                         </div>
                         <div class="card-row">
                             <span class="card-label">${t('sizeLabel')}</span>
-                            <select id="size-${p.id}" class="card-select" onchange="onSizeChange('${p.id}')">
+                            <select id="size-${key}" class="card-select" onchange="onSizeChange('${key}')">
                                 ${prodSizes.map(s => `<option value="${s}" ${s === defaultSize ? 'selected' : ''}>${s}</option>`).join('')}
                             </select>
                             <span class="size-link" onclick="showSizeGuide('${p.gender}')">${t('sizeGuideLink')}</span>
@@ -1307,13 +1328,13 @@
                         <div class="card-row">
                             <span class="card-label">${t('qtyLabel')}</span>
                             <div class="stepper">
-                                <button type="button" id="qty-minus-${p.id}" onclick="changeProductCardQuantity('${p.id}', -1)" ${blockData || maxQ <= 1 ? 'disabled' : ''} aria-label="-">−</button>
-                                <input id="qty-${p.id}" type="text" inputmode="numeric" value="${cartQ}" readonly>
-                                <button type="button" id="qty-plus-${p.id}" onclick="changeProductCardQuantity('${p.id}', 1)" ${blockData || maxQ <= 1 ? 'disabled' : ''} aria-label="+">+</button>
+                                <button type="button" id="qty-minus-${key}" onclick="changeProductCardQuantity('${key}', -1)" ${blockData || maxQ <= 1 ? 'disabled' : ''} aria-label="-">−</button>
+                                <input id="qty-${key}" type="text" inputmode="numeric" value="${cartQ}" readonly>
+                                <button type="button" id="qty-plus-${key}" onclick="changeProductCardQuantity('${key}', 1)" ${blockData || maxQ <= 1 ? 'disabled' : ''} aria-label="+">+</button>
                             </div>
-                            <span id="qty-stock-${p.id}" class="qty-stock">${t('ofLabel', maxQ)}</span>
+                            <span id="qty-stock-${key}" class="qty-stock">${t('ofLabel', maxQ)}</span>
                         </div>
-                        <button id="btn-${p.id}" ${blockData ? 'disabled' : ''} class="btn-select ${blockData ? 'disabled-btn' : (isInCart ? 'in-cart' : '')}" onclick="toggleCartItem('${p.id}')">
+                        <button id="btn-${key}" ${blockData ? 'disabled' : ''} class="btn-select ${blockData ? 'disabled-btn' : (isInCart ? 'in-cart' : '')}" onclick="toggleCartItem('${key}')">
                             ${blockData ? t('sizeTaken', defaultSize) : (isInCart ? t('inCartLabel') : t('addToCart'))}
                         </button>
                         ${datesChosen && !blockData && maxQ === 1 ? `<div class="stock-hint">${t('lastUnitText')}</div>` : ''}
@@ -1342,16 +1363,17 @@
         return Math.max(0, getProductStock(id) - getBlockedUnitCount(id, size));
     }
 
-    function getProductCardQuantity(id) {
-        const qtyEl = document.getElementById(`qty-${id}`);
+    function getProductCardQuantity(key) {
+        const qtyEl = document.getElementById(`qty-${key}`);
         return qtyEl ? Math.max(1, Number(qtyEl.value) || 1) : 1;
     }
 
-    function setProductCardQuantity(id, value) {
-        const sizeEl = document.getElementById(`size-${id}`);
-        const qtyEl = document.getElementById(`qty-${id}`);
-        const minusEl = document.getElementById(`qty-minus-${id}`);
-        const plusEl = document.getElementById(`qty-plus-${id}`);
+    function setProductCardQuantity(key, value) {
+        const id = baseId(key);
+        const sizeEl = document.getElementById(`size-${key}`);
+        const qtyEl = document.getElementById(`qty-${key}`);
+        const minusEl = document.getElementById(`qty-minus-${key}`);
+        const plusEl = document.getElementById(`qty-plus-${key}`);
         if (!sizeEl || !qtyEl) return;
 
         const size = sizeEl.value;
@@ -1368,9 +1390,10 @@
         }
     }
 
-    function changeProductCardQuantity(id, delta) {
-        const sizeEl = document.getElementById(`size-${id}`);
-        const qtyEl = document.getElementById(`qty-${id}`);
+    function changeProductCardQuantity(key, delta) {
+        const id = baseId(key);
+        const sizeEl = document.getElementById(`size-${key}`);
+        const qtyEl = document.getElementById(`qty-${key}`);
         if (!sizeEl || !qtyEl) return;
 
         const size = sizeEl.value;
@@ -1379,11 +1402,12 @@
         if (maxQty < 1) return;
 
         const currentQty = Math.max(1, Number(qtyEl.value) || 1);
-        setProductCardQuantity(id, Math.max(1, Math.min(maxQty, currentQty + delta)));
+        setProductCardQuantity(key, Math.max(1, Math.min(maxQty, currentQty + delta)));
     }
 
-    function toggleCartItem(id) {
-        const sizeEl = document.getElementById(`size-${id}`);
+    function toggleCartItem(key) {
+        const id = baseId(key);
+        const sizeEl = document.getElementById(`size-${key}`);
         const size = sizeEl ? sizeEl.value : 'OS';
         if (isProductBlocked(id, size)) return;
 
@@ -1392,7 +1416,7 @@
             cartItems.splice(idx, 1);
         } else {
             const maxQty = getMaxCartQuantity(id, size);
-            const selectedQty = getProductCardQuantity(id);
+            const selectedQty = getProductCardQuantity(key);
             if (maxQty < 1) {
                 showToast(currentLang === 'he' ? 'אין מספיק יחידות פנויות לתאריכים שבחרת.' : 'Not enough units are available for the selected dates.', 'error');
                 return;
@@ -1400,7 +1424,7 @@
             cartItems.push({ id, size, qty: Math.min(selectedQty, maxQty) });
         }
         updateUI();
-        onSizeChange(id);
+        syncTwin(id);
     }
 
     function changeCartQuantity(id, size, delta) {
@@ -1420,7 +1444,7 @@
         const idx = cartItems.findIndex(i => i.id === id && i.size === size);
         if (idx > -1) { cartItems.splice(idx, 1); }
         updateUI();
-        onSizeChange(id);
+        syncTwin(id);
     }
 
     function openBundleWizard(typeId) {
@@ -1465,10 +1489,10 @@
                 <div class="wiz-item-title"><span class="cat-ic">${catIcons[c]}</span>${catNames[currentLang][c] || c}</div>
                 <div class="wiz-selects">
                     <select id="wb-${c}" class="wiz-prod" onchange="updateWizardSizes('${c}'); checkWizardSelectionValidity()">
-                        ${products.filter(p => p.cat === c && (p.gender === g || (p.gender === 'מבוגרים' && g !== 'ילדים'))).map(p => `<option value="${p.id}">${translateProductName(p)}</option>`).join('')}
+                        ${products.filter(p => !p.set && p.cat === c && (p.gender === g || (p.gender === 'מבוגרים' && g !== 'ילדים'))).map(p => `<option value="${p.id}">${translateProductName(p)}</option>`).join('')}
                     </select>
                     <select id="wbs-${c}" class="wiz-size" onchange="checkWizardSelectionValidity()">
-                        ${((products.find(p => p.cat === c && (p.gender === g || (p.gender === 'מבוגרים' && g !== 'ילדים'))) || {}).sizes || sizes[c]).map(s => `<option value="${s}">${s}</option>`).join('')}
+                        ${((products.find(p => !p.set && p.cat === c && (p.gender === g || (p.gender === 'מבוגרים' && g !== 'ילדים'))) || {}).sizes || sizes[c]).map(s => `<option value="${s}">${s}</option>`).join('')}
                     </select>
                 </div>
             </div>
@@ -2473,4 +2497,5 @@
 </script>
 </body>
 </html>
+
 
