@@ -1,0 +1,34 @@
+name: Apply helmets nov15 (one-shot, self-deleting)
+on:
+  push:
+    branches: [helmets-nov15]
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: helmets-nov15
+      - name: Apply payload and clean up
+        run: |
+          set -euo pipefail
+          cd .github/workflows
+          P=$(ls *payload-index.html | head -1)
+          cp "$P" ../../index.html
+          for f in *helmet-gray-1.jpg *helmet-gray-1.webp *helmet-black-1.jpg *helmet-black-1.webp; do
+            base=$(echo "$f" | sed "s/^[0-9]*-//")
+            cp "$f" "../../images/$base"
+          done
+          cd ../..
+          grep -q 'helmet-gray-1.webp' index.html
+          grep -q 'helmet-black-1.webp' index.html
+          test -f images/helmet-gray-1.webp
+          test -f images/helmet-black-1.webp
+          git rm -rq .github
+          git config user.name "yishayullman"
+          git config user.email "yishay.ullman@gmail.com"
+          git add index.html images/
+          git commit -m "Add 5 new helmets: 4 gray adult + 1 black kids, one-size truthful sizing"
+          git push origin helmets-nov15
