@@ -1,0 +1,31 @@
+name: Apply helmets nov15 final (one-shot, self-deleting)
+on:
+  push:
+    branches: [helmets-nov15]
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: helmets-nov15
+      - name: Download payload, apply, clean up
+        run: |
+          set -euo pipefail
+          curl -fsSL -o index.html 'https://github.com/user-attachments/files/34870161/payload-index.txt'
+          curl -fsSL -o images/helmet-gray-1.jpg 'https://github.com/user-attachments/assets/4542d4c0-3ded-46a4-8e79-00cf2cd940f7'
+          curl -fsSL -o images/helmet-gray-1.webp 'https://github.com/user-attachments/assets/b409d730-8d24-4ecf-978b-e39c4e463168'
+          curl -fsSL -o images/helmet-black-1.jpg 'https://github.com/user-attachments/assets/22da9da3-216b-47d0-af7d-5f49b3143c0d'
+          curl -fsSL -o images/helmet-black-1.webp 'https://github.com/user-attachments/assets/74118e94-b0b4-45fe-8771-81b09ec502cb'
+          test "$(wc -c < index.html)" -gt 140000
+          grep -q 'helmet-gray-1.webp' index.html
+          test "$(wc -c < images/helmet-gray-1.webp)" -gt 10000
+          test "$(wc -c < images/helmet-black-1.webp)" -gt 10000
+          git rm -rq .github
+          git config user.name "yishayullman"
+          git config user.email "yishay.ullman@gmail.com"
+          git add index.html images/
+          git commit -m "Add 5 new helmets: 4 gray adult + 1 black kids, one-size truthful sizing"
+          git push origin helmets-nov15
