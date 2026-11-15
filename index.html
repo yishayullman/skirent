@@ -1028,10 +1028,8 @@
     products = products.filter(p => !p.image.includes('placehold.jp'));
 
     // קסדות חדשות שהתקבלו (נובמבר 2026): 4 אפורות למבוגרים ואחת שחורה לילדים.
-    // כולן באותה מידה אצלנו; המידה המדויקת לא מסומנת, לכן לא מוצגות מידות S/M/L - ההתאמה נבדקת במדידה.
-    const oneSizeNote = { he: 'המידה היחידה במלאי - ההתאמה נבדקת במדידה', en: 'Only size in stock - fit checked at the fitting' };
-    products.push({ id: 'קסדה-מבוגרים-1', name: 'קסדה אפורה', cat: 'קסדה', gender: 'מבוגרים', price: prices['קסדה'], image: 'images/helmet-gray-1.webp', sizes: ['מידה אחת'], sizeNote: oneSizeNote });
-    products.push({ id: 'קסדה-ילדים-2', name: 'קסדה שחורה', cat: 'קסדה', gender: 'ילדים', price: prices['קסדה'], image: 'images/helmet-black-1.webp', sizes: ['מידה אחת'], sizeNote: oneSizeNote });
+    products.push({ id: 'קסדה-מבוגרים-1', name: 'קסדה אפורה', cat: 'קסדה', gender: 'מבוגרים', price: prices['קסדה'], image: 'images/helmet-gray-1.webp' });
+    products.push({ id: 'קסדה-ילדים-2', name: 'קסדה שחורה', cat: 'קסדה', gender: 'ילדים', price: prices['קסדה'], image: 'images/helmet-black-1.webp' });
 
     // מלאי פיזי למוצרים שיש מהם יותר מיחידה אחת
     const productStock = {
