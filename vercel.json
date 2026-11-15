@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/((?!api/).*)",
+      "has": [{ "type": "host", "value": "skirent-ten.vercel.app" }],
+      "destination": "https://ski.surfrent-il.com/$1",
+      "permanent": true
+    }
+  ]
+}
