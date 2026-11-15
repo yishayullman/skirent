@@ -620,8 +620,8 @@
         en: { 'מעיל': 'Coat', 'מכנס': 'Pants', 'קסדה': 'Helmet', 'כפפות': 'Gloves', 'גוגלס': 'Goggles' }
     };
     const genderNames = {
-        he: { 'גברים': 'גברים', 'נשים': 'נשים', 'ילדים': 'ילדים' },
-        en: { 'גברים': "Men's", 'נשים': "Women's", 'ילדים': "Kids'" }
+        he: { 'גברים': 'גברים', 'נשים': 'נשים', 'ילדים': 'ילדים', 'מבוגרים': 'מבוגרים' },
+        en: { 'גברים': "Men's", 'נשים': "Women's", 'ילדים': "Kids'", 'מבוגרים': "Adults'" }
     };
     const catNamesPlural = {
         he: { 'מעיל': 'מעילי סקי', 'מכנס': 'מכנסי סקי וסנובורד', 'קסדה': 'קסדות מגן', 'כפפות': 'כפפות תרמיות אטומות', 'גוגלס': 'משקפת גוגלס (Goggles)' },
@@ -1027,11 +1027,19 @@
     // מסירים לגמרי מהקטלוג כל מוצר שעדיין אין לו תמונה אמיתית (רק placeholder)
     products = products.filter(p => !p.image.includes('placehold.jp'));
 
+    // קסדות חדשות שהתקבלו (נובמבר 2026): 4 אפורות למבוגרים ואחת שחורה לילדים.
+    // כולן באותה מידה אצלנו; המידה המדויקת לא מסומנת, לכן לא מוצגות מידות S/M/L - ההתאמה נבדקת במדידה.
+    const oneSizeNote = { he: 'המידה היחידה במלאי - ההתאמה נבדקת במדידה', en: 'Only size in stock - fit checked at the fitting' };
+    products.push({ id: 'קסדה-מבוגרים-1', name: 'קסדה אפורה', cat: 'קסדה', gender: 'מבוגרים', price: prices['קסדה'], image: 'images/helmet-gray-1.webp', sizes: ['מידה אחת'], sizeNote: oneSizeNote });
+    products.push({ id: 'קסדה-ילדים-2', name: 'קסדה שחורה', cat: 'קסדה', gender: 'ילדים', price: prices['קסדה'], image: 'images/helmet-black-1.webp', sizes: ['מידה אחת'], sizeNote: oneSizeNote });
+
     // מלאי פיזי למוצרים שיש מהם יותר מיחידה אחת
     const productStock = {
         'קסדה-גברים-1': 4,
         'קסדה-נשים-1': 4,
-        'קסדה-ילדים-1': 1
+        'קסדה-ילדים-1': 1,
+        'קסדה-מבוגרים-1': 4,
+        'קסדה-ילדים-2': 1
     };
 
     let cartItems = JSON.parse(localStorage.getItem('skiCartItems')) || [];
@@ -1244,13 +1252,15 @@
             if (gridEl) gridEl.innerHTML = '';
         });
 
-        const filtered = products.filter(p => (currentCat === 'all' || p.cat === currentCat) && (currentGender === 'all' || p.gender === currentGender));
+        // קסדות מבוגרים (יוניסקס) מופיעות גם תחת גברים וגם תחת נשים, בלי שכפול מלאי
+        const filtered = products.filter(p => (currentCat === 'all' || p.cat === currentCat) && (currentGender === 'all' || p.gender === currentGender || (p.gender === 'מבוגרים' && currentGender !== 'ילדים')));
         
         filtered.forEach(p => {
             // בוחרים כברירת מחדל את המידה הראשונה שפנויה בתאריכים שנבחרו;
             // אם כולן תפוסות, נופלים חזרה למידה הראשונה ומציגים שהיא תפוסה
-            const availableSize = sizes[p.cat].find(s => !isProductBlocked(p.id, s));
-            const defaultSize = availableSize || sizes[p.cat][0];
+            const prodSizes = p.sizes || sizes[p.cat];
+            const availableSize = prodSizes.find(s => !isProductBlocked(p.id, s));
+            const defaultSize = availableSize || prodSizes[0];
             const blockData = getProductBlockData(p.id, defaultSize);
             const isInCart = cartItems.some(i => i.id === p.id && i.size === defaultSize);
             const targetGrid = document.getElementById(`grid-${p.cat}`);
@@ -1287,10 +1297,11 @@
                         <div class="card-row">
                             <span class="card-label">${t('sizeLabel')}</span>
                             <select id="size-${p.id}" class="card-select" onchange="onSizeChange('${p.id}')">
-                                ${sizes[p.cat].map(s => `<option value="${s}" ${s === defaultSize ? 'selected' : ''}>${s}</option>`).join('')}
+                                ${prodSizes.map(s => `<option value="${s}" ${s === defaultSize ? 'selected' : ''}>${s}</option>`).join('')}
                             </select>
                             <span class="size-link" onclick="showSizeGuide('${p.gender}')">${t('sizeGuideLink')}</span>
                         </div>
+                        ${p.sizeNote ? `<div class="stock-hint">${p.sizeNote[currentLang] || p.sizeNote.he}</div>` : ''}
                         <div class="card-row">
                             <span class="card-label">${t('qtyLabel')}</span>
                             <div class="stepper">
@@ -1451,17 +1462,27 @@
             <div class="wiz-item">
                 <div class="wiz-item-title"><span class="cat-ic">${catIcons[c]}</span>${catNames[currentLang][c] || c}</div>
                 <div class="wiz-selects">
-                    <select id="wb-${c}" class="wiz-prod" onchange="checkWizardSelectionValidity()">
-                        ${products.filter(p => p.cat === c && p.gender === g).map(p => `<option value="${p.id}">${translateProductName(p)}</option>`).join('')}
+                    <select id="wb-${c}" class="wiz-prod" onchange="updateWizardSizes('${c}'); checkWizardSelectionValidity()">
+                        ${products.filter(p => p.cat === c && (p.gender === g || (p.gender === 'מבוגרים' && g !== 'ילדים'))).map(p => `<option value="${p.id}">${translateProductName(p)}</option>`).join('')}
                     </select>
                     <select id="wbs-${c}" class="wiz-size" onchange="checkWizardSelectionValidity()">
-                        ${sizes[c].map(s => `<option value="${s}">${s}</option>`).join('')}
+                        ${((products.find(p => p.cat === c && (p.gender === g || (p.gender === 'מבוגרים' && g !== 'ילדים'))) || {}).sizes || sizes[c]).map(s => `<option value="${s}">${s}</option>`).join('')}
                     </select>
                 </div>
             </div>
         `).join('');
         
         checkWizardSelectionValidity();
+    }
+
+    // כשמחליפים מוצר באשף החבילות, רשימת המידות מתעדכנת למידות של אותו מוצר (אם הוגדרו במפורש)
+    function updateWizardSizes(c) {
+        const sel = document.getElementById(`wb-${c}`);
+        const sizeSel = document.getElementById(`wbs-${c}`);
+        if (!sel || !sizeSel) return;
+        const prod = products.find(p => p.id === sel.value);
+        const list = (prod && prod.sizes) || sizes[c];
+        sizeSel.innerHTML = list.map(s => `<option value="${s}">${s}</option>`).join('');
     }
 
     function checkWizardSelectionValidity() {
@@ -1908,7 +1929,7 @@
         
         pSelect.onchange = () => {
             const prod = products.find(p => p.id === pSelect.value);
-            document.getElementById('admin-size-select').innerHTML = sizes[prod.cat].map(s => `<option value="${s}">${s}</option>`).join('');
+            document.getElementById('admin-size-select').innerHTML = (prod.sizes || sizes[prod.cat]).map(s => `<option value="${s}">${s}</option>`).join('');
         };
         pSelect.onchange();
 
