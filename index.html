@@ -1086,6 +1086,11 @@
         }, duration);
     }
 
+    const usedSizePickers = new WeakSet();
+    document.addEventListener('focusin', event => {
+        if (event.target.matches('.card-select')) usedSizePickers.add(event.target);
+    });
+
     async function loadBlockedDates() {
         try {
             const res = await fetch(API_BASE);
@@ -1095,7 +1100,15 @@
             reviewsFromServer = data.reviews || [];
             cloudLoadFailed = false;
             document.getElementById('cloud-status').style.display = 'none';
-            render();
+            // Preserve active/used native pickers while refreshing availability in place.
+            document.querySelectorAll('.card-select').forEach(select => {
+                const key = select.id.slice(5);
+                if (!usedSizePickers.has(select)) {
+                    const available = Array.from(select.options).find(option => !isProductBlocked(baseId(key), option.value));
+                    if (available) select.value = available.value;
+                }
+                onSizeChange(key);
+            });
             updateUI();
             renderAdminList();
             renderReviewsPublic();
@@ -2515,4 +2528,3 @@
 </script>
 </body>
 </html>
-
