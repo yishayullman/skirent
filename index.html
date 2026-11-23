@@ -1907,7 +1907,13 @@
 
     function showModal(id) { document.getElementById('overlay').style.display='block'; document.getElementById(id).style.display='block'; }
     function closePopups() { document.querySelectorAll('.modal, .overlay').forEach(m => m.style.display='none'); cancelPostPaymentView(); }
-    function closePaymentInstructionsModal() { document.getElementById('paymentInstructionsModal').style.display = 'none'; }
+    function closePaymentInstructionsModal() {
+        document.getElementById('paymentInstructionsModal').style.display = 'none';
+        const container = document.getElementById('post-payment-container');
+        if (container && container.firstChild) {
+            setTimeout(() => container.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
+        }
+    }
 
     let isAdminAuthenticated = false;
     let adminPassword = "";
