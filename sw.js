@@ -1,7 +1,7 @@
 // Service Worker - מאפשר התקנת אפליקציה (PWA) + מטמון תמונות לטעינה מהירה.
 // שים לב: HTML ו-JS לא נשמרים במטמון, כדי שגרסאות חדשות של האתר יגיעו מיד לכולם.
 
-const IMG_CACHE = 'skirent-img-v1';
+const IMG_CACHE = 'skirent-img-jacket-20261123';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

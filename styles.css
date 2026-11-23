@@ -959,3 +959,12 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--g
 @media (max-width: 760px) {
   .how-steps { grid-template-columns: 1fr; }
 }
+
+/* Selected jacket logo, complete user-provided artwork. */
+.brand-logo { display:block; width:102px; height:78px; object-fit:contain; background:#fff; border-radius:4px; }
+.topbar-inner { min-height:94px; }
+.site-footer .brand-logo { width:185px; height:auto; padding:6px; }
+@media(max-width:767px) { .brand-logo { width:95px; height:72px; } .topbar-inner { min-height:84px; } }
+
+:root { --topbar-h:94px; }
+@media(max-width:767px) { :root { --topbar-h:84px; } }
