@@ -1090,6 +1090,11 @@
     document.addEventListener('focusin', event => {
         if (event.target.matches('.card-select')) usedSizePickers.add(event.target);
     });
+    // Remember sizes the customer picked so render() (dates, filters) does not reset them to the first size (S).
+    const chosenSizes = {};
+    document.addEventListener('change', event => {
+        if (event.target.matches && event.target.matches('.card-select')) chosenSizes[event.target.id.slice(5)] = event.target.value;
+    });
 
     async function loadBlockedDates() {
         try {
@@ -1103,7 +1108,7 @@
             // Preserve active/used native pickers while refreshing availability in place.
             document.querySelectorAll('.card-select').forEach(select => {
                 const key = select.id.slice(5);
-                if (!usedSizePickers.has(select)) {
+                if (!usedSizePickers.has(select) && !chosenSizes[key]) {
                     const available = Array.from(select.options).find(option => !isProductBlocked(baseId(key), option.value));
                     if (available) select.value = available.value;
                 }
@@ -1308,7 +1313,8 @@
             // אם כולן תפוסות, נופלים חזרה למידה הראשונה ומציגים שהיא תפוסה
             const prodSizes = p.sizes || sizes[p.cat];
             const availableSize = prodSizes.find(s => !isProductBlocked(p.id, s));
-            const defaultSize = availableSize || prodSizes[0];
+            const keptSize = chosenSizes[key];
+            const defaultSize = (keptSize && prodSizes.includes(keptSize)) ? keptSize : (availableSize || prodSizes[0]);
             const blockData = getProductBlockData(p.id, defaultSize);
             const isInCart = cartItems.some(i => i.id === p.id && i.size === defaultSize);
             const targetGrid = document.getElementById(`grid-${cat}`);
