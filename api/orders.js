@@ -19,6 +19,87 @@
 // מחירון צד-שרת. זהה למחירים ב-index.html. אם משנים מחירים באתר - לעדכן גם כאן.
 const CAT_PRICES = { 'מעיל': 150, 'מכנס': 120, 'קסדה': 50, 'כפפות': 30, 'גוגלס': 40 };
 const BUNDLE_PRICES = { duo: 200, full: 300 };
+
+// מחיר ויחידת מוצר נגזרים מה-id של המוצר בצד שרת, לא מה-cat/מחיר שהלקוח שולח.
+// קידומת ה-id היא הקטגוריה. חליפה שלמה (מעיל + מכנס) עולה 200 ש"ח לשבוע, כמו באתר.
+// קטגוריה חדשה באתר דורשת שורה כאן, אחרת הזמנה עם מוצר ממנה נדחית (invalid_order).
+const PRICE_BY_ID_PREFIX = { coat: { cat: 'מעיל', price: 150 }, 'מכנס': { cat: 'מכנס', price: 120 }, 'קסדה': { cat: 'קסדה', price: 50 }, 'כפפות': { cat: 'כפפות', price: 30 }, 'גוגלס': { cat: 'גוגלס', price: 40 }, 'חליפה': { cat: 'חליפה', price: 200 } };
+function productInfo(id) {
+  const prefix = String(id || '').split('-')[0];
+  return Object.prototype.hasOwnProperty.call(PRICE_BY_ID_PREFIX, prefix) ? PRICE_BY_ID_PREFIX[prefix] : null;
+}
+// הרכב חבילה לפי סוג (כמו bundleTypes באתר): duo = מעיל + מכנס, full = מעיל, מכנס, קסדה, כפפות, גוגלס
+const BUNDLE_CATS = { duo: ['מעיל', 'מכנס'], full: ['מעיל', 'מכנס', 'קסדה', 'כפפות', 'גוגלס'] };
+function bundleComposed(typeId, items) {
+  const want = BUNDLE_CATS[typeId];
+  if (!want || items.length !== want.length) return false;
+  return items.every((bi, i) => { const info = productInfo(bi.id); return info && info.cat === want[i]; });
+}
+// מלאי לפי מוצר+מידה (עותק של productStock ב-index.html; ברירת מחדל יחידה אחת).
+// אם משנים מלאי באתר - לעדכן גם כאן (יש בדיקה שמשווה בין השניים).
+const PRODUCT_STOCK = { 'קסדה-גברים-1': 4, 'קסדה-נשים-1': 4, 'קסדה-ילדים-1': 1, 'קסדה-מבוגרים-1': 4, 'קסדה-ילדים-2': 1 };
+
+const BLOCKS_READ_TIMEOUT_MS = 4000;
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+// חסימות מלאי מה-Bin של האתר (אותו Bin ש-api/blocks.js משתמש בו).
+// מחזיר מערך, או null אם אי אפשר לאמת (חסר הגדרה, שגיאת רשת/JSONBin, או מבנה לא תקין).
+async function readBlocks() {
+  const id = process.env.JSONBIN_ID;
+  const key = process.env.JSONBIN_KEY;
+  if (!id || !key) return null;
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), BLOCKS_READ_TIMEOUT_MS); // לא תוקעים הזמנה אם JSONBin איטי
+    try {
+      const r = await fetch(`https://api.jsonbin.io/v3/b/${id}/latest`, { headers: { 'X-Master-Key': key }, signal: ctrl.signal });
+      if (!r.ok) return null;
+      const data = await r.json();
+      const blocks = data && data.record && data.record.blocks;
+      return Array.isArray(blocks) ? blocks : null;
+    } finally { clearTimeout(timer); }
+  } catch (e) { return null; }
+}
+
+// אותו כלל כמו isProductBlocked באתר: חסימה על אותו מוצר ומידה שחופפת לתאריכים (קצוות כלולים).
+// חסימה פגומה (לא אובייקט, או בלי תאריכים תקינים) על אותו מוצר ומידה נחשבת כחוסמת, כדי לא לפספס מלאי תפוס.
+function isBlocked(blocks, id, size, startDate, endDate) {
+  return blocks.some(b => {
+    if (!b || typeof b !== 'object') return false;
+    if (b.productId !== id || b.size !== size) return false;
+    if (typeof b.startDate !== 'string' || typeof b.endDate !== 'string' || !ISO_DATE.test(b.startDate) || !ISO_DATE.test(b.endDate)) return true;
+    return startDate <= b.endDate && endDate >= b.startDate;
+  });
+}
+
+// מחזיר רשימת פריטים לא זמינים עם סיבה: 'blocked' (חסימה בתאריכים) או 'quantity' (כמות מצטברת מעל המלאי)
+function findUnavailable(blocks, itemSnapshots, bundleSnapshots, startDate, endDate) {
+  const needed = new Map();
+  const add = (id, size, qty) => { const k = id + '\u0000' + size; needed.set(k, { id, size, qty: ((needed.get(k) || {}).qty || 0) + qty }); };
+  itemSnapshots.forEach(it => add(it.id, it.size, it.qty));
+  bundleSnapshots.forEach(b => b.items.forEach(bi => add(bi.id, bi.size, 1)));
+  const taken = [];
+  for (const n of needed.values()) {
+    if (isBlocked(blocks, n.id, n.size, startDate, endDate)) taken.push({ id: n.id, size: n.size, reason: 'blocked' });
+    else if (n.qty > (PRODUCT_STOCK[n.id] || 1)) taken.push({ id: n.id, size: n.size, reason: 'quantity' });
+  }
+  return taken;
+}
+
+// בדיקת צורה בסיסית של פריט/חבילה, כדי שאי אפשר לעקוף את בדיקת הזמינות עם מזהה או מידה ריקים/מוזרים או חבילה ריקה.
+// בכוונה לא בודקים מול קטלוג המוצרים: מוצר חדש באתר שלא נוסף לכאן היה נדחה בהזמנה. רק צורה.
+const ID_RE = /^[A-Za-z0-9_\u0590-\u05FF-]{1,60}$/;
+const SIZE_RE = /^[A-Za-z0-9]{1,6}$/;
+const BUNDLE_SIZES = { duo: 2, full: 5 };
+function validShape(itemSnapshots, bundleSnapshots) {
+  for (const it of itemSnapshots) if (!ID_RE.test(it.id) || !SIZE_RE.test(it.size)) return false;
+  for (const b of bundleSnapshots) {
+    if (b.items.length !== BUNDLE_SIZES[b.typeId]) return false;
+    for (const bi of b.items) if (!ID_RE.test(bi.id) || !SIZE_RE.test(bi.size)) return false;
+  }
+  return true;
+}
+
 const BUNDLE_LABELS = { duo: 'חבילת מעיל + מכנס', full: 'חבילת קומפלט (הכל)' };
 
 // מקבל רק תאריך אמיתי בפורמט YYYY-MM-DD. מחזיר מספר (ms) או null.
@@ -130,9 +211,10 @@ export default async function handler(req, res) {
       let total = 0;
       const itemSnapshots = [];
       for (const it of items.slice(0, 50)) {
-        const cat = String(it.cat || '');
-        const price = CAT_PRICES[cat];
-        if (!price) return res.status(400).json({ error: 'פריט לא מוכר: ' + cat });
+        const info = productInfo(it.id);
+        if (!info) return res.status(400).json({ error: 'invalid_order' });
+        const cat = info.cat;
+        const price = info.price;
         const qty = Math.max(1, Math.min(20, Math.round(Number(it.qty) || 1)));
         const lineTotal = price * weeks * qty;
         total += lineTotal;
@@ -151,6 +233,7 @@ export default async function handler(req, res) {
       for (const b of bundles.slice(0, 20)) {
         const typeId = BUNDLE_PRICES[b.typeId] ? b.typeId : null;
         if (!typeId) return res.status(400).json({ error: 'חבילה לא מוכרת' });
+        if (!bundleComposed(typeId, (Array.isArray(b.items) ? b.items : []))) return res.status(400).json({ error: 'invalid_order' });
         const lineTotal = BUNDLE_PRICES[typeId] * weeks;
         total += lineTotal;
         bundleSnapshots.push({
@@ -165,6 +248,13 @@ export default async function handler(req, res) {
           lineTotal,
         });
       }
+
+      // בדיקת זמינות בצד שרת. אם אי אפשר לאמת - לא מקבלים את ההזמנה והלקוח מתבקש לנסות שוב.
+      if (!validShape(itemSnapshots, bundleSnapshots)) return res.status(400).json({ error: 'invalid_order' });
+      const blocks = await readBlocks();
+      if (!blocks) return res.status(503).json({ error: 'availability_unverified' });
+      const taken = findUnavailable(blocks, itemSnapshots, bundleSnapshots, startDate, endDate);
+      if (taken.length) return res.status(409).json({ error: 'unavailable', items: taken });
 
       const orders = await readOrders(BIN_ID, API_KEY);
       const order = {

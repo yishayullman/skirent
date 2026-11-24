@@ -743,6 +743,8 @@
             reasonCopiedText: 'סיבת ההעברה הועתקה - הדביקו אותה בשדה הסיבה/הערה באפליקציה:', manualReasonText: 'רשמו באפליקציה את סיבת ההעברה הזו:',
             payNowLineText: (appName, price, phone) => `עברו לאפליקציית <b>${appName}</b> והעבירו <b style="color:var(--success);">₪${price}</b> למספר <b dir="ltr">${phone}</b>.`,
             orderNumberLineText: (orderId) => `מספר ההזמנה שלכם: <b>${orderId}</b>`,
+            qtyOverStockToast: (n) => `הכמות המבוקשת עבור ${n} גדולה מהמלאי. הסירו או שנו אחד מהם בסל.`,
+            availabilityUnverifiedToast: 'לא הצלחנו לאמת זמינות כרגע, ההזמנה לא נשלחה. נסו שוב בעוד רגע.',
             orderCreateFailedToast: 'יצירת ההזמנה נכשלה. בדקו חיבור לאינטרנט ונסו שוב.',
             adminOrdersTitle: '📦 הזמנות שהתקבלו:', noOrdersAdminYetText: 'עדיין אין הזמנות.',
             orderStatusText: (s) => ({ pending: '⏳ ממתין לתשלום', paid: '✅ שולם', cancelled: '❌ בוטל' })[s] || s,
@@ -868,6 +870,8 @@
             reasonCopiedText: "The transfer reason was copied - paste it in the app's reason/note field:", manualReasonText: 'Enter this transfer reason in the app:',
             payNowLineText: (appName, price, phone) => `Open <b>${appName}</b> and transfer <b style="color:var(--success);">₪${price}</b> to <b dir="ltr">${phone}</b>.`,
             orderNumberLineText: (orderId) => `Your order number: <b>${orderId}</b>`,
+            qtyOverStockToast: (n) => `The quantity requested for ${n} is more than we have in stock. Please remove or change one in the cart.`,
+            availabilityUnverifiedToast: 'We could not verify availability right now, so the order was not sent. Please try again in a moment.',
             orderCreateFailedToast: 'Could not create the order. Check your connection and try again.',
             adminOrdersTitle: '📦 Received orders:', noOrdersAdminYetText: 'No orders yet.',
             orderStatusText: (s) => ({ pending: '⏳ Pending payment', paid: '✅ Paid', cancelled: '❌ Cancelled' })[s] || s,
@@ -1105,6 +1109,7 @@
             reviewsFromServer = data.reviews || [];
             cloudLoadFailed = false;
             document.getElementById('cloud-status').style.display = 'none';
+            checkCartValidity(); // a cart restored from a previous visit may now hold taken items
             // Preserve active/used native pickers while refreshing availability in place.
             document.querySelectorAll('.card-select').forEach(select => {
                 const key = select.id.slice(5);
@@ -1214,7 +1219,11 @@
     }
 
     function checkCartValidity() {
+        // Drop cart items and bundles that are taken for the chosen dates, and say so once.
+        const before = cartItems.length + cartBundles.length;
         cartItems = cartItems.filter(item => !isProductBlocked(item.id, item.size));
+        cartBundles = cartBundles.filter(b => !b.items.some(it => isProductBlocked(it.id, it.size)));
+        if (cartItems.length + cartBundles.length < before) showToast(t('bundleItemBlockedToast'), "error");
     }
 
     let currentCat = 'all';
@@ -1811,6 +1820,33 @@
                 })
             });
             const data = await res.json();
+            if (data && data.error === 'availability_unverified') {
+                if (btnBit) btnBit.disabled = false;
+                if (btnPaybox) btnPaybox.disabled = false;
+                showToast(t('availabilityUnverifiedToast'), "error", 6000);
+                return;
+            }
+            if (data && data.error === 'unavailable') {
+                if (btnBit) btnBit.disabled = false;
+                if (btnPaybox) btnPaybox.disabled = false;
+                // Refresh availability. If that removes the taken items, checkCartValidity already showed the toast.
+                const unitsBefore = cartItems.length + cartBundles.length;
+                await loadBlockedDates();
+                if (cartItems.length + cartBundles.length === unitsBefore) {
+                    // Nothing was removed (e.g. the same item+size appears twice in the cart): say what is wrong.
+                    const list = Array.isArray(data.items) ? data.items : [];
+                    const names = list.map(x => { const p = products.find(q => q.id === x.id); return (p ? translateProductName(p) : x.id) + ' (' + x.size + ')'; }).join(', ');
+                    const qtyIssue = list.some(x => x.reason === 'quantity');
+                    showToast(qtyIssue ? t('qtyOverStockToast', names) : t('bundleItemBlockedToast'), "error", 7000);
+                }
+                return;
+            }
+            if (data && data.error === 'invalid_order') {
+                if (btnBit) btnBit.disabled = false;
+                if (btnPaybox) btnPaybox.disabled = false;
+                showToast(t('orderCreateFailedToast'), "error");
+                return;
+            }
             if (!res.ok || !data.ok) throw new Error(data.error || 'create_order failed');
             serverOrder = data;
         } catch (err) {
