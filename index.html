@@ -414,6 +414,16 @@
                     <span class="field-label" data-i18n="fullNameLabel">שם מלא להזמנה:</span>
                     <input type="text" id="cust-name" autocomplete="name" data-i18n-placeholder="fullNamePlaceholder" placeholder="הכנס שם מלא">
                 </label>
+                <div class="date-fields cart-date-fields" id="cart-date-fields" style="grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); margin-bottom: 12px;">
+                    <label class="field" for="cart-start-date">
+                        <span class="field-label" data-i18n="fromDate">מתאריך</span>
+                        <input type="date" id="cart-start-date" onchange="setDatesFromCart()">
+                    </label>
+                    <label class="field" for="cart-end-date">
+                        <span class="field-label" data-i18n="toDate">עד תאריך</span>
+                        <input type="date" id="cart-end-date" onchange="setDatesFromCart()">
+                    </label>
+                </div>
                 <div class="cart-dates" id="cart-dates-summary"></div>
                 <div class="total-row">
                     <span data-i18n="totalToPay">סה"כ לתשלום:</span>
@@ -732,7 +742,7 @@
             serverUpdateErrorToast: 'תקלה בעדכון השרת. נסה שוב בעוד רגע.', networkSaveErrorToast: 'תקלה ברשת בשמירה לענן. נסה שוב בעוד רגע.',
             bundleItemBlockedToast: 'אחד הפריטים תפוס בתאריכים שבחרת. אנא שנה מוצר או מידה.', bundleAddedToast: 'החבילה נוספה לסל!',
             invalidHeightWeightToast: 'אנא הזינו ערכי גובה ומשקל תקינים.', nameRequiredForOrderToast: 'נא להזין שם מלא להזמנה לפני התשלום',
-            datesRequiredToast: 'נא לבחור תאריכי השכרה בראש העמוד', blockDatesRequiredToast: 'יש לבחור תאריכים לחסימה',
+            datesRequiredToast: 'נא לבחור תאריכי השכרה בסל או בראש העמוד', blockDatesRequiredToast: 'יש לבחור תאריכים לחסימה',
             blockEndBeforeStartToast: 'תאריך הסיום לא יכול להיות לפני תאריך ההתחלה', reviewNameRequiredToast: 'נא להזין שם.',
             adminPasswordRequiredText: 'נא להזין סיסמה.', confirmReleaseBlockText: 'האם לשחרר חסימה זו ולהחזיר את המוצר למלאי לכולם?', adminManageTitle: '🛠️ פאנל ניהול', chooseProductToBlock: 'בחר מוצר לחסימה:', chooseSizeLabel: 'בחר מידה:', fromDateAdmin: 'מאיזה תאריך:',
             reviewStarsRequiredToast: 'נא לבחור דירוג בכוכבים.', reviewThanksToast: 'תודה על הביקורת!',
@@ -773,7 +783,7 @@
             cartPillCta: 'לסל',
             orderSentToast: 'ההזמנה נשלחה אלינו בוואטסאפ! נחזור אליך לאישור סופי.',
             cartDatesLine: (s, e, weeks, days) => `תאריכי השכרה: ${s} עד ${e} · ${weeks} שבועות (${days} ימים)`,
-            cartNoDatesLine: 'לא נבחרו תאריכי השכרה - בחרו בראש העמוד לפני התשלום',
+            cartNoDatesLine: 'לא נבחרו תאריכי השכרה - בחרו תאריכים כאן לפני התשלום',
             durationInfoText: (weeks, days) => `תקופת חישוב: ${weeks} שבועות (${days} ימים)`,
             orderIdLabel: 'מספר הזמנה:',
             lastUnitText: '🔥 נשארה יחידה אחרונה בתאריכים אלו',
@@ -859,7 +869,7 @@
             serverUpdateErrorToast: 'There was a problem updating the server. Please try again shortly.', networkSaveErrorToast: 'Network error while saving to the cloud. Please try again shortly.',
             bundleItemBlockedToast: 'One of the items is unavailable for the dates you chose. Please change the product or size.', bundleAddedToast: 'Bundle added to cart!',
             invalidHeightWeightToast: 'Please enter valid height and weight values.', nameRequiredForOrderToast: 'Please enter your full name before paying',
-            datesRequiredToast: 'Please select rental dates at the top of the page', blockDatesRequiredToast: 'Please select dates to block',
+            datesRequiredToast: 'Please select rental dates in the cart or at the top of the page', blockDatesRequiredToast: 'Please select dates to block',
             blockEndBeforeStartToast: 'End date cannot be before start date', reviewNameRequiredToast: 'Please enter your name.',
             adminPasswordRequiredText: 'Please enter a password.', confirmReleaseBlockText: 'Release this block and make the product available to everyone again?', adminManageTitle: '🛠️ Admin Panel', chooseProductToBlock: 'Choose a product to block:', chooseSizeLabel: 'Choose a size:', fromDateAdmin: 'From date:',
             reviewStarsRequiredToast: 'Please select a star rating.', reviewThanksToast: 'Thanks for your review!',
@@ -900,7 +910,7 @@
             cartPillCta: 'Cart',
             orderSentToast: 'Your order was sent to us on WhatsApp! We will get back to you with final confirmation.',
             cartDatesLine: (s, e, weeks, days) => `Rental dates: ${s} to ${e} · ${weeks} week${weeks > 1 ? 's' : ''} (${days} days)`,
-            cartNoDatesLine: 'No rental dates selected - pick dates at the top of the page before paying',
+            cartNoDatesLine: 'No rental dates selected - pick dates here before paying',
             durationInfoText: (weeks, days) => `Calculated period: ${weeks} week${weeks > 1 ? 's' : ''} (${days} days)`,
             orderIdLabel: 'Order ID:',
             lastUnitText: '🔥 Last unit left for these dates',
@@ -1204,7 +1214,7 @@
     function validateDates() {
         const sInput = document.getElementById('start-date');
         const eInput = document.getElementById('end-date');
-        if (sInput.value && sInput.value < todayStr) { sInput.value = ""; return; }
+        if (sInput.value && sInput.value < todayStr) { sInput.value = ""; syncCartDateInputs(); return; }
         if (sInput.value) { eInput.min = sInput.value; }
         if (sInput.value && eInput.value && eInput.value < sInput.value) { eInput.value = ""; }
 
@@ -1214,6 +1224,29 @@
         checkCartValidity();
         updateUI();
         render();
+    }
+
+    // תאריכי ההשכרה בתוך הסל: אותו מצב כמו שדות התאריך שבראש העמוד (מקור אמת אחד, שדות ראש העמוד)
+    function setDatesFromCart() {
+        const cs = document.getElementById('cart-start-date');
+        const ce = document.getElementById('cart-end-date');
+        const sInput = document.getElementById('start-date');
+        const eInput = document.getElementById('end-date');
+        sInput.value = cs.value || '';
+        eInput.value = ce.value || '';
+        validateDates();
+    }
+
+    function syncCartDateInputs() {
+        const cs = document.getElementById('cart-start-date');
+        const ce = document.getElementById('cart-end-date');
+        if (!cs || !ce) return;
+        const sVal = document.getElementById('start-date').value;
+        const eVal = document.getElementById('end-date').value;
+        cs.min = todayStr;
+        ce.min = sVal || todayStr;
+        if (cs.value !== sVal) cs.value = sVal;
+        if (ce.value !== eVal) ce.value = eVal;
     }
 
     function getProductBlockData(id, size) {
@@ -1771,6 +1804,8 @@
         if (listContainer) listContainer.innerHTML = htmlContent;
         const finalPriceEl = document.getElementById('final-price');
         if (finalPriceEl) finalPriceEl.innerText = total;
+
+        syncCartDateInputs();
 
         // שורת תאריכי ההשכרה בתוך הסל - כדי שהלקוח יראה על מה הוא משלם
         const cartDatesEl = document.getElementById('cart-dates-summary');

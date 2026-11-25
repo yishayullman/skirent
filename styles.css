@@ -968,3 +968,6 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--g
 
 :root { --topbar-h:94px; }
 @media(max-width:767px) { :root { --topbar-h:84px; } }
+
+/* תאריכי השכרה בתוך הסל */
+.cart-date-fields .field input { min-width: 0; width: 100%; box-sizing: border-box; }
